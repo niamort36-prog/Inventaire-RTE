@@ -392,6 +392,7 @@
     <script>
         // --- CONFIGURATION FIREBASE ---
         let isFirebaseConfigured = false;
+        let dataLoadedFromFirebase = false; // NOUVEAU : VERROU DE SÉCURITÉ
         
         const firebaseConfig = {
             apiKey: "AIzaSyCq73TBSEROdPNWe58xFBBYJqALDO8pNnU",
@@ -403,19 +404,10 @@
             appId: "1:105067826948:web:545a35991a5d9a1ef1ca51"
         };
 
+        // On démarre avec des profils VIDES pour ne pas écraser la base de données avec des exemples
         let profilesData = {
-            "EL Feytiat": {
-                families: [ { id: 1, name: "Electroportatif", color: "red", desc: "Perceuses, visseuses et outils sur batterie" } ],
-                parts: [ { id: 1, name: "Perceuse Makita", qty: 50, alertQty: 5, familyId: 1, location: "Armoire 1", image: null, desc: "Modèle DHP453", docData: null } ],
-                mapData: { image: null, markers: [ { id: 101, x: 20, y: 30, name: "Armoire 1", desc: "Étagère principale" } ] },
-                baskets: [ { id: 1001, name: "Chantier Limoges Centre", status: 'draft', items: [] } ]
-            },
-            "EL Aurillac": {
-                families: [ { id: 4, name: "Gros Oeuvre", color: "orange", desc: "Matériel lourd" } ],
-                parts: [ { id: 2, name: "Boîte de 500 Vis", qty: 120, alertQty: 10, familyId: 4, location: "Stock A", image: null, desc: "Vis bois 5x50", docData: null } ],
-                mapData: { image: null, markers: [ { id: 102, x: 50, y: 50, name: "Stock A", desc: "Rayonnage visserie" } ] },
-                baskets: [ { id: 1002, name: "Chantier Cantal Ouest", status: 'draft', items: [] } ]
-            }
+            "EL Feytiat": { families: [], parts: [], mapData: { image: null, markers: [] }, baskets: [] },
+            "EL Aurillac": { families: [], parts: [], mapData: { image: null, markers: [] }, baskets: [] }
         };
 
         let currentProfileName = "EL Feytiat";
@@ -430,8 +422,9 @@
             document.getElementById('sync-indicator').classList.replace('bg-gray-300', 'bg-green-500');
             document.getElementById('sync-indicator').title = "Synchronisation Active";
             
-            let isFirstLoad = true;
             firebase.database().ref('profilesData').on('value', (snapshot) => {
+                dataLoadedFromFirebase = true; // DÉVERROUILLAGE : Firebase a fini de charger !
+                
                 const data = snapshot.val();
                 if (data) {
                     profilesData = data;
@@ -455,14 +448,20 @@
                         const b = baskets.find(x => x.id === currentBasketId);
                         if(b) renderBasketItems(b);
                     }
-                } else if (isFirstLoad) {
+                } else {
+                    // Si la base est totalement vide, on l'initialise avec nos structures vides
                     saveDataToFirebase();
                 }
-                isFirstLoad = false;
             });
         }
 
         function saveDataToFirebase() {
+            // SÉCURITÉ ABSOLUE : Si Firebase est configuré mais n'a pas encore chargé, on bloque la sauvegarde !
+            if (isFirebaseConfigured && !dataLoadedFromFirebase) {
+                console.warn("Sauvegarde bloquée : Firebase n'a pas encore chargé les données.");
+                return;
+            }
+
             profilesData[currentProfileName] = { families, parts, mapData, baskets };
             if (isFirebaseConfigured) {
                 firebase.database().ref('profilesData').set(profilesData);
