@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Inventaire Atelier - Filtres Panier & Familles</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-database-compat.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { primary: '#4F46E5', bgLight: '#F3F4F6' },
+                    animation: { 'ping-slow': 'ping 2s cubic-bezier(0, 0, 0.2, 1) infinite' },
+                    zIndex: { '60': '60', '70': '70' }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #F8F9FA; overscroll-behavior: none; }
+        .nav-item.active { color: #4F46E5; border-bottom: 2px solid #4F46E5; }
+        .badge { padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
+        .card-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .map-marker { position: absolute; transform: translate(-50%, -100%); cursor: pointer; transition: transform 0.1s; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4)); z-index: 10; touch-action: none; }
+        .map-marker:active { cursor: grabbing; z-index: 50; transform: translate(-50%, -100%) scale(1.1); }
+        .highlight-marker { animation: bounce 1s infinite; filter: drop-shadow(0 0 10px #F59E0B); z-index: 100; }
+        @keyframes bounce { 0%, 100% { transform: translate(-50%, -100%); } 50% { transform: translate(-50%, -130%); } }
+        .zone-item:hover { background-color: #F3F4F6; }
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        #reader { width: 100%; border-radius: 8px; overflow: hidden; }
+        #reader video { object-fit: cover; border-radius: 8px; }
+        .search-result-item:hover { background-color: #F3F4F6; }
+
+        .pie-chart {
+            width: 60px; height: 60px; border-radius: 50%;
+            background: conic-gradient(#4F46E5 0% 0%, #E5E7EB 0% 100%);
+            transition: background 0.5s ease;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .pie-chart-inner { width: 40px; height: 40px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; }
+    </style>
+</head>
+<body class="text-gray-700 h-screen flex flex-col overflow-hidden">
+
+    <nav class="bg-white shadow-sm sticky top-0 z-50 flex-none">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16 w-full">
+                <div class="flex overflow-hidden">
+                    <div class="flex-shrink-0 flex items-center gap-2">
+                        <i class="fa-solid fa-box-open text-primary text-xl"></i>
+                        <span class="font-bold text-xl text-gray-800 hidden md:inline">Inventaire</span>
+                    </div>
+                    <div class="ml-4 sm:ml-10 flex space-x-4 sm:space-x-8 overflow-x-auto">
+                        <a href="#" onclick="showPage('dashboard')" id="nav-dashboard" class="nav-item active inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900">Accueil</a>
+                        <a href="#" onclick="showPage('pieces')" id="nav-pieces" class="nav-item inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700">Pièces</a>
+                        <a href="#" onclick="showPage('familles')" id="nav-familles" class="nav-item inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700">Familles</a>
+                        <a href="#" onclick="showPage('plan')" id="nav-plan" class="nav-item inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700">Plan</a>
+                        <a href="#" onclick="showPage('paniers')" id="nav-paniers" class="nav-item inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700">Paniers</a>
+                        <a href="#" onclick="showPage('scanner')" id="nav-scanner" class="nav-item inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700">Scan</a>
+                    </div>
+                </div>
+                <div class="flex items-center ml-2 flex-shrink-0 border-l pl-4 relative">
+                    <div id="sync-indicator" class="absolute -left-3 top-1/2 transform -translate-y-1/2 w-2 h-2 rounded-full bg-gray-300" title="Synchronisation désactivée"></div>
+                    <div class="relative">
+                        <select id="profile-selector" onchange="switchProfile(this.value)" class="block w-full pl-3 pr-8 py-1.5 text-sm border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md shadow-sm font-bold bg-white text-indigo-700 cursor-pointer">
+                            <option value="EL Feytiat">EL Feytiat</option>
+                            <option value="EL Aurillac">EL Aurillac</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex-grow w-full overflow-y-auto" id="main-content">
+        
+        <div id="page-dashboard" class="space-y-6">
+            <h1 class="text-2xl font-bold text-gray-900">Tableau de bord</h1>
+             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white shadow rounded-lg p-5 border-l-4 border-indigo-500">
+                    <dt class="text-sm font-medium text-gray-500">Total Pièces</dt>
+                    <dd class="mt-1 text-3xl font-semibold text-gray-900" id="stat-total-parts">0</dd>
+                </div>
+                <div class="bg-white shadow rounded-lg p-5 border-l-4 border-purple-500">
+                    <dt class="text-sm font-medium text-gray-500">Chantiers Actifs</dt>
+                    <dd class="mt-1 text-3xl font-semibold text-gray-900" id="stat-total-active-baskets">0</dd>
+                </div>
+                <div class="bg-white shadow rounded-lg p-5 border-l-4 border-green-500">
+                    <dt class="text-sm font-medium text-gray-500">Zones Définies</dt>
+                    <dd class="mt-1 text-3xl font-semibold text-gray-900" id="stat-total-locations">0</dd>
+                </div>
+            </div>
+
+            <div id="active-baskets-dashboard-container" class="hidden">
+                <h3 class="text-lg font-bold text-gray-800 mb-3"><i class="fa-solid fa-truck-ramp-box mr-2 text-indigo-600"></i>Chantiers en cours de chargement</h3>
+                <div id="active-baskets-dashboard-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+            </div>
+
+            <div id="stock-alerts-container" class="hidden mt-6">
+                <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-md shadow-sm">
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="flex items-center"><i class="fa-solid fa-triangle-exclamation text-red-600 text-xl mr-2"></i><h3 class="text-lg font-bold text-red-800">Alertes Stock Bas</h3></div>
+                        <span class="bg-red-200 text-red-800 text-xs font-bold px-2 py-1 rounded-full" id="alert-count-badge">0</span>
+                    </div>
+                    <div id="stock-alerts-list" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="page-pieces" class="hidden space-y-6">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <h1 class="text-2xl font-bold text-gray-900">Gestion des pièces</h1>
+                <div class="flex gap-2 w-full md:w-auto flex-col sm:flex-row">
+                    <button onclick="downloadExcel()" class="bg-white border border-gray-300 text-green-700 px-4 py-2 rounded-md text-sm font-medium shadow-sm hover:bg-gray-50 transition w-full sm:w-auto">
+                        <i class="fa-solid fa-file-excel mr-2"></i> Excel
+                    </button>
+                    <button onclick="downloadAllQRCodes()" class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-md text-sm font-medium shadow-sm hover:bg-gray-50 transition w-full sm:w-auto">
+                        <i class="fa-solid fa-download mr-2"></i> QR Codes
+                    </button>
+                    <button onclick="openPartModal()" class="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium shadow-sm hover:bg-indigo-700 transition w-full sm:w-auto">
+                        <i class="fa-solid fa-plus mr-2"></i> Ajouter une pièce
+                    </button>
+                </div>
+            </div>
+            <div class="relative">
+                <input type="text" id="search-input-parts" onkeyup="renderPartsGrid()" class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm shadow-sm" placeholder="Rechercher...">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i class="fa-solid fa-search text-gray-400"></i></div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="all-parts-grid"></div>
+        </div>
+
+        <div id="page-familles" class="hidden space-y-6">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <h1 class="text-2xl font-bold text-gray-900">Gestion des familles</h1>
+                <button onclick="openFamilyModal()" class="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium shadow-sm hover:bg-indigo-700 transition w-full md:w-auto"><i class="fa-solid fa-plus mr-2"></i> Ajouter une famille</button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4" id="all-families-grid"></div>
+        </div>
+
+        <div id="page-plan" class="hidden h-full flex flex-col gap-4">
+            <div class="flex justify-between items-center flex-none">
+                <div><h1 class="text-2xl font-bold text-gray-900">Plan de l'atelier</h1></div>
+                <div class="flex gap-2"><label class="bg-white border border-gray-300 text-gray-700 px-3 py-2 rounded-md text-sm font-medium shadow-sm hover:bg-gray-50 cursor-pointer"><i class="fa-solid fa-upload mr-1"></i> <span class="hidden sm:inline">Changer plan</span><input type="file" accept="image/*" class="hidden" onchange="uploadMap(event)"></label></div>
+            </div>
+            <div class="flex flex-col lg:flex-row gap-4 flex-grow overflow-hidden">
+                <div class="w-full lg:w-3/4 bg-gray-100 p-1 rounded-lg shadow border border-gray-200 relative overflow-hidden flex flex-col">
+                    <div id="no-map-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-gray-400 z-0"><i class="fa-regular fa-map fa-4x mb-4"></i><p class="text-lg font-medium">Aucun plan chargé</p></div>
+                    <div id="map-container" class="hidden relative w-full h-full cursor-crosshair overflow-hidden touch-none" onmousemove="handleContainerMove(event)" ontouchmove="handleContainerMove(event)" onmouseup="handleContainerUp(event)" ontouchend="handleContainerUp(event)" onclick="handleMapBackgroundClick(event)">
+                        <img id="atelier-map-img" src="" class="w-full h-full object-contain pointer-events-none select-none" alt="Plan">
+                        <div id="map-markers-layer" class="absolute inset-0 w-full h-full"></div>
+                    </div>
+                </div>
+                <div class="w-full lg:w-1/4 bg-white rounded-lg shadow border border-gray-200 flex flex-col"><div class="p-3 border-b bg-gray-50 rounded-t-lg"><h3 class="font-bold text-gray-700"><i class="fa-solid fa-list-ul mr-2"></i>Liste des Zones</h3></div><div class="flex-grow overflow-y-auto p-2 space-y-2" id="zones-list-container"></div></div>
+            </div>
+        </div>
+
+        <div id="page-paniers" class="hidden space-y-6">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <h1 class="text-2xl font-bold text-gray-900">Paniers & Chantiers</h1>
+                <button onclick="createBasket()" class="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium shadow-sm hover:bg-indigo-700 transition w-full md:w-auto">
+                    <i class="fa-solid fa-cart-plus mr-2"></i> Nouveau Chantier
+                </button>
+            </div>
+            <div id="baskets-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            <div id="empty-baskets-msg" class="text-center py-10 text-gray-500 hidden">
+                <i class="fa-solid fa-basket-shopping fa-3x mb-3 text-gray-300"></i><p>Aucun panier actif.</p>
+            </div>
+        </div>
+
+        <div id="page-scanner" class="hidden space-y-6">
+            <h1 class="text-2xl font-bold text-gray-900">Scanner</h1>
+            <div class="max-w-md mx-auto bg-white p-4 rounded-lg shadow">
+                <div id="reader"></div>
+                <p class="text-center text-sm text-gray-500 mt-4">Pointez vers un QR Code.</p>
+            </div>
+        </div>
+
+    </main>
+
+    <div id="modal-confirm-add-basket" class="hidden fixed z-[60] inset-0 overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="fixed inset-0 bg-gray-600 bg-opacity-75" onclick="closeModal('modal-confirm-add-basket')"></div>
+            <div class="bg-white rounded-lg p-6 max-w-sm w-full shadow-xl relative z-50 transform transition-all">
+                <h3 class="text-lg font-bold mb-4" id="confirm-add-title">Ajouter au panier</h3>
+                <input type="hidden" id="confirm-add-part-id">
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1">Quantité Prévue</label>
+                    <input type="number" id="confirm-add-qty" value="1" min="1" class="w-full border p-2 rounded focus:ring-indigo-500">
+                    <p class="text-xs text-gray-500 mt-1" id="confirm-add-stock-info">Stock disponible: 0</p>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold mb-1">Commentaire</label>
+                    <textarea id="confirm-add-comment" rows="2" class="w-full border p-2 rounded focus:ring-indigo-500 text-sm" placeholder="Ex: Pour chantier SDB..."></textarea>
+                </div>
+                <div class="mb-6 flex items-center">
+                    <input type="checkbox" id="confirm-add-deduct" class="h-4 w-4 text-indigo-600 border-gray-300 rounded" checked>
+                    <label for="confirm-add-deduct" class="ml-2 block text-sm text-gray-900">Déduire du stock à la validation</label>
+                </div>
+                <div class="flex justify-end gap-2">
+                    <button onclick="closeModal('modal-confirm-add-basket')" class="bg-white border px-4 py-2 rounded hover:bg-gray-50">Annuler</button>
+                    <button onclick="finalizeAddToBasket()" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">Valider</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-basket-detail" class="hidden fixed z-50 inset-0 overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20">
+            <div class="fixed inset-0 bg-gray-600 bg-opacity-75" onclick="closeModal('modal-basket-detail')"></div>
+            <div class="bg-white rounded-lg w-full max-w-3xl shadow-xl relative z-10 flex flex-col max-h-[95vh]">
+                <div class="px-6 py-4 border-b flex justify-between items-center bg-gray-50 rounded-t-lg">
+                    <div class="flex items-center gap-3">
+                         <div id="header-pie-chart" class="pie-chart hidden"><div class="pie-chart-inner" id="header-pie-text">0%</div></div>
+                         <div><h3 class="text-xl font-bold text-gray-900" id="basket-detail-title">Panier</h3><span id="basket-status-badge" class="text-xs font-bold px-2 py-0.5 rounded bg-gray-200 text-gray-600">Brouillon</span></div>
+                    </div>
+                    <button onclick="closeModal('modal-basket-detail')" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-times fa-lg"></i></button>
+                </div>
+                <div id="basket-search-container" class="px-6 py-4 bg-white border-b relative">
+                    <div class="relative"><input type="text" id="basket-search-input" onkeyup="searchPartForBasket()" class="w-full border p-3 pl-10 rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="Ajouter une pièce (Recherche)..."><div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i class="fa-solid fa-plus text-gray-400"></i></div></div>
+                    <div id="basket-search-results" class="absolute left-6 right-6 top-14 bg-white shadow-xl rounded-b-lg border border-t-0 border-gray-200 z-20 max-h-48 overflow-y-auto hidden"></div>
+                </div>
+                <div class="px-6 py-3 bg-gray-100 border-b flex flex-wrap gap-2 items-center">
+                    <div class="flex-grow relative"><input type="text" id="filter-basket-text" onkeyup="renderBasketItems(baskets.find(b=>b.id===currentBasketId))" placeholder="Filtrer dans la liste..." class="w-full border border-gray-300 rounded px-2 py-1 text-sm pl-7 focus:outline-none focus:border-indigo-500"><i class="fa-solid fa-filter absolute left-2 top-2 text-gray-400 text-xs"></i></div>
+                    <select id="filter-basket-zone" onchange="renderBasketItems(baskets.find(b=>b.id===currentBasketId))" class="border border-gray-300 rounded px-2 py-1 text-sm bg-white focus:outline-none max-w-[120px]"><option value="">Toutes Zones</option></select>
+                    <select id="filter-basket-family" onchange="renderBasketItems(baskets.find(b=>b.id===currentBasketId))" class="border border-gray-300 rounded px-2 py-1 text-sm bg-white focus:outline-none max-w-[120px]"><option value="">Toutes Familles</option></select>
+                </div>
+                <div class="p-0 overflow-y-auto flex-grow bg-white">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-100 sticky top-0 z-10"><tr id="basket-table-header"></tr></thead>
+                        <tbody id="basket-items-list" class="bg-white divide-y divide-gray-200"></tbody>
+                    </table>
+                    <div id="basket-empty-list-msg" class="text-center py-8 text-gray-400 hidden">Aucun élément trouvé.</div>
+                </div>
+                <div class="bg-gray-50 px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4 border-t">
+                    <button onclick="deleteBasket()" class="text-red-600 hover:text-red-800 text-sm font-medium">Supprimer / Archiver</button>
+                    <div class="flex gap-2 w-full sm:w-auto" id="basket-footer-actions"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-quick-view" class="hidden fixed z-[70] inset-0 overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 bg-gray-600 bg-opacity-75 transition-opacity" onclick="closeModal('modal-quick-view')"></div>
+            <div class="inline-block align-middle bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-md sm:w-full">
+                <input type="hidden" id="quick-view-id">
+                <div class="h-48 bg-gray-100 relative">
+                    <img id="quick-view-img" class="w-full h-full object-cover" src="" style="display:none;">
+                    <div id="quick-view-no-img" class="absolute inset-0 flex items-center justify-center text-gray-400"><i class="fa-solid fa-image fa-4x"></i></div>
+                    <button onclick="closeModal('modal-quick-view')" class="absolute top-2 right-2 bg-black bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-70"><i class="fa-solid fa-times"></i></button>
+                </div>
+                <div class="px-6 py-4">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-xl font-bold text-gray-900" id="quick-view-name">Nom Pièce</h3>
+                        <span id="quick-view-family" class="badge">Famille</span>
+                    </div>
+                    <div class="flex gap-2 mb-4">
+                        <button onclick="locateZoneOnMap()" class="flex-grow flex items-center text-sm text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded transition justify-center"><i class="fa-solid fa-location-dot mr-2"></i>Zone</button>
+                        <button onclick="showQRCode()" class="flex-none bg-gray-100 text-gray-600 px-3 py-1.5 rounded hover:bg-gray-200"><i class="fa-solid fa-qrcode"></i></button>
+                    </div>
+                    <div class="bg-gray-50 p-3 rounded-md mb-4 border border-gray-100"><p id="quick-view-desc" class="text-sm text-gray-700 italic">Desc</p></div>
+                    <div class="flex items-center justify-center gap-6 mb-6 bg-gray-50 rounded-xl p-4 border border-gray-100">
+                        <button onclick="updateQuickQty(-1)" class="w-12 h-12 rounded-full bg-white border border-gray-300 text-gray-600 hover:bg-red-50"><i class="fa-solid fa-minus"></i></button>
+                        <div class="text-center"><span id="quick-view-qty" class="block text-4xl font-bold text-gray-800">0</span><span class="text-xs text-gray-500 uppercase font-semibold">En Stock</span></div>
+                        <button onclick="updateQuickQty(1)" class="w-12 h-12 rounded-full bg-white border border-gray-300 text-gray-600 hover:bg-green-50"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="editFromQuickView()" class="flex-1 bg-white border border-gray-300 text-gray-700 py-2 rounded-md hover:bg-gray-50 font-medium">Modifier</button>
+                         <button id="quick-view-doc-btn" onclick="openDocFromQuickView()" class="hidden flex-1 bg-white border border-gray-300 text-red-600 py-2 rounded-md hover:bg-red-50 font-medium">Notice</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-family" class="hidden fixed z-50 inset-0 overflow-y-auto">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20">
+            <div class="fixed inset-0 bg-gray-600 bg-opacity-75" onclick="closeModal('modal-family')"></div>
+            <div class="bg-white rounded-lg w-full max-w-lg p-6 relative z-10">
+                <form id="form-family" onsubmit="handleFamilySubmit(event)">
+                    <h3 class="text-xl font-bold mb-4">Famille</h3>
+                    <input type="hidden" id="family-edit-id">
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Nom</label>
+                        <input type="text" id="input-family-name" required class="w-full border p-2 rounded mb-4">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Description</label>
+                        <textarea id="input-family-desc" rows="2" class="w-full border p-2 rounded mb-4" placeholder="Description de la famille..."></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold mb-1">Couleur</label>
+                        <div class="flex flex-wrap gap-3 mb-4" id="color-picker-container"></div>
+                        <input type="hidden" id="input-family-color">
+                    </div>
+                    <div class="flex justify-between items-center gap-2 mt-4">
+                        <button type="button" id="btn-delete-family" class="hidden text-red-600 hover:text-red-800 text-sm font-medium px-2 py-2" onclick="deleteFamily()">
+                            <i class="fa-solid fa-trash mr-1"></i> Supprimer
+                        </button>
+                        <div class="flex gap-2 ml-auto">
+                            <button type="button" class="border px-4 py-2 rounded hover:bg-gray-50" onclick="closeModal('modal-family')">Annuler</button>
+                            <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">Sauvegarder</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-family-details" class="hidden fixed z-50 inset-0 overflow-y-auto">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20">
+            <div class="fixed inset-0 bg-gray-600 bg-opacity-75" onclick="closeModal('modal-family-details')"></div>
+            <div class="bg-white rounded-lg w-full max-w-lg p-6 relative z-10">
+                <div class="flex justify-between border-b pb-3 mb-4">
+                    <h3 class="text-xl font-bold" id="detail-family-title">Famille</h3>
+                    <button onclick="closeModal('modal-family-details')"><i class="fa-solid fa-times"></i></button>
+                </div>
+                <div class="max-h-[60vh] overflow-y-auto" id="family-items-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-zone-details" class="hidden fixed z-50 inset-0 overflow-y-auto">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20">
+            <div class="fixed inset-0 bg-gray-600 bg-opacity-75" onclick="closeModal('modal-zone-details')"></div>
+            <div class="bg-white rounded-lg w-full max-w-lg p-6 relative z-10">
+                <div class="flex justify-between border-b pb-3 mb-4 items-start">
+                    <div>
+                        <h3 class="text-xl font-bold" id="detail-zone-title">Zone</h3>
+                        <p id="detail-zone-desc" class="text-sm text-gray-500 italic mt-1"></p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button id="btn-edit-zone" class="text-gray-400 hover:text-indigo-600 transition" title="Modifier la zone"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="closeModal('modal-zone-details')"><i class="fa-solid fa-times text-xl"></i></button>
+                    </div>
+                </div>
+                <div class="max-h-[60vh] overflow-y-auto" id="zone-items-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-marker" class="hidden fixed z-50 inset-0 overflow-y-auto">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20">
+            <div class="fixed inset-0 bg-gray-600 bg-opacity-75" onclick="closeModal('modal-marker')"></div>
+            <div class="bg-white rounded-lg w-full max-w-sm p-6 relative z-10">
+                <form id="form-marker" onsubmit="handleMarkerSubmit(event)">
+                    <h3 class="text-lg font-bold mb-4" id="modal-marker-title">Zone</h3>
+                    <input type="hidden" id="marker-id">
+                    <input type="hidden" id="marker-x">
+                    <input type="hidden" id="marker-y">
+                    <div class="mb-4">
+                        <label class="block text-sm font-semibold mb-1">Nom</label>
+                        <input type="text" id="input-marker-name" required class="w-full border p-2 rounded" placeholder="Nom de la zone">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-semibold mb-1">Description</label>
+                        <textarea id="input-marker-desc" rows="2" class="w-full border p-2 rounded text-sm" placeholder="Ex: Étagère du haut..."></textarea>
+                    </div>
+                    <div class="flex justify-end gap-2 mt-4">
+                        <button type="button" class="border px-4 py-2 rounded" onclick="closeModal('modal-marker')">Annuler</button>
+                        <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded">Valider</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-qr-display" class="hidden fixed z-50 inset-0 overflow-y-auto"><div class="flex items-center justify-center min-h-screen px-4"><div class="fixed inset-0 bg-gray-600 bg-opacity-75" onclick="closeModal('modal-qr-display')"></div><div class="relative bg-white rounded-lg p-8 max-w-sm w-full text-center shadow-xl"><h3 class="text-lg font-bold mb-4">QR Code Pièce</h3><div id="qrcode-container" class="flex justify-center mb-4"></div><button onclick="closeModal('modal-qr-display')" class="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 w-full">Fermer</button></div></div></div>
+    <div id="modal-part" class="hidden fixed z-50 inset-0 overflow-y-auto"><div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20"><div class="fixed inset-0 bg-gray-600 bg-opacity-75" onclick="closeModal('modal-part')"></div><div class="bg-white rounded-lg w-full max-w-lg p-6 relative z-10"><form id="form-part" onsubmit="handlePartSubmit(event)"><h3 class="text-xl font-bold mb-4">Pièce</h3><input type="hidden" id="part-edit-id"><div class="space-y-4 max-h-[70vh] overflow-y-auto pr-2"><div><label class="block text-sm font-semibold">Nom</label><input type="text" id="input-part-name" required class="w-full border p-2 rounded"></div><div class="grid grid-cols-2 gap-4"><div><label class="block text-sm font-semibold">Qté</label><input type="number" id="input-part-qty" required class="w-full border p-2 rounded"></div><div><label class="block text-sm font-semibold">Seuil</label><input type="number" id="input-part-alert" class="w-full border p-2 rounded"></div></div><div class="grid grid-cols-2 gap-4"><div><label class="block text-sm font-semibold">Famille</label><select id="input-part-family" class="w-full border p-2 rounded bg-white"></select></div><div><label class="block text-sm font-semibold">Lieu</label><input type="text" id="input-part-location" class="w-full border p-2 rounded"></div></div><div><label class="block text-sm font-semibold">Desc</label><textarea id="input-part-desc" class="w-full border p-2 rounded"></textarea></div><div><label class="block text-sm font-semibold">PDF</label><input type="file" id="input-part-doc" accept=".pdf" onchange="previewDoc(event)"></div><div><label class="block text-sm font-semibold">Photo</label><input type="file" id="input-part-photo" accept="image/*" onchange="previewImage(event)"></div></div><div class="flex justify-end gap-2 mt-4"><button type="button" class="border px-4 py-2 rounded" onclick="closeModal('modal-part')">Annuler</button><button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded">Sauvegarder</button></div></form></div></div></div>
+    
+    <script>
+        // --- CONFIGURATION FIREBASE ---
+        let isFirebaseConfigured = false;
+        
+        // Configuration de l'utilisateur
+        const firebaseConfig = {
+            apiKey: "AIzaSyCq73TBSEROdPNWe58xFBBYJqALDO8pNnU",
+            authDomain: "inventaire-rte.firebaseapp.com",
+            databaseURL: "https://inventaire-rte-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "inventaire-rte",
+            storageBucket: "inventaire-rte.firebasestorage.app",
+            messagingSenderId: "105067826948",
+            appId: "1:105067826948:web:545a35991a5d9a1ef1ca51"
+        };
+
+        // --- GESTION DES PROFILS ET DONNEES ---
+        let profilesData = {
+            "EL Feytiat": {
+                families: [ { id: 1, name: "Electroportatif", color: "red", desc: "Perceuses, visseuses et outils sur batterie" } ],
+                parts: [ { id: 1, name: "Perceuse Makita", qty: 50, alertQty: 5, familyId: 1, location: "Armoire 1", image: null, desc: "Modèle DHP453", docData: null } ],
+                mapData: { image: null, markers: [ { id: 101, x: 20, y: 30, name: "Armoire 1", desc: "Étagère principale" } ] },
+                baskets: [ { id: 1001, name: "Chantier Limoges Centre", status: 'draft', items: [] } ]
+            },
+            "EL Aurillac": {
+                families: [ { id: 4, name: "Gros Oeuvre", color: "orange", desc: "Matériel lourd" } ],
+                parts: [ { id: 2, name: "Boîte de 500 Vis", qty: 120, alertQty: 10, familyId: 4, location: "Stock A", image: null, desc: "Vis bois 5x50", docData: null } ],
+                mapData: { image: null, markers: [ { id: 102, x: 50, y: 50, name: "Stock A", desc: "Rayonnage visserie" } ] },
+                baskets: [ { id: 1002, name: "Chantier Cantal Ouest", status: 'draft', items: [] } ]
+            }
+        };
+
+        let currentProfileName = "EL Feytiat";
+        let families = profilesData[currentProfileName].families;
+        let parts = profilesData[currentProfileName].parts;
+        let mapData = profilesData[currentProfileName].mapData;
+        let baskets = profilesData[currentProfileName].baskets;
+
+        // INITIALISATION FIREBASE
+        if (firebaseConfig.apiKey !== "VOTRE_API_KEY") {
+            firebase.initializeApp(firebaseConfig);
+            isFirebaseConfigured = true;
+            document.getElementById('sync-indicator').classList.replace('bg-gray-300', 'bg-green-500');
+            document.getElementById('sync-indicator').title = "Synchronisation Active";
+            
+            let isFirstLoad = true;
+            firebase.database().ref('profilesData').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    profilesData = data;
+                    families = profilesData[currentProfileName].families || [];
+                    parts = profilesData[currentProfileName].parts || [];
+                    mapData = profilesData[currentProfileName].mapData || { image: null, markers: [] };
+                    baskets = profilesData[currentProfileName].baskets || [];
+                    
+                    renderFamiliesGrid();
+                    renderPartsGrid();
+                    renderMap();
+                    renderBaskets();
+                    updateStats();
+
+                    // Rafraîchissement direct du panier si ouvert
+                    if (!document.getElementById('modal-basket-detail').classList.contains('hidden') && currentBasketId) {
+                        const b = baskets.find(x => x.id === currentBasketId);
+                        if(b) renderBasketItems(b);
+                    }
+                } else if (isFirstLoad) {
+                    // Si base de données vide, on pousse les données initiales
+                    saveDataToFirebase();
+                }
+                isFirstLoad = false;
+            });
+        }
+
+        // Fonction maîtresse de sauvegarde
+        function saveDataToFirebase() {
+            profilesData[currentProfileName] = { families, parts, mapData, baskets };
+            if (isFirebaseConfigured) {
+                firebase.database().ref('profilesData').set(profilesData);
+            }
+        }
+
+        function switchProfile(newProfileName) {
+            if (currentProfileName === newProfileName) return;
+            profilesData[currentProfileName] = { families, parts, mapData, baskets };
+            currentProfileName = newProfileName;
+            families = profilesData[currentProfileName].families || [];
+            parts = profilesData[currentProfileName].parts || [];
+            mapData = profilesData[currentProfileName].mapData || { image: null, markers: [] };
+            baskets = profilesData[currentProfileName].baskets || [];
+            
+            renderFamiliesGrid(); renderPartsGrid(); renderMap(); renderBaskets(); updateStats();
+            document.querySelectorAll('div[id^="modal-"]').forEach(m => m.classList.add('hidden'));
+        }
+
+        const colorMap = { 
+            'red': { bg: 'bg-red-100', text: 'text-red-800', hex: '#FCA5A5' }, 
+            'blue': { bg: 'bg-blue-100', text: 'text-blue-800', hex: '#93C5FD' }, 
+            'green': { bg: 'bg-green-100', text: 'text-green-800', hex: '#86EFAC' }, 
+            'yellow': { bg: 'bg-yellow-100', text: 'text-yellow-800', hex: '#FDE047' }, 
+            'purple': { bg: 'bg-purple-100', text: 'text-purple-800', hex: '#D8B4FE' },
+            'orange': { bg: 'bg-orange-100', text: 'text-orange-800', hex: '#FDBA74' },
+            'pink': { bg: 'bg-pink-100', text: 'text-pink-800', hex: '#F9A8D4' },
+            'teal': { bg: 'bg-teal-100', text: 'text-teal-800', hex: '#5EEAD4' },
+            'gray': { bg: 'bg-gray-100', text: 'text-gray-800', hex: '#D1D5DB' },
+            'indigo': { bg: 'bg-indigo-100', text: 'text-indigo-800', hex: '#A5B4FC' }
+        };
+        
+        let currentImageBuffer = null; let currentDocBuffer = null; let html5QrcodeScanner = null; let currentBasketId = null;
+
+        // --- NAVIGATION ---
+        function showPage(pageId) {
+            document.querySelectorAll('main > div[id^="page-"]').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active', 'text-gray-900'));
+            const p = document.getElementById('page-' + pageId); if(p) p.classList.remove('hidden');
+            const n = document.getElementById('nav-' + pageId); if(n) n.classList.add('active', 'text-gray-900');
+            if(pageId === 'scanner') startScanner(); else stopScanner();
+            if(pageId === 'paniers') renderBaskets();
+            if(pageId==='pieces') renderPartsGrid();
+            if(pageId==='familles') renderFamiliesGrid();
+            if(pageId==='plan') renderMap(); 
+            updateStats();
+        }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+        // --- EXPORTATION ---
+        function downloadAllQRCodes() {
+            if (parts.length === 0) { alert("Aucune pièce à exporter dans l'inventaire."); return; }
+            const tempContainer = document.createElement('div'); tempContainer.style.display = 'none'; document.body.appendChild(tempContainer);
+            let htmlContent = `<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>QR Codes - Inventaire</title><style>body { font-family: 'Segoe UI', Tahoma, sans-serif; text-align: center; color: #333; background: #f8f9fa; }.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; padding: 20px; max-w-6xl; margin: 0 auto; }.label { border: 1px dashed #aaa; padding: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #fff; border-radius: 8px; page-break-inside: avoid; }.name { margin-bottom: 15px; font-weight: bold; font-size: 14px; word-wrap: break-word; color: #111; }img { max-width: 100%; height: auto; }.btn-print { background: #4F46E5; color: white; border: none; padding: 12px 24px; font-size: 16px; border-radius: 6px; cursor: pointer; margin-top: 20px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }.btn-print:hover { background: #4338CA; }@media print { body { background: #fff; } .no-print { display: none !important; } .label { border: 1px solid #000; break-inside: avoid; } .grid { display: flex; flex-wrap: wrap; gap: 10px; padding: 0; } .label { width: 140px; } }</style></head><body><div class="no-print"><h2 style="margin-top:20px;">Planche d'étiquettes QR Codes</h2><button class="btn-print" onclick="window.print()">Imprimer / Sauvegarder en PDF</button></div><div class="grid">`;
+            parts.forEach(p => {
+                const qrDiv = document.createElement('div'); tempContainer.appendChild(qrDiv);
+                new QRCode(qrDiv, { text: "PART:" + p.id, width: 128, height: 128 });
+                const canvas = qrDiv.querySelector('canvas'); const dataURL = canvas ? canvas.toDataURL("image/png") : "";
+                if(dataURL) { htmlContent += `<div class="label"><div class="name">${p.name}</div><img src="${dataURL}" alt="QR Code"></div>`; }
+            });
+            htmlContent += `</div></body></html>`;
+            document.body.removeChild(tempContainer);
+            const printWin = window.open('', '_blank');
+            if (printWin) { printWin.document.write(htmlContent); printWin.document.close(); } else { alert("Pop-ups bloquées."); }
+        }
+
+        function downloadExcel() {
+            if (parts.length === 0) { alert("Aucune pièce à exporter dans l'inventaire."); return; }
+            const dataToExport = parts.map(p => {
+                const family = families.find(f => f.id === p.familyId);
+                return { "Nom de la pièce": p.name, "Quantité": p.qty, "Seuil d'alerte": p.alertQty || 0, "Famille": family ? family.name : "Aucune", "Lieu de stockage": p.location || "Non défini" };
+            });
+            const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Inventaire Matériel");
+            XLSX.writeFile(workbook, `Inventaire_Atelier_${currentProfileName}.xlsx`);
+        }
+
+        // --- GESTION FAMILLES ---
+        function renderFamiliesGrid() {
+            const g = document.getElementById('all-families-grid'); g.innerHTML = '';
+            families.forEach(f => {
+                const s = colorMap[f.color] || colorMap.red;
+                const d = document.createElement('div'); 
+                d.className="bg-white shadow rounded p-5 border-t-4 card-hover cursor-pointer flex flex-col justify-between"; 
+                d.style.borderTopColor=s.hex; 
+                d.onclick=()=>openFamilyDetails(f.id);
+                const descHtml = f.desc ? `<p class="text-sm text-gray-500 mt-2 italic line-clamp-2">${f.desc}</p>` : '';
+                d.innerHTML=`<div><div class="flex justify-between items-start"><h3 class="font-bold">${f.name}</h3><div class="flex items-center gap-2"><button onclick="event.stopPropagation(); openFamilyModal(${f.id})" class="text-gray-400 hover:text-indigo-600 transition" title="Modifier la famille"><i class="fa-solid fa-pen"></i></button><span class="bg-gray-100 text-xs px-2 py-1 rounded font-bold">${parts.filter(p=>p.familyId===f.id).length}</span></div></div>${descHtml}</div>`;
+                g.appendChild(d);
+            });
+        }
+        function openFamilyDetails(i){const f=families.find(k=>k.id===i);if(!f)return;document.getElementById('detail-family-title').innerText="Famille : "+f.name;const l=document.getElementById('family-items-list');l.innerHTML='';const associated=parts.filter(p=>p.familyId===i);if(associated.length===0){l.innerHTML='<p class="text-center text-gray-400 py-4">Aucune pièce dans cette famille</p>';}else{associated.forEach(p=>{const d=document.createElement('div');d.className="flex justify-between items-center p-3 border-b cursor-pointer hover:bg-gray-50 transition";d.onclick=()=>{closeModal('modal-family-details');openQuickView(p.id)};d.innerHTML=`<span class="font-medium text-gray-800">${p.name}</span><span class="text-sm text-gray-500 font-bold bg-gray-100 px-2 py-1 rounded">Stock: ${p.qty}</span>`;l.appendChild(d);});}document.getElementById('modal-family-details').classList.remove('hidden');}
+        function openFamilyModal(id) { document.getElementById('modal-family').classList.remove('hidden'); const ct = document.getElementById('color-picker-container'); ct.innerHTML = ''; Object.keys(colorMap).forEach(k => { const d=document.createElement('div'); d.className='color-option w-6 h-6 rounded-full cursor-pointer border'; d.style.backgroundColor=colorMap[k].hex; d.onclick=()=>selectColor(k); d.dataset.color=k; ct.appendChild(d); }); const btnDel = document.getElementById('btn-delete-family'); if(id) { const f=families.find(x=>x.id===id); document.getElementById('family-edit-id').value=f.id; document.getElementById('input-family-name').value=f.name; document.getElementById('input-family-desc').value=f.desc || ""; selectColor(f.color); btnDel.classList.remove('hidden'); } else { document.getElementById('form-family').reset(); document.getElementById('family-edit-id').value=""; document.getElementById('input-family-desc').value=""; selectColor('red'); btnDel.classList.add('hidden'); } }
+        function selectColor(c) { document.getElementById('input-family-color').value=c; document.querySelectorAll('.color-option').forEach(e => { e.classList.remove('ring-2','ring-offset-1'); if(e.dataset.color==c) e.classList.add('ring-2','ring-offset-1') }); }
+        
+        function handleFamilySubmit(e) { e.preventDefault(); const id = document.getElementById('family-edit-id').value; const data = { name: document.getElementById('input-family-name').value, desc: document.getElementById('input-family-desc').value, color: document.getElementById('input-family-color').value }; if(id) { const i=families.findIndex(x=>x.id==id); families[i]={id:parseInt(id), ...data}; } else { families.push({id:Date.now(), ...data}); } closeModal('modal-family'); renderFamiliesGrid(); renderPartsGrid(); updateStats(); saveDataToFirebase(); }
+        function deleteFamily() { const id = parseInt(document.getElementById('family-edit-id').value); const linkedParts = parts.filter(p => p.familyId === id); if(linkedParts.length > 0) { if(!confirm(`Cette famille est liée à ${linkedParts.length} pièce(s).\n\nVoulez-vous vraiment la supprimer ?`)) return; linkedParts.forEach(p => p.familyId = null); } else { if(!confirm("Voulez-vous vraiment supprimer cette famille ?")) return; } families = families.filter(f => f.id !== id); closeModal('modal-family'); renderFamiliesGrid(); renderPartsGrid(); updateStats(); saveDataToFirebase(); }
+
+        // --- GESTION PANIERS ---
+        function createBasket() { const name = prompt("Nom du nouveau chantier / panier :", "Chantier " + (baskets.length + 1)); if(name) { const newBasket = { id: Date.now(), name: name, status: 'draft', items: [] }; baskets.push(newBasket); renderBaskets(); updateStats(); saveDataToFirebase(); } }
+        function renderBaskets() { const grid = document.getElementById('baskets-grid'); grid.innerHTML = ''; const emptyMsg = document.getElementById('empty-baskets-msg'); if(baskets.length === 0) { emptyMsg.classList.remove('hidden'); } else { emptyMsg.classList.add('hidden'); baskets.forEach(b => { const isDraft = b.status === 'draft'; const color = isDraft ? 'indigo' : 'green'; const icon = isDraft ? 'fa-pen-to-square' : 'fa-truck-loading'; const statusText = isDraft ? 'Brouillon' : 'En Chargement'; const percent = calculateProgress(b); const card = document.createElement('div'); card.className = `bg-white p-5 rounded-lg shadow border-l-4 border-${color}-500 cursor-pointer hover:shadow-md transition`; card.onclick = () => openBasketDetail(b.id); card.innerHTML = ` <div class="flex justify-between items-start mb-2"> <div><h3 class="font-bold text-lg text-gray-800">${b.name}</h3><span class="text-xs font-semibold px-2 py-0.5 rounded bg-${color}-100 text-${color}-800">${statusText}</span></div> ${!isDraft ? `<div class="pie-chart" style="width:40px; height:40px; background: conic-gradient(#16a34a ${percent}%, #E5E7EB 0);"><div class="pie-chart-inner" style="width:28px; height:28px;">${percent}%</div></div>` : `<i class="fa-solid ${icon} text-gray-300 text-xl"></i>`} </div> <p class="text-sm text-gray-500 mt-2">${b.items.length} références</p> `; grid.appendChild(card); }); } }
+        function calculateProgress(basket) { if(!basket.items || basket.items.length === 0) return 0; const total = basket.items.length; const checked = basket.items.filter(i => i.loaded).length; return Math.round((checked / total) * 100); }
+        function openBasketDetail(id) { currentBasketId = id; const basket = baskets.find(b => b.id === id); if(!basket) return; document.getElementById('basket-detail-title').innerText = basket.name; const badge = document.getElementById('basket-status-badge'); const searchContainer = document.getElementById('basket-search-container'); const footerActions = document.getElementById('basket-footer-actions'); const headerPie = document.getElementById('header-pie-chart'); const headerTable = document.getElementById('basket-table-header'); document.getElementById('basket-search-results').classList.add('hidden'); document.getElementById('basket-search-input').value = ""; document.getElementById('filter-basket-text').value = ""; populateBasketFilters(); if(basket.status === 'draft') { badge.innerText = "Brouillon"; badge.className = "text-xs font-bold px-2 py-0.5 rounded bg-indigo-100 text-indigo-800"; searchContainer.classList.remove('hidden'); headerPie.classList.add('hidden'); headerTable.innerHTML = `<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Pièce</th><th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Qté</th><th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Déduire</th><th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Action</th>`; footerActions.innerHTML = `<button onclick="closeModal('modal-basket-detail')" class="bg-white border px-4 py-2 rounded">Fermer</button><button onclick="validateBasketDraft()" class="bg-indigo-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-700">Valider & Charger</button>`; } else { badge.innerText = "Chargement en cours"; badge.className = "text-xs font-bold px-2 py-0.5 rounded bg-green-100 text-green-800"; searchContainer.classList.add('hidden'); headerPie.classList.remove('hidden'); updateHeaderPie(basket); headerTable.innerHTML = `<th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Vu</th><th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Pièce</th><th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Qté Chargée</th><th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Note</th>`; footerActions.innerHTML = `<button onclick="closeModal('modal-basket-detail')" class="bg-white border px-4 py-2 rounded">Fermer</button>`; } renderBasketItems(basket); document.getElementById('modal-basket-detail').classList.remove('hidden'); }
+        function populateBasketFilters() { const z = document.getElementById('filter-basket-zone'); z.innerHTML = '<option value="">Toutes Zones</option>'; const f = document.getElementById('filter-basket-family'); f.innerHTML = '<option value="">Toutes Familles</option>'; mapData.markers.forEach(m => { z.innerHTML += `<option value="${m.name}">${m.name}</option>`; }); families.forEach(fam => { f.innerHTML += `<option value="${fam.id}">${fam.name}</option>`; }); }
+        function updateHeaderPie(basket) { const p = calculateProgress(basket); const pie = document.getElementById('header-pie-chart'); pie.style.background = `conic-gradient(#16a34a ${p}%, #E5E7EB 0)`; document.getElementById('header-pie-text').innerText = p + '%'; }
+        function renderBasketItems(basket) { if(!basket) return; const tbody = document.getElementById('basket-items-list'); const emptyMsg = document.getElementById('basket-empty-list-msg'); tbody.innerHTML = ''; const filterText = document.getElementById('filter-basket-text').value.toLowerCase(); const filterZone = document.getElementById('filter-basket-zone').value; const filterFam = document.getElementById('filter-basket-family').value; const filteredItems = basket.items.filter((item, index) => { const part = parts.find(p => p.id === item.partId); if(!part) return false; if(filterText && !part.name.toLowerCase().includes(filterText)) return false; if(filterZone && part.location !== filterZone) return false; if(filterFam && part.familyId && part.familyId.toString() !== filterFam) return false; item.originalIndex = index; return true; }); if(filteredItems.length === 0) { emptyMsg.classList.remove('hidden'); return; } emptyMsg.classList.add('hidden'); filteredItems.forEach(item => { const index = item.originalIndex; const part = parts.find(p => p.id === item.partId); const tr = document.createElement('tr'); const commentHtml = item.comment ? `<div class="text-xs text-indigo-600 italic mt-1"><i class="fa-regular fa-comment-dots mr-1"></i>${item.comment}</div>` : ''; if(basket.status === 'draft') { const deductStatus = item.deduct ? '<span class="text-green-600 text-xs font-bold bg-green-100 px-2 py-1 rounded">OUI</span>' : '<span class="text-gray-400 text-xs bg-gray-100 px-2 py-1 rounded">NON</span>'; tr.innerHTML = ` <td class="px-6 py-3 cursor-pointer group" onclick="openQuickView(${part.id})"> <div class="text-sm font-bold text-gray-900 group-hover:text-indigo-600 transition">${part ? part.name : 'Inconnu'} <i class="fa-solid fa-eye text-xs opacity-0 group-hover:opacity-100 ml-1"></i></div> ${commentHtml} <div class="text-xs text-gray-500">Stock: ${part ? part.qty : '?'}</div> </td> <td class="px-6 py-3 text-right text-sm font-bold">${item.qty}</td> <td class="px-6 py-3 text-center">${deductStatus}</td> <td class="px-6 py-3 text-right"><button onclick="removeItemFromBasket(${index})" class="text-red-600 hover:text-red-900 bg-red-50 p-2 rounded-full"><i class="fa-solid fa-trash"></i></button></td> `; } else { if(item.loaded === undefined) item.loaded = false; if(item.loadedQty === undefined) item.loadedQty = item.qty; if(item.loadComment === undefined) item.loadComment = ""; const bgClass = item.loaded ? 'bg-green-50' : ''; tr.className = bgClass; tr.innerHTML = ` <td class="px-4 py-3 text-center"><input type="checkbox" onchange="toggleItemLoad(${index}, this.checked)" ${item.loaded ? 'checked' : ''} class="w-6 h-6 text-green-600 rounded focus:ring-green-50 cursor-pointer"></td> <td class="px-4 py-3 cursor-pointer group" onclick="openQuickView(${part.id})"> <div class="text-sm font-bold text-gray-900 group-hover:text-indigo-600 transition">${part ? part.name : 'Inconnu'} <i class="fa-solid fa-eye text-xs opacity-0 group-hover:opacity-100 ml-1"></i></div> <div class="text-xs text-gray-500">Prévu: ${item.qty}</div> ${commentHtml} </td> <td class="px-4 py-3 text-right"><input type="number" value="${item.loadedQty}" onchange="updateLoadQty(${index}, this.value)" class="w-20 text-right border rounded p-1 text-sm font-bold ${item.qty !== item.loadedQty ? 'text-red-600 border-red-300' : 'text-gray-700'}" min="0"></td> <td class="px-4 py-3"><input type="text" value="${item.loadComment}" onchange="updateLoadComment(${index}, this.value)" placeholder="..." class="w-full border-b border-gray-300 focus:border-indigo-500 text-sm bg-transparent p-1"></td> `; } tbody.appendChild(tr); }); }
+        
+        function toggleItemLoad(index, isChecked) { const basket = baskets.find(b => b.id === currentBasketId); basket.items[index].loaded = isChecked; updateHeaderPie(basket); renderBasketItems(basket); updateDashboardActiveBaskets(); saveDataToFirebase(); }
+        function updateLoadQty(index, val) { baskets.find(b => b.id === currentBasketId).items[index].loadedQty = parseInt(val); saveDataToFirebase(); }
+        function updateLoadComment(index, val) { baskets.find(b => b.id === currentBasketId).items[index].loadComment = val; saveDataToFirebase(); }
+        
+        function searchPartForBasket() { const query = document.getElementById('basket-search-input').value.toLowerCase(); const resultsDiv = document.getElementById('basket-search-results'); if(query.length < 1) { resultsDiv.classList.add('hidden'); return; } const matchedParts = parts.filter(p => p.name.toLowerCase().includes(query) || p.location.toLowerCase().includes(query)); resultsDiv.innerHTML = ''; if(matchedParts.length > 0) { matchedParts.forEach(p => { const div = document.createElement('div'); div.className = "search-result-item flex justify-between items-center p-3 border-b cursor-pointer transition"; div.onclick = () => openConfirmAddModal(p.id); div.innerHTML = `<div class="flex items-center gap-3"><div class="h-8 w-8 bg-gray-100 rounded flex items-center justify-center overflow-hidden">${p.image ? `<img src="${p.image}" class="h-full w-full object-cover">` : `<i class="fa-solid fa-box text-gray-400"></i>`}</div><div><p class="text-sm font-bold text-gray-800">${p.name}</p><p class="text-xs text-gray-500">${p.location} • Stock: ${p.qty}</p></div></div><i class="fa-solid fa-cart-plus text-indigo-500 text-xl hover:text-indigo-600"></i>`; resultsDiv.appendChild(div); }); resultsDiv.classList.remove('hidden'); } else { resultsDiv.innerHTML = '<div class="p-3 text-sm text-gray-500 text-center">Aucun résultat</div>'; resultsDiv.classList.remove('hidden'); } }
+        function openConfirmAddModal(partId) { const part = parts.find(p => p.id === partId); if(!part) return; document.getElementById('confirm-add-part-id').value = partId; document.getElementById('confirm-add-title').innerText = "Ajouter : " + part.name; document.getElementById('confirm-add-qty').value = 1; document.getElementById('confirm-add-comment').value = ""; document.getElementById('confirm-add-stock-info').innerText = "Stock disponible : " + part.qty; document.getElementById('confirm-add-deduct').checked = true; document.getElementById('modal-confirm-add-basket').classList.remove('hidden'); document.getElementById('basket-search-results').classList.add('hidden'); }
+        
+        function finalizeAddToBasket() { const partId = parseInt(document.getElementById('confirm-add-part-id').value); const qty = parseInt(document.getElementById('confirm-add-qty').value); const deduct = document.getElementById('confirm-add-deduct').checked; const comment = document.getElementById('confirm-add-comment').value; if(qty <= 0) { alert("Quantité invalide"); return; } const basket = baskets.find(b => b.id === currentBasketId); const existingItem = basket.items.find(i => i.partId === partId && i.deduct === deduct && i.comment === comment); if(existingItem) { existingItem.qty += qty; } else { basket.items.push({ partId: partId, qty: qty, deduct: deduct, comment: comment }); } closeModal('modal-confirm-add-basket'); document.getElementById('basket-search-input').value = ""; renderBasketItems(basket); saveDataToFirebase(); }
+        function removeItemFromBasket(index) { const basket = baskets.find(b => b.id === currentBasketId); basket.items.splice(index, 1); renderBasketItems(basket); saveDataToFirebase(); }
+        function validateBasketDraft() { const basket = baskets.find(b => b.id === currentBasketId); if(!basket || basket.items.length === 0) return alert("Panier vide."); let warning = ""; basket.items.forEach(item => { if(item.deduct) { const part = parts.find(p => p.id === item.partId); if(part && part.qty < item.qty) warning += `- ${part.name}\n`; } }); if(warning && !confirm("STOCK INSUFFISANT :\n" + warning + "\nContinuer ?")) return; basket.items.forEach(item => { if(item.deduct) { const part = parts.find(p => p.id === item.partId); if(part) part.qty -= item.qty; } }); basket.status = 'active'; alert("Validé ! Passage au mode chargement."); openBasketDetail(currentBasketId); updateDashboardActiveBaskets(); updateStats(); saveDataToFirebase(); }
+        function deleteBasket() { if(confirm("Supprimer ce chantier/panier définitivement ?")) { baskets = baskets.filter(b => b.id !== currentBasketId); closeModal('modal-basket-detail'); renderBaskets(); updateStats(); updateDashboardActiveBaskets(); saveDataToFirebase(); } }
+        
+        function updateDashboardActiveBaskets() { const activeBaskets = baskets.filter(b => b.status === 'active'); const container = document.getElementById('active-baskets-dashboard-container'); const list = document.getElementById('active-baskets-dashboard-list'); document.getElementById('stat-total-active-baskets').innerText = activeBaskets.length; if(activeBaskets.length > 0) { container.classList.remove('hidden'); list.innerHTML = ''; activeBaskets.forEach(b => { const p = calculateProgress(b); const div = document.createElement('div'); div.className = "bg-white p-4 rounded shadow border border-green-100 cursor-pointer flex justify-between items-center hover:bg-green-50"; div.onclick = () => { showPage('paniers'); openBasketDetail(b.id); }; div.innerHTML = `<div><h4 class="font-bold text-gray-800">${b.name}</h4><p class="text-xs text-gray-500">${b.items.length} items • ${p}% chargé</p></div><div class="pie-chart" style="width:40px; height:40px; background: conic-gradient(#16a34a ${p}%, #E5E7EB 0);"><div class="pie-chart-inner" style="width:28px; height:28px;">${p}%</div></div>`; list.appendChild(div); }); } else { container.classList.add('hidden'); } }
+
+        // --- STATS, QR, QUICKVIEW, MAP ETC ---
+        function updateStats() { document.getElementById('stat-total-parts').innerText = parts.length; document.getElementById('stat-total-locations').innerText = mapData.markers.length; updateDashboardActiveBaskets(); const lowStock = parts.filter(p => p.qty <= (p.alertQty || 0)); const alertContainer = document.getElementById('stock-alerts-container'); const list = document.getElementById('stock-alerts-list'); const badge = document.getElementById('alert-count-badge'); if(lowStock.length > 0) { alertContainer.classList.remove('hidden'); badge.innerText = lowStock.length; list.innerHTML = ''; lowStock.forEach(p => { const div = document.createElement('div'); div.className = "flex justify-between items-center bg-white p-3 rounded shadow-sm border border-red-100 cursor-pointer hover:bg-red-50"; div.onclick = () => { showPage('pieces'); openQuickView(p.id); }; div.innerHTML = `<div><p class="font-bold text-gray-800">${p.name}</p><p class="text-xs text-red-500 font-semibold">Stock: ${p.qty} / Seuil: ${p.alertQty || 0}</p></div><button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">Voir</button>`; list.appendChild(div); }); } else { alertContainer.classList.add('hidden'); } }
+        function startScanner(){ if(html5QrcodeScanner)return; setTimeout(()=>{html5QrcodeScanner=new Html5QrcodeScanner("reader",{fps:10,qrbox:250});html5QrcodeScanner.render(onScanSuccess,onScanFailure)},100);}
+        function stopScanner(){if(html5QrcodeScanner){html5QrcodeScanner.clear().catch(console.error);html5QrcodeScanner=null;}}
+        function onScanSuccess(t){if(t.startsWith("PART:")){const id=parseInt(t.split(":")[1]);if(parts.find(p=>p.id===id)){stopScanner();showPage('pieces');openQuickView(id);}else alert("Inconnu");}}
+        function onScanFailure(e){}
+        function showQRCode(){const id=document.getElementById('quick-view-id').value; document.getElementById('qrcode-container').innerHTML=""; new QRCode(document.getElementById('qrcode-container'),{text:"PART:"+id,width:128,height:128}); document.getElementById('modal-qr-display').classList.remove('hidden');}
+        function openQuickView(id){ const p=parts.find(x=>x.id===id); if(!p)return; document.getElementById('quick-view-id').value=p.id; document.getElementById('quick-view-name').innerText=p.name; document.getElementById('quick-view-qty').innerText=p.qty; document.getElementById('quick-view-desc').innerText=p.desc||""; const f=families.find(x=>x.id===p.familyId); const fel=document.getElementById('quick-view-family'); fel.innerText=f?f.name:"Inconnu"; fel.className=f?`badge ${colorMap[f.color]?.bg} ${colorMap[f.color]?.text}`:"badge bg-gray-100 text-gray-800"; if(p.image){document.getElementById('quick-view-img').src=p.image;document.getElementById('quick-view-img').style.display='block';document.getElementById('quick-view-no-img').style.display='none';}else{document.getElementById('quick-view-img').style.display='none';document.getElementById('quick-view-no-img').style.display='flex';} const db=document.getElementById('quick-view-doc-btn'); if(p.docData) db.classList.remove('hidden'); else db.classList.add('hidden'); document.getElementById('modal-quick-view').classList.remove('hidden');}
+        
+        function updateQuickQty(c){const id=parseInt(document.getElementById('quick-view-id').value); const p=parts.find(x=>x.id===id); if(p){p.qty=Math.max(0,p.qty+c); document.getElementById('quick-view-qty').innerText=p.qty; renderPartsGrid(); updateStats(); saveDataToFirebase();}}
+        
+        function editFromQuickView(){closeModal('modal-quick-view'); openPartModal(parseInt(document.getElementById('quick-view-id').value));}
+        function openDocFromQuickView(){const p=parts.find(x=>x.id==document.getElementById('quick-view-id').value); if(p&&p.docData){const w=window.open();w.document.write('<iframe src="'+p.docData+'" style="border:0;top:0;left:0;bottom:0;right:0;width:100%;height:100%" allowfullscreen></iframe>');}}
+        function locateZoneOnMap(){const p=parts.find(x=>x.id==document.getElementById('quick-view-id').value); const m=mapData.markers.find(x=>x.name.toLowerCase()==p.location.toLowerCase()); closeModal('modal-quick-view'); showPage('plan'); if(m)setTimeout(()=>{const e=document.getElementById('marker-'+m.id); if(e){e.scrollIntoView({behavior:'smooth',block:'center'});e.classList.add('highlight-marker');setTimeout(()=>e.classList.remove('highlight-marker'),2000)}},300);}
+        let isDragging=false, dragId=null, dragStartTime=0, ignoreClick=false;
+        function uploadMap(e){const f=e.target.files[0];if(f){const r=new FileReader();r.onload=(ev)=>{mapData.image=ev.target.result; renderMap(); saveDataToFirebase(); };r.readAsDataURL(f)}}
+        
+        function renderMap(){ const c=document.getElementById('map-container');const p=document.getElementById('no-map-placeholder');const i=document.getElementById('atelier-map-img');const l=document.getElementById('map-markers-layer');const z=document.getElementById('zones-list-container');z.innerHTML='';if(!mapData.image&&mapData.markers.length===0){c.classList.add('hidden');p.classList.remove('hidden');i.src='';}else{c.classList.remove('hidden');p.classList.add('hidden');i.src=mapData.image||'';};l.innerHTML='';mapData.markers.forEach(m=>{const e=document.createElement('div');e.id='marker-'+m.id;e.className='map-marker flex flex-col items-center group';e.style.left=m.x+'%';e.style.top=m.y+'%';e.innerHTML=`<i class="fa-solid fa-location-dot text-red-600 text-3xl drop-shadow-md"></i><span class="bg-gray-900 text-white text-xs px-2 py-1 rounded shadow-lg mt-1">${m.name}</span>`;e.onmousedown=ev=>startDrag(ev,m.id);e.ontouchstart=ev=>startDrag(ev,m.id);l.appendChild(e);const li=document.createElement('div');li.className="zone-item flex justify-between p-2 border-b cursor-pointer";li.innerHTML=`<span>${m.name}</span><button onclick="deleteMarker(${m.id})"><i class="fa-solid fa-trash text-gray-400"></i></button>`;li.onclick=()=>openZoneDetails(m.id);z.appendChild(li)});}
+        
+        function startDrag(e,i){e.preventDefault();e.stopPropagation();isDragging=true;dragId=i;dragStartTime=Date.now()}
+        function handleContainerMove(e){if(!isDragging||!dragId)return;e.preventDefault();const r=document.getElementById('atelier-map-img').getBoundingClientRect();const cx=e.touches?e.touches[0].clientX:e.clientX;const cy=e.touches?e.touches[0].clientY:e.clientY;let x=((cx-r.left)/r.width)*100;let y=((cy-r.top)/r.height)*100;x=Math.max(0,Math.min(100,x));y=Math.max(0,Math.min(100,y));const el=document.getElementById('marker-'+dragId);if(el){el.style.left=x+'%';el.style.top=y+'%'}const m=mapData.markers.find(k=>k.id===dragId);if(m){m.x=x;m.y=y}}
+        function handleContainerUp(){if(isDragging){if(Date.now()-dragStartTime<150)openZoneDetails(dragId);else{ignoreClick=true;setTimeout(()=>ignoreClick=false,100); saveDataToFirebase(); }isDragging=false;dragId=null}}
+        function handleMapBackgroundClick(e){if(isDragging||ignoreClick)return;const r=document.getElementById('atelier-map-img').getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;const x=((e.clientX-r.left)/r.width)*100;const y=((e.clientY-r.top)/r.height)*100;openMarkerModal(null,x,y)}
+        
+        function openZoneDetails(i){
+            const m = mapData.markers.find(k=>k.id===i);
+            if(!m) return;
+            document.getElementById('detail-zone-title').innerText = m.name;
+            document.getElementById('detail-zone-desc').innerText = m.desc || "";
+            document.getElementById('btn-edit-zone').onclick = () => { closeModal('modal-zone-details'); openMarkerModal(m.id); };
+            const l = document.getElementById('zone-items-list');
+            l.innerHTML = '';
+            const zoneParts = parts.filter(p => p.location.toLowerCase() == m.name.toLowerCase());
+            
+            if(zoneParts.length === 0){
+                l.innerHTML = '<p class="text-center text-gray-400 py-4">Aucune pièce dans cette zone</p>';
+            } else {
+                const familyGroups = {};
+                zoneParts.forEach(p => {
+                    const fId = p.familyId || 0;
+                    if(!familyGroups[fId]) familyGroups[fId] = [];
+                    familyGroups[fId].push(p);
+                });
+                
+                Object.keys(familyGroups).forEach(fId => {
+                    const fam = families.find(f => f.id == fId);
+                    const famName = fam ? fam.name : "Sans famille";
+                    const s = fam ? (colorMap[fam.color] || colorMap.gray) : {bg:'bg-gray-100', text:'text-gray-800'};
+                    
+                    const fh = document.createElement('div');
+                    fh.className = "bg-gray-50 p-2 mt-3 mb-1 rounded flex justify-between items-center";
+                    fh.innerHTML = `<span class="badge ${s.bg} ${s.text}">${famName}</span><span class="text-xs font-bold text-gray-500">${familyGroups[fId].length} pièces</span>`;
+                    l.appendChild(fh);
+                    
+                    familyGroups[fId].forEach(p => {
+                        const d = document.createElement('div');
+                        d.className = "flex justify-between items-center p-2 border-b cursor-pointer hover:bg-gray-50 ml-2";
+                        d.onclick = () => { closeModal('modal-zone-details'); openQuickView(p.id); };
+                        d.innerHTML = `<span class="text-sm font-medium text-gray-800">${p.name}</span><b class="text-sm text-gray-600">Stock: ${p.qty}</b>`;
+                        l.appendChild(d);
+                    });
+                });
+            }
+            document.getElementById('modal-zone-details').classList.remove('hidden');
+        }
+        
+        function renderPartsGrid(){const t=document.getElementById('search-input-parts').value.toLowerCase();const g=document.getElementById('all-parts-grid');g.innerHTML='';parts.filter(p=>p.name.toLowerCase().includes(t)||p.location.toLowerCase().includes(t)).forEach(p=>{const f=families.find(x=>x.id==p.familyId);const s=f?colorMap[f.color]:colorMap.red;const ih=p.image?`<img src="${p.image}" class="w-full h-40 object-cover rounded-t-lg">`:`<div class="w-full h-40 bg-gray-100 rounded-t-lg flex items-center justify-center text-gray-300"><i class="fa-solid fa-image fa-3x"></i></div>`;const d=document.createElement('div');d.className="card-hover bg-white rounded-lg shadow border border-gray-200 cursor-pointer";d.onclick=()=>openQuickView(p.id);d.innerHTML=`<div class="relative">${ih}<span class="absolute top-2 right-2 badge ${s.bg} ${s.text}">${f?f.name:'?'}</span></div><div class="p-4"><h3 class="font-bold truncate">${p.name}</h3><p class="text-xs text-gray-500 mb-3"><i class="fa-solid fa-location-dot"></i> ${p.location}</p><div class="flex justify-between border-t pt-2 mt-2"><span class="text-2xl font-bold">${p.qty}</span></div></div>`;g.appendChild(d)})}
+        function openPartModal(id){document.getElementById('modal-part').classList.remove('hidden');const s=document.getElementById('input-part-family');s.innerHTML='';families.forEach(f=>{const o=document.createElement('option');o.value=f.id;o.text=f.name;s.appendChild(o)});currentImageBuffer=null;currentDocBuffer=null;if(id){const p=parts.find(x=>x.id==id);document.getElementById('part-edit-id').value=p.id;document.getElementById('input-part-name').value=p.name;document.getElementById('input-part-qty').value=p.qty;document.getElementById('input-part-family').value=p.familyId;document.getElementById('input-part-location').value=p.location;document.getElementById('input-part-desc').value=p.desc||"";document.getElementById('input-part-alert').value=p.alertQty||0;if(p.image)currentImageBuffer=p.image;if(p.docData)currentDocBuffer=p.docData}else{document.getElementById('form-part').reset();document.getElementById('part-edit-id').value=""}}
+        
+        function handlePartSubmit(e){e.preventDefault();const id=document.getElementById('part-edit-id').value;const d={name:document.getElementById('input-part-name').value,qty:parseInt(document.getElementById('input-part-qty').value),alertQty:parseInt(document.getElementById('input-part-alert').value),familyId:parseInt(document.getElementById('input-part-family').value),location:document.getElementById('input-part-location').value,desc:document.getElementById('input-part-desc').value,image:currentImageBuffer,docData:currentDocBuffer};if(id){const i=parts.findIndex(x=>x.id==id);if(!d.docData)d.docData=parts[i].docData;if(!d.image)d.image=parts[i].image;parts[i]={...parts[i],...d}}else{parts.unshift({id:Date.now(),...d})}closeModal('modal-part');renderPartsGrid();updateStats(); saveDataToFirebase(); }
+        function previewImage(e){const f=e.target.files[0];if(f){const r=new FileReader();r.onload=ev=>currentImageBuffer=ev.target.result;r.readAsDataURL(f)}}
+        function previewDoc(e){const f=e.target.files[0];if(f){const r=new FileReader();r.onload=ev=>currentDocBuffer=ev.target.result;r.readAsDataURL(f)}}
+        
+        function openMarkerModal(i,x,y){
+            document.getElementById('modal-marker').classList.remove('hidden');
+            if(i){
+                const m = mapData.markers.find(k=>k.id==i);
+                document.getElementById('marker-id').value = m.id;
+                document.getElementById('input-marker-name').value = m.name;
+                document.getElementById('input-marker-desc').value = m.desc || "";
+            }else{
+                document.getElementById('form-marker').reset();
+                document.getElementById('marker-id').value = "";
+                document.getElementById('marker-x').value = x;
+                document.getElementById('marker-y').value = y;
+                document.getElementById('input-marker-desc').value = "";
+            }
+        }
+        
+        function handleMarkerSubmit(e){
+            e.preventDefault();
+            const id = document.getElementById('marker-id').value;
+            const n = document.getElementById('input-marker-name').value;
+            const desc = document.getElementById('input-marker-desc').value;
+            
+            if(id){
+                const m = mapData.markers.find(k=>k.id==id);
+                const oldName = m.name;
+                m.name = n;
+                m.desc = desc;
+                
+                if(oldName !== n){
+                    parts.forEach(p => { if(p.location === oldName) p.location = n; });
+                }
+            }else{
+                mapData.markers.push({id:Date.now(), x:document.getElementById('marker-x').value, y:document.getElementById('marker-y').value, name:n, desc:desc});
+            }
+            
+            closeModal('modal-marker');
+            renderMap();
+            renderPartsGrid();
+            updateStats();
+            saveDataToFirebase();
+        }
+        
+        function deleteMarker(i){if(confirm("Supprimer?")){mapData.markers=mapData.markers.filter(x=>x.id!=i);renderMap();updateStats(); saveDataToFirebase();}}
+        
+        updateStats();
+    </script>
+</body>
+</html>
