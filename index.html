@@ -101,7 +101,7 @@
             </div>
 
             <div id="active-baskets-dashboard-container" class="hidden">
-                <h3 class="text-lg font-bold text-gray-800 mb-3"><i class="fa-solid fa-truck-ramp-box mr-2 text-indigo-600"></i>Chantiers en cours de chargement</h3>
+                <h3 class="text-lg font-bold text-gray-800 mb-3"><i class="fa-solid fa-truck-ramp-box mr-2 text-indigo-600"></i>Liste des Chantiers</h3>
                 <div id="active-baskets-dashboard-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
             </div>
 
@@ -131,10 +131,22 @@
                     </button>
                 </div>
             </div>
-            <div class="relative">
-                <input type="text" id="search-input-parts" onkeyup="renderPartsGrid()" class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm shadow-sm" placeholder="Rechercher...">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i class="fa-solid fa-search text-gray-400"></i></div>
+            
+            <div class="flex flex-col md:flex-row gap-3 bg-white p-3 rounded-md shadow-sm border border-gray-200">
+                <div class="relative flex-grow">
+                    <input type="text" id="search-input-parts" onkeyup="renderPartsGrid()" class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-gray-50 placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Rechercher une pièce...">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i class="fa-solid fa-search text-gray-400"></i></div>
+                </div>
+                <div class="flex gap-3 w-full md:w-auto">
+                    <select id="filter-parts-family" onchange="renderPartsGrid()" class="block w-full md:w-48 pl-3 pr-8 py-2 text-sm border border-gray-300 bg-gray-50 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md">
+                        <option value="">Toutes Familles</option>
+                    </select>
+                    <select id="filter-parts-zone" onchange="renderPartsGrid()" class="block w-full md:w-48 pl-3 pr-8 py-2 text-sm border border-gray-300 bg-gray-50 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md">
+                        <option value="">Toutes Zones</option>
+                    </select>
+                </div>
             </div>
+
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="all-parts-grid"></div>
         </div>
 
@@ -381,7 +393,6 @@
         // --- CONFIGURATION FIREBASE ---
         let isFirebaseConfigured = false;
         
-        // Configuration de l'utilisateur
         const firebaseConfig = {
             apiKey: "AIzaSyCq73TBSEROdPNWe58xFBBYJqALDO8pNnU",
             authDomain: "inventaire-rte.firebaseapp.com",
@@ -392,7 +403,6 @@
             appId: "1:105067826948:web:545a35991a5d9a1ef1ca51"
         };
 
-        // --- GESTION DES PROFILS ET DONNEES ---
         let profilesData = {
             "EL Feytiat": {
                 families: [ { id: 1, name: "Electroportatif", color: "red", desc: "Perceuses, visseuses et outils sur batterie" } ],
@@ -414,7 +424,6 @@
         let mapData = profilesData[currentProfileName].mapData;
         let baskets = profilesData[currentProfileName].baskets;
 
-        // INITIALISATION FIREBASE
         if (firebaseConfig.apiKey !== "VOTRE_API_KEY") {
             firebase.initializeApp(firebaseConfig);
             isFirebaseConfigured = true;
@@ -429,7 +438,6 @@
                     families = profilesData[currentProfileName].families || [];
                     parts = profilesData[currentProfileName].parts || [];
                     
-                    // PROTECTION FIREBASE : recréer les tableaux vides
                     mapData = profilesData[currentProfileName].mapData || { image: null, markers: [] };
                     if (!mapData.markers) mapData.markers = [];
                     
@@ -437,25 +445,23 @@
                     baskets.forEach(b => { if(!b.items) b.items = []; });
                     
                     renderFamiliesGrid();
+                    populatePartsFilters(); // Met à jour les sélecteurs de filtres
                     renderPartsGrid();
                     renderMap();
                     renderBaskets();
                     updateStats();
 
-                    // Rafraîchissement direct du panier si ouvert
                     if (!document.getElementById('modal-basket-detail').classList.contains('hidden') && currentBasketId) {
                         const b = baskets.find(x => x.id === currentBasketId);
                         if(b) renderBasketItems(b);
                     }
                 } else if (isFirstLoad) {
-                    // Si base de données vide, on pousse les données initiales
                     saveDataToFirebase();
                 }
                 isFirstLoad = false;
             });
         }
 
-        // Fonction maîtresse de sauvegarde
         function saveDataToFirebase() {
             profilesData[currentProfileName] = { families, parts, mapData, baskets };
             if (isFirebaseConfigured) {
@@ -470,13 +476,12 @@
             families = profilesData[currentProfileName].families || [];
             parts = profilesData[currentProfileName].parts || [];
             
-            // PROTECTION FIREBASE : recréer les tableaux vides
             mapData = profilesData[currentProfileName].mapData || { image: null, markers: [] };
             if (!mapData.markers) mapData.markers = [];
             baskets = profilesData[currentProfileName].baskets || [];
             baskets.forEach(b => { if(!b.items) b.items = []; });
             
-            renderFamiliesGrid(); renderPartsGrid(); renderMap(); renderBaskets(); updateStats();
+            renderFamiliesGrid(); populatePartsFilters(); renderPartsGrid(); renderMap(); renderBaskets(); updateStats();
             document.querySelectorAll('div[id^="modal-"]').forEach(m => m.classList.add('hidden'));
         }
 
@@ -495,7 +500,6 @@
         
         let currentImageBuffer = null; let currentDocBuffer = null; let html5QrcodeScanner = null; let currentBasketId = null;
 
-        // --- NAVIGATION ---
         function showPage(pageId) {
             document.querySelectorAll('main > div[id^="page-"]').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active', 'text-gray-900'));
@@ -503,14 +507,13 @@
             const n = document.getElementById('nav-' + pageId); if(n) n.classList.add('active', 'text-gray-900');
             if(pageId === 'scanner') startScanner(); else stopScanner();
             if(pageId === 'paniers') renderBaskets();
-            if(pageId==='pieces') renderPartsGrid();
-            if(pageId==='familles') renderFamiliesGrid();
-            if(pageId==='plan') renderMap(); 
+            if(pageId === 'pieces') { populatePartsFilters(); renderPartsGrid(); }
+            if(pageId === 'familles') renderFamiliesGrid();
+            if(pageId === 'plan') renderMap(); 
             updateStats();
         }
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
-        // --- EXPORTATION ---
         function downloadAllQRCodes() {
             if (parts.length === 0) { alert("Aucune pièce à exporter dans l'inventaire."); return; }
             const tempContainer = document.createElement('div'); tempContainer.style.display = 'none'; document.body.appendChild(tempContainer);
@@ -539,7 +542,6 @@
             XLSX.writeFile(workbook, `Inventaire_Atelier_${currentProfileName}.xlsx`);
         }
 
-        // --- GESTION FAMILLES ---
         function renderFamiliesGrid() {
             const g = document.getElementById('all-families-grid'); g.innerHTML = '';
             families.forEach(f => {
@@ -557,10 +559,9 @@
         function openFamilyModal(id) { document.getElementById('modal-family').classList.remove('hidden'); const ct = document.getElementById('color-picker-container'); ct.innerHTML = ''; Object.keys(colorMap).forEach(k => { const d=document.createElement('div'); d.className='color-option w-6 h-6 rounded-full cursor-pointer border'; d.style.backgroundColor=colorMap[k].hex; d.onclick=()=>selectColor(k); d.dataset.color=k; ct.appendChild(d); }); const btnDel = document.getElementById('btn-delete-family'); if(id) { const f=families.find(x=>x.id===id); document.getElementById('family-edit-id').value=f.id; document.getElementById('input-family-name').value=f.name; document.getElementById('input-family-desc').value=f.desc || ""; selectColor(f.color); btnDel.classList.remove('hidden'); } else { document.getElementById('form-family').reset(); document.getElementById('family-edit-id').value=""; document.getElementById('input-family-desc').value=""; selectColor('red'); btnDel.classList.add('hidden'); } }
         function selectColor(c) { document.getElementById('input-family-color').value=c; document.querySelectorAll('.color-option').forEach(e => { e.classList.remove('ring-2','ring-offset-1'); if(e.dataset.color==c) e.classList.add('ring-2','ring-offset-1') }); }
         
-        function handleFamilySubmit(e) { e.preventDefault(); const id = document.getElementById('family-edit-id').value; const data = { name: document.getElementById('input-family-name').value, desc: document.getElementById('input-family-desc').value, color: document.getElementById('input-family-color').value }; if(id) { const i=families.findIndex(x=>x.id==id); families[i]={id:parseInt(id), ...data}; } else { families.push({id:Date.now(), ...data}); } closeModal('modal-family'); renderFamiliesGrid(); renderPartsGrid(); updateStats(); saveDataToFirebase(); }
-        function deleteFamily() { const id = parseInt(document.getElementById('family-edit-id').value); const linkedParts = parts.filter(p => p.familyId === id); if(linkedParts.length > 0) { if(!confirm(`Cette famille est liée à ${linkedParts.length} pièce(s).\n\nVoulez-vous vraiment la supprimer ?`)) return; linkedParts.forEach(p => p.familyId = null); } else { if(!confirm("Voulez-vous vraiment supprimer cette famille ?")) return; } families = families.filter(f => f.id !== id); closeModal('modal-family'); renderFamiliesGrid(); renderPartsGrid(); updateStats(); saveDataToFirebase(); }
+        function handleFamilySubmit(e) { e.preventDefault(); const id = document.getElementById('family-edit-id').value; const data = { name: document.getElementById('input-family-name').value, desc: document.getElementById('input-family-desc').value, color: document.getElementById('input-family-color').value }; if(id) { const i=families.findIndex(x=>x.id==id); families[i]={id:parseInt(id), ...data}; } else { families.push({id:Date.now(), ...data}); } closeModal('modal-family'); renderFamiliesGrid(); populatePartsFilters(); renderPartsGrid(); updateStats(); saveDataToFirebase(); }
+        function deleteFamily() { const id = parseInt(document.getElementById('family-edit-id').value); const linkedParts = parts.filter(p => p.familyId === id); if(linkedParts.length > 0) { if(!confirm(`Cette famille est liée à ${linkedParts.length} pièce(s).\n\nVoulez-vous vraiment la supprimer ?`)) return; linkedParts.forEach(p => p.familyId = null); } else { if(!confirm("Voulez-vous vraiment supprimer cette famille ?")) return; } families = families.filter(f => f.id !== id); closeModal('modal-family'); renderFamiliesGrid(); populatePartsFilters(); renderPartsGrid(); updateStats(); saveDataToFirebase(); }
 
-        // --- GESTION PANIERS ---
         function createBasket() { 
             const name = prompt("Nom du nouveau chantier / panier :", "Chantier " + (baskets.length + 1)); 
             if(name) { 
@@ -591,22 +592,33 @@
         function validateBasketDraft() { const basket = baskets.find(b => b.id === currentBasketId); if(!basket || !basket.items || basket.items.length === 0) return alert("Panier vide."); let warning = ""; basket.items.forEach(item => { if(item.deduct) { const part = parts.find(p => p.id === item.partId); if(part && part.qty < item.qty) warning += `- ${part.name}\n`; } }); if(warning && !confirm("STOCK INSUFFISANT :\n" + warning + "\nContinuer ?")) return; basket.items.forEach(item => { if(item.deduct) { const part = parts.find(p => p.id === item.partId); if(part) part.qty -= item.qty; } }); basket.status = 'active'; alert("Validé ! Passage au mode chargement."); openBasketDetail(currentBasketId); updateDashboardActiveBaskets(); updateStats(); saveDataToFirebase(); }
         function deleteBasket() { if(confirm("Supprimer ce chantier/panier définitivement ?")) { baskets = baskets.filter(b => b.id !== currentBasketId); closeModal('modal-basket-detail'); renderBaskets(); updateStats(); updateDashboardActiveBaskets(); saveDataToFirebase(); } }
         
-        function updateDashboardActiveBaskets() { const activeBaskets = baskets.filter(b => b.status === 'active'); const container = document.getElementById('active-baskets-dashboard-container'); const list = document.getElementById('active-baskets-dashboard-list'); document.getElementById('stat-total-active-baskets').innerText = activeBaskets.length; if(activeBaskets.length > 0) { container.classList.remove('hidden'); list.innerHTML = ''; activeBaskets.forEach(b => { const p = calculateProgress(b); const div = document.createElement('div'); div.className = "bg-white p-4 rounded shadow border border-green-100 cursor-pointer flex justify-between items-center hover:bg-green-50"; div.onclick = () => { showPage('paniers'); openBasketDetail(b.id); }; div.innerHTML = `<div><h4 class="font-bold text-gray-800">${b.name}</h4><p class="text-xs text-gray-500">${b.items ? b.items.length : 0} items • ${p}% chargé</p></div><div class="pie-chart" style="width:40px; height:40px; background: conic-gradient(#16a34a ${p}%, #E5E7EB 0);"><div class="pie-chart-inner" style="width:28px; height:28px;">${p}%</div></div>`; list.appendChild(div); }); } else { container.classList.add('hidden'); } }
+        function updateDashboardActiveBaskets() { 
+            const activeBaskets = baskets; 
+            const container = document.getElementById('active-baskets-dashboard-container'); 
+            const list = document.getElementById('active-baskets-dashboard-list'); 
+            document.getElementById('stat-total-active-baskets').innerText = activeBaskets.length; 
+            if(activeBaskets.length > 0) { 
+                container.classList.remove('hidden'); 
+                list.innerHTML = ''; 
+                activeBaskets.forEach(b => { 
+                    const p = calculateProgress(b); 
+                    const div = document.createElement('div'); 
+                    div.className = "bg-white p-4 rounded shadow border border-green-100 cursor-pointer flex justify-between items-center hover:bg-green-50"; 
+                    div.onclick = () => { showPage('paniers'); openBasketDetail(b.id); }; 
+                    div.innerHTML = `<div><h4 class="font-bold text-gray-800">${b.name}</h4><p class="text-xs text-gray-500">${b.items ? b.items.length : 0} items • ${b.status === 'draft' ? 'Brouillon' : p + '% chargé'}</p></div><div class="pie-chart" style="width:40px; height:40px; background: conic-gradient(#16a34a ${p}%, #E5E7EB 0);"><div class="pie-chart-inner" style="width:28px; height:28px;">${p}%</div></div>`; 
+                    list.appendChild(div); 
+                }); 
+            } else { 
+                container.classList.add('hidden'); 
+            } 
+        }
 
-        // --- STATS, QR, QUICKVIEW, MAP ETC ---
         function updateStats() { document.getElementById('stat-total-parts').innerText = parts.length; document.getElementById('stat-total-locations').innerText = mapData.markers.length; updateDashboardActiveBaskets(); const lowStock = parts.filter(p => p.qty <= (p.alertQty || 0)); const alertContainer = document.getElementById('stock-alerts-container'); const list = document.getElementById('stock-alerts-list'); const badge = document.getElementById('alert-count-badge'); if(lowStock.length > 0) { alertContainer.classList.remove('hidden'); badge.innerText = lowStock.length; list.innerHTML = ''; lowStock.forEach(p => { const div = document.createElement('div'); div.className = "flex justify-between items-center bg-white p-3 rounded shadow-sm border border-red-100 cursor-pointer hover:bg-red-50"; div.onclick = () => { showPage('pieces'); openQuickView(p.id); }; div.innerHTML = `<div><p class="font-bold text-gray-800">${p.name}</p><p class="text-xs text-red-500 font-semibold">Stock: ${p.qty} / Seuil: ${p.alertQty || 0}</p></div><button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">Voir</button>`; list.appendChild(div); }); } else { alertContainer.classList.add('hidden'); } }
         
-        // --- MISE A JOUR DU SCANNER POUR MOBILE ---
         function startScanner(){ 
             if(html5QrcodeScanner) return; 
-            // On augmente le délai pour s'assurer que l'animation de la page est terminée
             setTimeout(() => {
-                // qrbox en objet et aspectRatio pour forcer l'affichage correct sur mobile
-                html5QrcodeScanner = new Html5QrcodeScanner("reader", { 
-                    fps: 10, 
-                    qrbox: { width: 200, height: 200 }, 
-                    aspectRatio: 1.0 
-                }, false);
+                html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: { width: 200, height: 200 }, aspectRatio: 1.0 }, false);
                 html5QrcodeScanner.render(onScanSuccess, onScanFailure);
             }, 300);
         }
@@ -614,11 +626,10 @@
         function stopScanner(){
             if(html5QrcodeScanner){
                 let scannerToClear = html5QrcodeScanner;
-                html5QrcodeScanner = null; // Libère immédiatement la variable pour éviter les conflits
+                html5QrcodeScanner = null; 
                 scannerToClear.clear().catch(console.error);
             }
         }
-        // ------------------------------------------
 
         function onScanSuccess(t){if(t.startsWith("PART:")){const id=parseInt(t.split(":")[1]);if(parts.find(p=>p.id===id)){stopScanner();showPage('pieces');openQuickView(id);}else alert("Inconnu");}}
         function onScanFailure(e){}
@@ -681,8 +692,49 @@
             }
             document.getElementById('modal-zone-details').classList.remove('hidden');
         }
+
+        // --- NOUVEAU : Fonction de remplissage des filtres de la page Pièces ---
+        function populatePartsFilters() {
+            const fSelect = document.getElementById('filter-parts-family');
+            const zSelect = document.getElementById('filter-parts-zone');
+            
+            const currentF = fSelect.value;
+            const currentZ = zSelect.value;
+            
+            fSelect.innerHTML = '<option value="">Toutes Familles</option>';
+            families.forEach(fam => { fSelect.innerHTML += `<option value="${fam.id}">${fam.name}</option>`; });
+            fSelect.value = currentF;
+            
+            zSelect.innerHTML = '<option value="">Toutes Zones</option>';
+            mapData.markers.forEach(m => { zSelect.innerHTML += `<option value="${m.name}">${m.name}</option>`; });
+            zSelect.value = currentZ;
+        }
         
-        function renderPartsGrid(){const t=document.getElementById('search-input-parts').value.toLowerCase();const g=document.getElementById('all-parts-grid');g.innerHTML='';parts.filter(p=>p.name.toLowerCase().includes(t)||p.location.toLowerCase().includes(t)).forEach(p=>{const f=families.find(x=>x.id==p.familyId);const s=f?colorMap[f.color]:colorMap.red;const ih=p.image?`<img src="${p.image}" class="w-full h-40 object-cover rounded-t-lg">`:`<div class="w-full h-40 bg-gray-100 rounded-t-lg flex items-center justify-center text-gray-300"><i class="fa-solid fa-image fa-3x"></i></div>`;const d=document.createElement('div');d.className="card-hover bg-white rounded-lg shadow border border-gray-200 cursor-pointer";d.onclick=()=>openQuickView(p.id);d.innerHTML=`<div class="relative">${ih}<span class="absolute top-2 right-2 badge ${s.bg} ${s.text}">${f?f.name:'?'}</span></div><div class="p-4"><h3 class="font-bold truncate">${p.name}</h3><p class="text-xs text-gray-500 mb-3"><i class="fa-solid fa-location-dot"></i> ${p.location}</p><div class="flex justify-between border-t pt-2 mt-2"><span class="text-2xl font-bold">${p.qty}</span></div></div>`;g.appendChild(d)})}
+        // Mise à jour de renderPartsGrid pour inclure la logique des filtres
+        function renderPartsGrid() {
+            const t = document.getElementById('search-input-parts').value.toLowerCase();
+            const fFilter = document.getElementById('filter-parts-family').value;
+            const zFilter = document.getElementById('filter-parts-zone').value;
+            
+            const g = document.getElementById('all-parts-grid');
+            g.innerHTML = '';
+            
+            parts.filter(p => {
+                const matchTxt = p.name.toLowerCase().includes(t) || (p.location && p.location.toLowerCase().includes(t));
+                const matchFam = fFilter === "" || (p.familyId && p.familyId.toString() === fFilter);
+                const matchZone = zFilter === "" || (p.location && p.location === zFilter);
+                return matchTxt && matchFam && matchZone;
+            }).forEach(p => {
+                const f=families.find(x=>x.id==p.familyId);
+                const s=f?colorMap[f.color]:colorMap.red;
+                const ih=p.image?`<img src="${p.image}" class="w-full h-40 object-cover rounded-t-lg">`:`<div class="w-full h-40 bg-gray-100 rounded-t-lg flex items-center justify-center text-gray-300"><i class="fa-solid fa-image fa-3x"></i></div>`;
+                const d=document.createElement('div');
+                d.className="card-hover bg-white rounded-lg shadow border border-gray-200 cursor-pointer";
+                d.onclick=()=>openQuickView(p.id);
+                d.innerHTML=`<div class="relative">${ih}<span class="absolute top-2 right-2 badge ${s.bg} ${s.text}">${f?f.name:'?'}</span></div><div class="p-4"><h3 class="font-bold truncate">${p.name}</h3><p class="text-xs text-gray-500 mb-3"><i class="fa-solid fa-location-dot"></i> ${p.location}</p><div class="flex justify-between border-t pt-2 mt-2"><span class="text-2xl font-bold">${p.qty}</span></div></div>`;
+                g.appendChild(d);
+            });
+        }
         
         function openPartModal(id){document.getElementById('modal-part').classList.remove('hidden');const s=document.getElementById('input-part-family');s.innerHTML='';families.forEach(f=>{const o=document.createElement('option');o.value=f.id;o.text=f.name;s.appendChild(o)});const loc=document.getElementById('input-part-location');loc.innerHTML='<option value="">-- Choisir une zone --</option>';mapData.markers.forEach(m=>{const o=document.createElement('option');o.value=m.name;o.text=m.name;loc.appendChild(o)});currentImageBuffer=null;currentDocBuffer=null;const btnDel=document.getElementById('btn-delete-part');if(id){const p=parts.find(x=>x.id==id);document.getElementById('part-edit-id').value=p.id;document.getElementById('input-part-name').value=p.name;document.getElementById('input-part-qty').value=p.qty;document.getElementById('input-part-family').value=p.familyId;if(p.location&&!mapData.markers.find(m=>m.name===p.location)){const o=document.createElement('option');o.value=p.location;o.text=p.location+" (Ancien)";loc.appendChild(o);}loc.value=p.location||"";document.getElementById('input-part-desc').value=p.desc||"";document.getElementById('input-part-alert').value=p.alertQty||0;if(p.image)currentImageBuffer=p.image;if(p.docData)currentDocBuffer=p.docData;if(btnDel)btnDel.classList.remove('hidden');}else{document.getElementById('form-part').reset();document.getElementById('part-edit-id').value="";if(btnDel)btnDel.classList.add('hidden');}}
         
@@ -728,13 +780,15 @@
             
             closeModal('modal-marker');
             renderMap();
+            populatePartsFilters(); // Met à jour les sélecteurs de filtres
             renderPartsGrid();
             updateStats();
             saveDataToFirebase();
         }
         
-        function deleteMarker(i){if(confirm("Supprimer?")){mapData.markers=mapData.markers.filter(x=>x.id!=i);renderMap();updateStats(); saveDataToFirebase();}}
+        function deleteMarker(i){if(confirm("Supprimer?")){mapData.markers=mapData.markers.filter(x=>x.id!=i);renderMap();populatePartsFilters();renderPartsGrid();updateStats(); saveDataToFirebase();}}
         
+        populatePartsFilters(); // Initialisation au démarrage
         updateStats();
     </script>
 </body>
