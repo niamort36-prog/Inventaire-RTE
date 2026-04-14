@@ -592,7 +592,228 @@
         function validateBasketDraft() { const basket = baskets.find(b => b.id === currentBasketId); if(!basket || !basket.items || basket.items.length === 0) return alert("Panier vide."); let warning = ""; basket.items.forEach(item => { if(item.deduct) { const part = parts.find(p => p.id === item.partId); if(part && part.qty < item.qty) warning += `- ${part.name}\n`; } }); if(warning && !confirm("STOCK INSUFFISANT :\n" + warning + "\nContinuer ?")) return; basket.items.forEach(item => { if(item.deduct) { const part = parts.find(p => p.id === item.partId); if(part) part.qty -= item.qty; } }); basket.status = 'active'; alert("Validé ! Passage au mode chargement."); openBasketDetail(currentBasketId); updateDashboardActiveBaskets(); updateStats(); saveDataToFirebase(); }
         function deleteBasket() { if(confirm("Supprimer ce chantier/panier définitivement ?")) { baskets = baskets.filter(b => b.id !== currentBasketId); closeModal('modal-basket-detail'); renderBaskets(); updateStats(); updateDashboardActiveBaskets(); saveDataToFirebase(); } }
         
-        function updateDashboardActiveBaskets()}
+        function updateDashboardActiveBaskets() { 
+            const activeBaskets = baskets; 
+            const container = document.getElementById('active-baskets-dashboard-container'); 
+            const list = document.getElementById('active-baskets-dashboard-list'); 
+            document.getElementById('stat-total-active-baskets').innerText = activeBaskets.length; 
+            if(activeBaskets.length > 0) { 
+                container.classList.remove('hidden'); 
+                list.innerHTML = ''; 
+                activeBaskets.forEach(b => { 
+                    const p = calculateProgress(b); 
+                    const div = document.createElement('div'); 
+                    div.className = "bg-white p-4 rounded shadow border border-green-100 cursor-pointer flex justify-between items-center hover:bg-green-50"; 
+                    div.onclick = () => { showPage('paniers'); openBasketDetail(b.id); }; 
+                    div.innerHTML = `<div><h4 class="font-bold text-gray-800">${b.name}</h4><p class="text-xs text-gray-500">${b.items ? b.items.length : 0} items • ${b.status === 'draft' ? 'Brouillon' : p + '% chargé'}</p></div><div class="pie-chart" style="width:40px; height:40px; background: conic-gradient(#16a34a ${p}%, #E5E7EB 0);"><div class="pie-chart-inner" style="width:28px; height:28px;">${p}%</div></div>`; 
+                    list.appendChild(div); 
+                }); 
+            } else { 
+                container.classList.add('hidden'); 
+            } 
+        }
+
+        function updateStats() { document.getElementById('stat-total-parts').innerText = parts.length; document.getElementById('stat-total-locations').innerText = mapData.markers.length; updateDashboardActiveBaskets(); const lowStock = parts.filter(p => p.qty <= (p.alertQty || 0)); const alertContainer = document.getElementById('stock-alerts-container'); const list = document.getElementById('stock-alerts-list'); const badge = document.getElementById('alert-count-badge'); if(lowStock.length > 0) { alertContainer.classList.remove('hidden'); badge.innerText = lowStock.length; list.innerHTML = ''; lowStock.forEach(p => { const div = document.createElement('div'); div.className = "flex justify-between items-center bg-white p-3 rounded shadow-sm border border-red-100 cursor-pointer hover:bg-red-50"; div.onclick = () => { showPage('pieces'); openQuickView(p.id); }; div.innerHTML = `<div><p class="font-bold text-gray-800">${p.name}</p><p class="text-xs text-red-500 font-semibold">Stock: ${p.qty} / Seuil: ${p.alertQty || 0}</p></div><button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">Voir</button>`; list.appendChild(div); }); } else { alertContainer.classList.add('hidden'); } }
+        
+        function startScanner(){ 
+            if(html5QrcodeScanner) return; 
+            setTimeout(() => {
+                html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: { width: 200, height: 200 }, aspectRatio: 1.0 }, false);
+                html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+            }, 300);
+        }
+        
+        function stopScanner(){
+            if(html5QrcodeScanner){
+                let scannerToClear = html5QrcodeScanner;
+                html5QrcodeScanner = null; 
+                scannerToClear.clear().catch(console.error);
+            }
+        }
+
+        function onScanSuccess(t){if(t.startsWith("PART:")){const id=parseInt(t.split(":")[1]);if(parts.find(p=>p.id===id)){stopScanner();showPage('pieces');openQuickView(id);}else alert("Inconnu");}}
+        function onScanFailure(e){}
+        function showQRCode(){const id=document.getElementById('quick-view-id').value; document.getElementById('qrcode-container').innerHTML=""; new QRCode(document.getElementById('qrcode-container'),{text:"PART:"+id,width:128,height:128}); document.getElementById('modal-qr-display').classList.remove('hidden');}
+        function openQuickView(id){ const p=parts.find(x=>x.id===id); if(!p)return; document.getElementById('quick-view-id').value=p.id; document.getElementById('quick-view-name').innerText=p.name; document.getElementById('quick-view-qty').innerText=p.qty; document.getElementById('quick-view-desc').innerText=p.desc||""; const f=families.find(x=>x.id===p.familyId); const fel=document.getElementById('quick-view-family'); fel.innerText=f?f.name:"Inconnu"; fel.className=f?`badge ${colorMap[f.color]?.bg} ${colorMap[f.color]?.text}`:"badge bg-gray-100 text-gray-800"; if(p.image){document.getElementById('quick-view-img').src=p.image;document.getElementById('quick-view-img').style.display='block';document.getElementById('quick-view-no-img').style.display='none';}else{document.getElementById('quick-view-img').style.display='none';document.getElementById('quick-view-no-img').style.display='flex';} const db=document.getElementById('quick-view-doc-btn'); if(p.docData) db.classList.remove('hidden'); else db.classList.add('hidden'); document.getElementById('modal-quick-view').classList.remove('hidden');}
+        
+        function updateQuickQty(c){const id=parseInt(document.getElementById('quick-view-id').value); const p=parts.find(x=>x.id===id); if(p){p.qty=Math.max(0,p.qty+c); document.getElementById('quick-view-qty').innerText=p.qty; renderPartsGrid(); updateStats(); saveDataToFirebase();}}
+        
+        function editFromQuickView(){closeModal('modal-quick-view'); openPartModal(parseInt(document.getElementById('quick-view-id').value));}
+        function openDocFromQuickView(){const p=parts.find(x=>x.id==document.getElementById('quick-view-id').value); if(p&&p.docData){const w=window.open();w.document.write('<iframe src="'+p.docData+'" style="border:0;top:0;left:0;bottom:0;right:0;width:100%;height:100%" allowfullscreen></iframe>');}}
+        function locateZoneOnMap(){const p=parts.find(x=>x.id==document.getElementById('quick-view-id').value); const m=mapData.markers.find(x=>x.name.toLowerCase()==p.location.toLowerCase()); closeModal('modal-quick-view'); showPage('plan'); if(m)setTimeout(()=>{const e=document.getElementById('marker-'+m.id); if(e){e.scrollIntoView({behavior:'smooth',block:'center'});e.classList.add('highlight-marker');setTimeout(()=>e.classList.remove('highlight-marker'),2000)}},300);}
+        let isDragging=false, dragId=null, dragStartTime=0, ignoreClick=false;
+        function uploadMap(e){const f=e.target.files[0];if(f){const r=new FileReader();r.onload=(ev)=>{mapData.image=ev.target.result; renderMap(); saveDataToFirebase(); };r.readAsDataURL(f)}}
+        
+        function renderMap(){ const c=document.getElementById('map-container');const p=document.getElementById('no-map-placeholder');const i=document.getElementById('atelier-map-img');const l=document.getElementById('map-markers-layer');const z=document.getElementById('zones-list-container');z.innerHTML='';if(!mapData.image&&mapData.markers.length===0){c.classList.add('hidden');p.classList.remove('hidden');i.src='';}else{c.classList.remove('hidden');p.classList.add('hidden');i.src=mapData.image||'';};l.innerHTML='';mapData.markers.forEach(m=>{const e=document.createElement('div');e.id='marker-'+m.id;e.className='map-marker flex flex-col items-center group';e.style.left=m.x+'%';e.style.top=m.y+'%';e.innerHTML=`<i class="fa-solid fa-location-dot text-red-600 text-3xl drop-shadow-md"></i><span class="bg-gray-900 text-white text-xs px-2 py-1 rounded shadow-lg mt-1">${m.name}</span>`;e.onmousedown=ev=>startDrag(ev,m.id);e.ontouchstart=ev=>startDrag(ev,m.id);l.appendChild(e);const li=document.createElement('div');li.className="zone-item flex justify-between p-2 border-b cursor-pointer";li.innerHTML=`<span>${m.name}</span><button onclick="deleteMarker(${m.id})"><i class="fa-solid fa-trash text-gray-400"></i></button>`;li.onclick=()=>openZoneDetails(m.id);z.appendChild(li)});}
+        
+        function startDrag(e,i){e.preventDefault();e.stopPropagation();isDragging=true;dragId=i;dragStartTime=Date.now()}
+        function handleContainerMove(e){if(!isDragging||!dragId)return;e.preventDefault();const r=document.getElementById('atelier-map-img').getBoundingClientRect();const cx=e.touches?e.touches[0].clientX:e.clientX;const cy=e.touches?e.touches[0].clientY:e.clientY;let x=((cx-r.left)/r.width)*100;let y=((cy-r.top)/r.height)*100;x=Math.max(0,Math.min(100,x));y=Math.max(0,Math.min(100,y));const el=document.getElementById('marker-'+dragId);if(el){el.style.left=x+'%';el.style.top=y+'%'}const m=mapData.markers.find(k=>k.id===dragId);if(m){m.x=x;m.y=y}}
+        function handleContainerUp(){if(isDragging){if(Date.now()-dragStartTime<150)openZoneDetails(dragId);else{ignoreClick=true;setTimeout(()=>ignoreClick=false,100); saveDataToFirebase(); }isDragging=false;dragId=null}}
+        function handleMapBackgroundClick(e){if(isDragging||ignoreClick)return;const r=document.getElementById('atelier-map-img').getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;const x=((e.clientX-r.left)/r.width)*100;const y=((e.clientY-r.top)/r.height)*100;openMarkerModal(null,x,y)}
+        
+        function openZoneDetails(i){
+            const m = mapData.markers.find(k=>k.id===i);
+            if(!m) return;
+            document.getElementById('detail-zone-title').innerText = m.name;
+            document.getElementById('detail-zone-desc').innerText = m.desc || "";
+            document.getElementById('btn-edit-zone').onclick = () => { closeModal('modal-zone-details'); openMarkerModal(m.id); };
+            const l = document.getElementById('zone-items-list');
+            l.innerHTML = '';
+            const zoneParts = parts.filter(p => p.location.toLowerCase() == m.name.toLowerCase());
+            
+            if(zoneParts.length === 0){
+                l.innerHTML = '<p class="text-center text-gray-400 py-4">Aucune pièce dans cette zone</p>';
+            } else {
+                const familyGroups = {};
+                zoneParts.forEach(p => {
+                    const fId = p.familyId || 0;
+                    if(!familyGroups[fId]) familyGroups[fId] = [];
+                    familyGroups[fId].push(p);
+                });
+                
+                Object.keys(familyGroups).forEach(fId => {
+                    const fam = families.find(f => f.id == fId);
+                    const famName = fam ? fam.name : "Sans famille";
+                    const s = fam ? (colorMap[fam.color] || colorMap.gray) : {bg:'bg-gray-100', text:'text-gray-800'};
+                    
+                    const fh = document.createElement('div');
+                    fh.className = "bg-gray-50 p-2 mt-3 mb-1 rounded flex justify-between items-center";
+                    fh.innerHTML = `<span class="badge ${s.bg} ${s.text}">${famName}</span><span class="text-xs font-bold text-gray-500">${familyGroups[fId].length} pièces</span>`;
+                    l.appendChild(fh);
+                    
+                    familyGroups[fId].forEach(p => {
+                        const d = document.createElement('div');
+                        d.className = "flex justify-between items-center p-2 border-b cursor-pointer hover:bg-gray-50 ml-2";
+                        d.onclick = () => { closeModal('modal-zone-details'); openQuickView(p.id); };
+                        d.innerHTML = `<span class="text-sm font-medium text-gray-800">${p.name}</span><b class="text-sm text-gray-600">Stock: ${p.qty}</b>`;
+                        l.appendChild(d);
+                    });
+                });
+            }
+            document.getElementById('modal-zone-details').classList.remove('hidden');
+        }
+
+        function populatePartsFilters() {
+            const fSelect = document.getElementById('filter-parts-family');
+            const zSelect = document.getElementById('filter-parts-zone');
+            
+            const currentF = fSelect.value;
+            const currentZ = zSelect.value;
+            
+            fSelect.innerHTML = '<option value="">Toutes Familles</option>';
+            families.forEach(fam => { fSelect.innerHTML += `<option value="${fam.id}">${fam.name}</option>`; });
+            fSelect.value = currentF;
+            
+            zSelect.innerHTML = '<option value="">Toutes Zones</option>';
+            mapData.markers.forEach(m => { zSelect.innerHTML += `<option value="${m.name}">${m.name}</option>`; });
+            zSelect.value = currentZ;
+        }
+        
+        function renderPartsGrid() {
+            const t = document.getElementById('search-input-parts').value.toLowerCase();
+            const fFilter = document.getElementById('filter-parts-family').value;
+            const zFilter = document.getElementById('filter-parts-zone').value;
+            
+            const g = document.getElementById('all-parts-grid');
+            g.innerHTML = '';
+            
+            parts.filter(p => {
+                const matchTxt = p.name.toLowerCase().includes(t) || (p.location && p.location.toLowerCase().includes(t));
+                const matchFam = fFilter === "" || (p.familyId && p.familyId.toString() === fFilter);
+                const matchZone = zFilter === "" || (p.location && p.location === zFilter);
+                return matchTxt && matchFam && matchZone;
+            }).forEach(p => {
+                const f=families.find(x=>x.id==p.familyId);
+                const s=f?colorMap[f.color]:colorMap.red;
+                const ih=p.image?`<img src="${p.image}" class="w-full h-40 object-cover rounded-t-lg">`:`<div class="w-full h-40 bg-gray-100 rounded-t-lg flex items-center justify-center text-gray-300"><i class="fa-solid fa-image fa-3x"></i></div>`;
+                const d=document.createElement('div');
+                d.className="card-hover bg-white rounded-lg shadow border border-gray-200 cursor-pointer";
+                d.onclick=()=>openQuickView(p.id);
+                d.innerHTML=`<div class="relative">${ih}<span class="absolute top-2 right-2 badge ${s.bg} ${s.text}">${f?f.name:'?'}</span></div><div class="p-4"><h3 class="font-bold truncate">${p.name}</h3><p class="text-xs text-gray-500 mb-3"><i class="fa-solid fa-location-dot"></i> ${p.location}</p><div class="flex justify-between border-t pt-2 mt-2"><span class="text-2xl font-bold">${p.qty}</span></div></div>`;
+                g.appendChild(d);
+            });
+        }
+        
+        function openPartModal(id){document.getElementById('modal-part').classList.remove('hidden');const btnSave=document.querySelector('#form-part button[type="submit"]');if(btnSave){btnSave.disabled=false;btnSave.innerText="Sauvegarder";}const s=document.getElementById('input-part-family');s.innerHTML='';families.forEach(f=>{const o=document.createElement('option');o.value=f.id;o.text=f.name;s.appendChild(o)});const loc=document.getElementById('input-part-location');loc.innerHTML='<option value="">-- Choisir une zone --</option>';mapData.markers.forEach(m=>{const o=document.createElement('option');o.value=m.name;o.text=m.name;loc.appendChild(o)});currentImageBuffer=null;currentDocBuffer=null;const btnDel=document.getElementById('btn-delete-part');if(id){const p=parts.find(x=>x.id==id);document.getElementById('part-edit-id').value=p.id;document.getElementById('input-part-name').value=p.name;document.getElementById('input-part-qty').value=p.qty;document.getElementById('input-part-family').value=p.familyId;if(p.location&&!mapData.markers.find(m=>m.name===p.location)){const o=document.createElement('option');o.value=p.location;o.text=p.location+" (Ancien)";loc.appendChild(o);}loc.value=p.location||"";document.getElementById('input-part-desc').value=p.desc||"";document.getElementById('input-part-alert').value=p.alertQty||0;if(p.image)currentImageBuffer=p.image;if(p.docData)currentDocBuffer=p.docData;if(btnDel)btnDel.classList.remove('hidden');}else{document.getElementById('form-part').reset();document.getElementById('part-edit-id').value="";if(btnDel)btnDel.classList.add('hidden');}}
+        
+        function handlePartSubmit(e){
+            e.preventDefault();
+            const id=document.getElementById('part-edit-id').value;
+            const d={
+                name:document.getElementById('input-part-name').value,
+                qty:parseInt(document.getElementById('input-part-qty').value) || 0,
+                alertQty:parseInt(document.getElementById('input-part-alert').value) || 0,
+                familyId:parseInt(document.getElementById('input-part-family').value) || null,
+                location:document.getElementById('input-part-location').value,
+                desc:document.getElementById('input-part-desc').value,
+                image:currentImageBuffer || null,
+                docData:currentDocBuffer || null
+            };
+            if(id){
+                const i=parts.findIndex(x=>x.id==id);
+                if(!d.docData)d.docData=parts[i].docData || null;
+                if(!d.image)d.image=parts[i].image || null;
+                parts[i]={...parts[i],...d}
+            }else{
+                parts.unshift({id:Date.now(),...d})
+            }
+            closeModal('modal-part');
+            renderPartsGrid();
+            updateStats(); 
+            saveDataToFirebase(); 
+        }
+        
+        function deletePart(){const id=parseInt(document.getElementById('part-edit-id').value);if(confirm("Voulez-vous vraiment supprimer cette pièce ?")){parts=parts.filter(p=>p.id!==id);closeModal('modal-part');renderPartsGrid();updateStats();saveDataToFirebase();}}
+        function previewImage(e){const f=e.target.files[0];if(f){const btn=document.querySelector('#form-part button[type="submit"]');if(btn){btn.disabled=true;btn.innerText="Compression...";}const r=new FileReader();r.onload=ev=>{const img=new Image();img.onload=()=>{const canvas=document.createElement('canvas');let w=img.width,h=img.height;if(w>1024||h>1024){if(w>h){h=Math.floor(h*1024/w);w=1024;}else{w=Math.floor(w*1024/h);h=1024;}}canvas.width=w;canvas.height=h;canvas.getContext('2d').drawImage(img,0,0,w,h);currentImageBuffer=canvas.toDataURL('image/jpeg',0.7);if(btn){btn.disabled=false;btn.innerText="Sauvegarder";}};img.src=ev.target.result;};r.readAsDataURL(f);}}
+        function previewDoc(e){const f=e.target.files[0];if(f){if(f.size>5*1024*1024){alert("Le document est trop lourd (Max 5 Mo). Firebase risque de bloquer la sauvegarde.");e.target.value="";return;}const btn=document.querySelector('#form-part button[type="submit"]');if(btn){btn.disabled=true;btn.innerText="Chargement...";}const r=new FileReader();r.onload=ev=>{currentDocBuffer=ev.target.result;if(btn){btn.disabled=false;btn.innerText="Sauvegarder";}};r.readAsDataURL(f);}}
+        
+        function openMarkerModal(i,x,y){
+            document.getElementById('modal-marker').classList.remove('hidden');
+            if(i){
+                const m = mapData.markers.find(k=>k.id==i);
+                document.getElementById('marker-id').value = m.id;
+                document.getElementById('input-marker-name').value = m.name;
+                document.getElementById('input-marker-desc').value = m.desc || "";
+            }else{
+                document.getElementById('form-marker').reset();
+                document.getElementById('marker-id').value = "";
+                document.getElementById('marker-x').value = x;
+                document.getElementById('marker-y').value = y;
+                document.getElementById('input-marker-desc').value = "";
+            }
+        }
+        
+        function handleMarkerSubmit(e){
+            e.preventDefault();
+            const id = document.getElementById('marker-id').value;
+            const n = document.getElementById('input-marker-name').value;
+            const desc = document.getElementById('input-marker-desc').value;
+            
+            if(id){
+                const m = mapData.markers.find(k=>k.id==id);
+                const oldName = m.name;
+                m.name = n;
+                m.desc = desc;
+                
+                if(oldName !== n){
+                    parts.forEach(p => { if(p.location === oldName) p.location = n; });
+                }
+            }else{
+                mapData.markers.push({id:Date.now(), x:document.getElementById('marker-x').value, y:document.getElementById('marker-y').value, name:n, desc:desc});
+            }
+            
+            closeModal('modal-marker');
+            renderMap();
+            populatePartsFilters(); // Met à jour les sélecteurs de filtres
+            renderPartsGrid();
+            updateStats();
+            saveDataToFirebase();
+        }
+        
+        function deleteMarker(i){if(confirm("Supprimer?")){mapData.markers=mapData.markers.filter(x=>x.id!=i);renderMap();populatePartsFilters();renderPartsGrid();updateStats(); saveDataToFirebase();}}
+        
+        populatePartsFilters(); // Initialisation au démarrage
+        updateStats();
     </script>
 </body>
 </html>
