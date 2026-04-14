@@ -37,7 +37,7 @@
         .zone-item:hover { background-color: #F3F4F6; }
         .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         #reader { width: 100%; border-radius: 8px; overflow: hidden; }
-        #reader video { object-fit: cover; border-radius: 8px; }
+        #reader video { object-fit: cover; border-radius: 8px; width: 100% !important; }
         .search-result-item:hover { background-color: #F3F4F6; }
 
         .pie-chart {
@@ -576,8 +576,31 @@
 
         // --- STATS, QR, QUICKVIEW, MAP ETC ---
         function updateStats() { document.getElementById('stat-total-parts').innerText = parts.length; document.getElementById('stat-total-locations').innerText = mapData.markers.length; updateDashboardActiveBaskets(); const lowStock = parts.filter(p => p.qty <= (p.alertQty || 0)); const alertContainer = document.getElementById('stock-alerts-container'); const list = document.getElementById('stock-alerts-list'); const badge = document.getElementById('alert-count-badge'); if(lowStock.length > 0) { alertContainer.classList.remove('hidden'); badge.innerText = lowStock.length; list.innerHTML = ''; lowStock.forEach(p => { const div = document.createElement('div'); div.className = "flex justify-between items-center bg-white p-3 rounded shadow-sm border border-red-100 cursor-pointer hover:bg-red-50"; div.onclick = () => { showPage('pieces'); openQuickView(p.id); }; div.innerHTML = `<div><p class="font-bold text-gray-800">${p.name}</p><p class="text-xs text-red-500 font-semibold">Stock: ${p.qty} / Seuil: ${p.alertQty || 0}</p></div><button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">Voir</button>`; list.appendChild(div); }); } else { alertContainer.classList.add('hidden'); } }
-        function startScanner(){ if(html5QrcodeScanner)return; setTimeout(()=>{html5QrcodeScanner=new Html5QrcodeScanner("reader",{fps:10,qrbox:250});html5QrcodeScanner.render(onScanSuccess,onScanFailure)},100);}
-        function stopScanner(){if(html5QrcodeScanner){html5QrcodeScanner.clear().catch(console.error);html5QrcodeScanner=null;}}
+        
+        // --- MISE A JOUR DU SCANNER POUR MOBILE ---
+        function startScanner(){ 
+            if(html5QrcodeScanner) return; 
+            // On augmente le délai pour s'assurer que l'animation de la page est terminée
+            setTimeout(() => {
+                // qrbox en objet et aspectRatio pour forcer l'affichage correct sur mobile
+                html5QrcodeScanner = new Html5QrcodeScanner("reader", { 
+                    fps: 10, 
+                    qrbox: { width: 200, height: 200 }, 
+                    aspectRatio: 1.0 
+                }, false);
+                html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+            }, 300);
+        }
+        
+        function stopScanner(){
+            if(html5QrcodeScanner){
+                let scannerToClear = html5QrcodeScanner;
+                html5QrcodeScanner = null; // Libère immédiatement la variable pour éviter les conflits
+                scannerToClear.clear().catch(console.error);
+            }
+        }
+        // ------------------------------------------
+
         function onScanSuccess(t){if(t.startsWith("PART:")){const id=parseInt(t.split(":")[1]);if(parts.find(p=>p.id===id)){stopScanner();showPage('pieces');openQuickView(id);}else alert("Inconnu");}}
         function onScanFailure(e){}
         function showQRCode(){const id=document.getElementById('quick-view-id').value; document.getElementById('qrcode-container').innerHTML=""; new QRCode(document.getElementById('qrcode-container'),{text:"PART:"+id,width:128,height:128}); document.getElementById('modal-qr-display').classList.remove('hidden');}
