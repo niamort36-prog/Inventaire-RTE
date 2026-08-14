@@ -9,22 +9,22 @@ installer ni à compiler.
 
 ## À FAIRE — sécuriser la base de données
 
-**La base est actuellement ouverte à tout Internet** : n'importe qui connaissant
-l'adresse peut lire l'inventaire complet ou l'effacer en une seule requête.
+La connexion anonyme est activée : l'application s'authentifie toute seule et
+attend d'être connectée avant de lire quoi que ce soit. Les utilisateurs n'ont
+ni compte ni mot de passe à saisir.
 
-Deux étapes, dans cet ordre :
+**Il reste une étape.** Tant qu'elle n'est pas faite, la base est ouverte à tout
+Internet : n'importe qui connaissant l'adresse peut lire l'inventaire complet ou
+l'effacer en une seule requête.
 
-1. **Activer la connexion anonyme**
-   Console Firebase → *Authentication* → *Sign-in method* → **Anonyme** → Activer.
-   L'application se connecte toute seule : les utilisateurs n'ont ni compte ni
-   mot de passe à saisir, rien ne change pour eux.
+Console Firebase → *Realtime Database* → onglet **Règles** → coller le contenu de
+[`firebase-rules.json`](firebase-rules.json) → *Publier*.
 
-2. **Publier les règles**
-   Console Firebase → *Realtime Database* → onglet **Règles** → coller le contenu
-   de [`firebase-rules.json`](firebase-rules.json) → *Publier*.
-
-Tant que l'étape 1 n'est pas faite, ne publiez pas les règles : elles bloqueraient
-l'accès à tout le monde.
+Ces règles ont été validées sur l'émulateur Firebase (48 cas) : un visiteur non
+authentifié est bloqué sur toute la base, l'application conserve exactement les
+accès dont elle a besoin, les données incohérentes (stock négatif, photo replacée
+au milieu des données, statut de chantier inconnu) sont rejetées, aucune
+collection ne peut être effacée d'un bloc, et le journal est en ajout seul.
 
 ## Organisation des données
 

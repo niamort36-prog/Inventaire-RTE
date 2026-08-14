@@ -3,13 +3,18 @@
     "REGLES DE SECURITE A COLLER DANS LA CONSOLE FIREBASE.",
     "Console Firebase > Realtime Database > onglet 'Regles' > coller > Publier.",
     "",
-    "AVANT DE PUBLIER : activer la connexion anonyme.",
+    "PREREQUIS : la connexion anonyme doit etre activee.",
     "Console Firebase > Authentication > Sign-in method > Anonyme > Activer.",
-    "L'application se connecte deja toute seule en anonyme, les utilisateurs",
-    "n'ont RIEN a saisir : aucun compte, aucun mot de passe.",
+    "L'application se connecte toute seule : les utilisateurs n'ont ni compte",
+    "ni mot de passe a saisir.",
     "",
-    "Sans ces regles, la base est ouverte a tout Internet : n'importe qui",
-    "peut lire l'inventaire complet ou l'effacer en une seule requete.",
+    "Sans ces regles, la base est ouverte a tout Internet : n'importe qui peut",
+    "lire l'inventaire complet ou l'effacer en une seule requete.",
+    "",
+    "Principe : le droit d'ecriture est accorde element par element (une piece,",
+    "une zone, un chantier), jamais sur une collection entiere. Firebase ne",
+    "permet pas de retirer plus bas un droit accorde plus haut : accorder",
+    "l'ecriture sur 'parts' autoriserait a effacer tout l'inventaire d'un coup.",
     "",
     "Les cles _commentaire sont ignorees par Firebase, elles servent de notice."
   ],
@@ -19,9 +24,10 @@
     ".write": false,
 
     "teams": {
+      "_commentaire": "Index leger des equipes, lu au demarrage.",
       ".read": "auth != null",
-      ".write": "auth != null",
       "$team": {
+        ".write": "auth != null",
         ".validate": "newData.hasChildren(['name'])",
         "name":      { ".validate": "newData.isString() && newData.val().length <= 60" },
         "createdAt": { ".validate": "newData.isNumber()" },
@@ -33,21 +39,24 @@
       ".read": "auth != null",
 
       "$team": {
-        ".write": "auth != null",
 
         "meta": {
+          ".write": "auth != null",
           "name":      { ".validate": "newData.isString() && newData.val().length <= 60" },
-          "createdAt": { ".validate": "newData.isNumber()" }
+          "createdAt": { ".validate": "newData.isNumber()" },
+          "migratedAt":{ ".validate": "newData.isNumber()" },
+          "$autre":    { ".validate": false }
         },
 
         "parts": {
           "$part": {
-            ".validate": "!newData.exists() || newData.hasChildren(['id', 'name', 'qty'])",
+            ".write": "auth != null",
+            ".validate": "newData.hasChildren(['id', 'name', 'qty'])",
             "id":       { ".validate": "newData.isNumber()" },
             "name":     { ".validate": "newData.isString() && newData.val().length <= 200" },
             "qty":      { ".validate": "newData.isNumber() && newData.val() >= 0" },
             "alertQty": { ".validate": "newData.isNumber() && newData.val() >= 0" },
-            "familyId": { ".validate": "newData.isNumber() || newData.val() == null" },
+            "familyId": { ".validate": "newData.isNumber()" },
             "location": { ".validate": "newData.isString() && newData.val().length <= 120" },
             "desc":     { ".validate": "newData.isString() && newData.val().length <= 2000" },
             "hasImage": { ".validate": "newData.isBoolean()" },
@@ -58,6 +67,8 @@
 
         "families": {
           "$family": {
+            ".write": "auth != null",
+            ".validate": "newData.hasChildren(['id', 'name'])",
             "id":     { ".validate": "newData.isNumber()" },
             "name":   { ".validate": "newData.isString() && newData.val().length <= 100" },
             "desc":   { ".validate": "newData.isString() && newData.val().length <= 1000" },
@@ -67,10 +78,15 @@
         },
 
         "map": {
-          "_commentaire": "Le plan est compresse cote application (~300 Ko). La limite bloque un envoi accidentel d'image brute.",
-          "image": { ".validate": "newData.isString() && newData.val().length <= 3000000" },
+          "image": {
+            "_commentaire": "Plan compresse cote application (~300 Ko). La limite bloque l'envoi d'une image brute.",
+            ".write": "auth != null",
+            ".validate": "newData.isString() && newData.val().length <= 3000000"
+          },
           "markers": {
             "$marker": {
+              ".write": "auth != null",
+              ".validate": "newData.hasChildren(['id', 'name'])",
               "id":     { ".validate": "newData.isNumber()" },
               "x":      { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100" },
               "y":      { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100" },
@@ -82,11 +98,15 @@
         },
 
         "thumbs": {
-          "$part": { ".validate": "newData.isString() && newData.val().length <= 60000" }
+          "$part": {
+            ".write": "auth != null",
+            ".validate": "newData.isString() && newData.val().length <= 60000"
+          }
         },
 
         "media": {
           "$part": {
+            ".write": "auth != null",
             "image":  { ".validate": "newData.isString() && newData.val().length <= 3000000" },
             "doc":    { ".validate": "newData.isString() && newData.val().length <= 8000000" },
             "$autre": { ".validate": false }
@@ -95,18 +115,20 @@
 
         "baskets": {
           "$basket": {
+            ".write": "auth != null",
+            ".validate": "newData.hasChildren(['id', 'name'])",
             "id":        { ".validate": "newData.isNumber()" },
             "name":      { ".validate": "newData.isString() && newData.val().length <= 150" },
             "status":    { ".validate": "newData.val() == 'draft' || newData.val() == 'active'" },
-            "createdAt": { ".validate": "newData.isNumber()" },
-            "items":     { ".validate": "newData.hasChildren() || !newData.exists()" }
+            "createdAt": { ".validate": "newData.isNumber()" }
           }
         },
 
         "history": {
-          "_commentaire": "L'historique est en ajout seul : une entree ecrite ne peut plus etre modifiee ni effacee.",
+          "_commentaire": "Journal en ajout seul : une entree ecrite ne peut plus etre ni modifiee ni effacee, y compris par l'application elle-meme.",
           "$entry": {
-            ".validate": "!data.exists() && newData.hasChildren(['ts', 'text'])",
+            ".write": "auth != null && !data.exists() && newData.exists()",
+            ".validate": "newData.hasChildren(['ts', 'text'])",
             "ts":     { ".validate": "newData.isNumber()" },
             "user":   { ".validate": "newData.isString() && newData.val().length <= 60" },
             "text":   { ".validate": "newData.isString() && newData.val().length <= 300" },
@@ -117,7 +139,7 @@
     },
 
     "profilesData": {
-      "_commentaire": "Ancienne structure d'avant la migration. Conservee en lecture seule comme filet de securite : plus aucune ecriture n'est autorisee.",
+      "_commentaire": "Ancienne structure d'avant la migration, conservee en lecture seule comme filet de securite. Plus aucune ecriture n'est autorisee.",
       ".read": "auth != null",
       ".write": false
     }

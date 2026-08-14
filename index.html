@@ -613,13 +613,17 @@ const teamRef = sub => db.ref('profiles/' + teamKey + (sub ? '/' + sub : ''));
 function write(path, value) {
     if (!db) { toast("Hors ligne : modification non enregistrée", 'err'); return Promise.resolve(); }
     const p = value === null ? teamRef(path).remove() : teamRef(path).set(value);
-    return p.catch(err => { console.error('Écriture', path, err); toast("Échec de l'enregistrement", 'err'); });
+    return p.catch(err => {
+        if (!reportPermissionError(err, 'Écriture ' + path)) toast("Échec de l'enregistrement", 'err');
+    });
 }
 
 function updateNode(path, patch) {
     if (!db) { toast("Hors ligne : modification non enregistrée", 'err'); return Promise.resolve(); }
     return teamRef(path).update(patch)
-        .catch(err => { console.error('Update', path, err); toast("Échec de l'enregistrement", 'err'); });
+        .catch(err => {
+            if (!reportPermissionError(err, 'Update ' + path)) toast("Échec de l'enregistrement", 'err');
+        });
 }
 
 /** Ajuste un stock via une transaction : deux personnes peuvent modifier en
@@ -675,13 +679,30 @@ function detachListeners() {
     activeRefs = [];
 }
 
+/** Signalé une seule fois : inutile de répéter le message pour chaque section. */
+let permissionWarned = false;
+function reportPermissionError(err, action) {
+    console.error(action, err);
+    if (err && err.code === 'PERMISSION_DENIED') {
+        setSyncState('offline');
+        if (!permissionWarned) {
+            permissionWarned = true;
+            toast("Accès refusé par les règles Firebase", 'err');
+        }
+        return true;
+    }
+    return false;
+}
+
 function bind(path, handler) {
     const ref = teamRef(path);
     const cb = ref.on('value', snap => {
         handler(snap.val());
         setSyncState('online');
         saveCache();
-    }, err => { console.error('Lecture', path, err); setSyncState('offline'); });
+    }, err => {
+        if (!reportPermissionError(err, 'Lecture ' + path)) setSyncState('offline');
+    });
     activeRefs.push({ ref, cb });
 }
 
@@ -2180,38 +2201,39 @@ function boot() {
         return;
     }
 
-    // Connexion anonyme : si l'authentification est activée dans la console
-    // Firebase, elle permet de restreindre l'accès via les règles de sécurité.
-    // Si elle ne l'est pas, l'application continue de fonctionner normalement ;
-    // on note l'échec pour ne pas réessayer à chaque chargement (une tentative
-    // par jour suffit à reprendre l'authentification dès qu'elle est activée).
-    const authSkipUntil = num(localStorage.getItem('inventrte.authOff'), 0);
-    if (Date.now() > authSkipUntil) {
-        firebase.auth().signInAnonymously()
-            .then(() => localStorage.removeItem('inventrte.authOff'))
-            .catch(err => {
-                console.warn("Auth anonyme indisponible :", err.code);
-                if (err.code === 'auth/configuration-not-found' || err.code === 'auth/operation-not-allowed') {
-                    localStorage.setItem('inventrte.authOff', String(Date.now() + 86400000));
-                }
-            });
-    }
-
     db.ref('.info/connected').on('value', s => {
         isOnline = !!s.val();
         setSyncState(isOnline ? 'online' : 'offline');
     });
 
-    db.ref('teams').on('value', snap => {
-        teams = snap.val() || {};
-        if (!teams[teamKey]) {
-            // L'équipe mémorisée n'existe plus : on bascule proprement au lieu de planter.
-            const first = Object.keys(teams)[0];
-            if (first) { teamKey = first; localStorage.setItem('inventrte.team', first); renderTeamLabel(); }
-        }
-    }, err => console.error('Équipes', err));
+    // Les règles de sécurité exigent un utilisateur authentifié : on attend que
+    // la connexion anonyme soit établie AVANT de lire quoi que ce soit, sinon
+    // les premières lectures partent sans jeton et sont refusées.
+    // L'utilisateur ne voit rien de tout cela : ni compte, ni mot de passe.
+    let started = false;
+    const startSync = () => {
+        if (started) return;
+        started = true;
+        db.ref('teams').on('value', snap => {
+            teams = snap.val() || {};
+            if (!teams[teamKey]) {
+                // L'équipe mémorisée n'existe plus : on bascule au lieu de planter.
+                const first = Object.keys(teams)[0];
+                if (first) { teamKey = first; localStorage.setItem('inventrte.team', first); renderTeamLabel(); }
+            }
+        }, err => console.error('Équipes', err));
+        attachListeners();
+    };
 
-    attachListeners();
+    firebase.auth().onAuthStateChanged(user => { if (user) startSync(); });
+
+    firebase.auth().signInAnonymously().catch(err => {
+        // Authentification indisponible (non activée, ou hors ligne) : on tente
+        // quand même la synchronisation. Elle aboutira si les règles sont encore
+        // ouvertes, et échouera proprement sinon.
+        console.warn("Connexion anonyme impossible :", err.code);
+        startSync();
+    });
 }
 
 window.addEventListener('beforeunload', () => { detachListeners(); stopScanner(); });
