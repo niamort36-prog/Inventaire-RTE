@@ -655,11 +655,15 @@ async function ensureMapImage() {
     if (cached) { mapImage = cached; mapImageLoaded = true; return mapImage; }
     if (!db) return null;
     document.getElementById('map-loading').classList.remove('hidden');
+    const requested = teamKey;
     try {
         const snap = await teamRef('map/image').once('value');
+        // L'utilisateur a pu changer d'équipe pendant le chargement (le plan
+        // pèse ~300 Ko) : on n'affiche pas le plan d'une autre équipe.
+        if (teamKey !== requested) { document.getElementById('map-loading').classList.add('hidden'); return null; }
         mapImage = snap.val() || null;
         mapImageLoaded = true;
-        if (mapImage) { try { localStorage.setItem('inventrte.map.' + teamKey, mapImage); } catch (_) {} }
+        if (mapImage) { try { localStorage.setItem('inventrte.map.' + requested, mapImage); } catch (_) {} }
     } catch (e) { console.error('Plan', e); }
     document.getElementById('map-loading').classList.add('hidden');
     return mapImage;
@@ -702,8 +706,15 @@ function attachListeners() {
     });
 
     // Vignettes : une seule lecture par session (elles changent rarement).
+    // On mémorise l'équipe demandée : si l'utilisateur bascule avant la fin du
+    // chargement, on jette le résultat au lieu d'afficher les vignettes de
+    // l'équipe précédente.
+    const requested = teamKey;
     teamRef('thumbs').once('value')
-        .then(snap => { thumbs = snap.val() || {}; renderPartsGrid(); saveCache(); })
+        .then(snap => {
+            if (teamKey !== requested) return;
+            thumbs = snap.val() || {}; renderPartsGrid(); saveCache();
+        })
         .catch(e => console.error('Vignettes', e));
 }
 
