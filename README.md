@@ -64,6 +64,21 @@ que les articles sont indexés par identifiant plutôt que rangés dans une list
 filet de sécurité. Elle n'est plus utilisée par l'application et peut être
 supprimée une fois que tout aura été validé en conditions réelles.
 
+## Bon de chantier imprimable
+
+Dans un chantier, la liste peut être triée par zone de rangement, par nom, par
+famille, ou laissée dans l'ordre d'ajout. Le bouton **Imprimer** produit un bon
+de chantier qui reprend exactement le tri et les filtres affichés à l'écran.
+
+Sur un tri par zone ou par famille, les articles sont regroupés sous un
+intertitre : sur le papier, on suit l'atelier zone par zone. Le bon comprend une
+case à cocher par ligne, les quantités prévues et chargées (avec les écarts en
+rouge), les observations et un emplacement pour le visa.
+
+Pour obtenir un PDF, choisir « Enregistrer au format PDF » comme destination dans
+la fenêtre d'impression. Si le navigateur bloque les fenêtres pop-up — courant
+sur mobile — l'impression est déclenchée directement, sans nouvel onglet.
+
 ## Fonctionnement hors ligne
 
 Les dernières données consultées sont conservées dans le navigateur : l'app

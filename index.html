@@ -320,6 +320,15 @@
                     <div class="flex-grow relative"><input type="text" id="filter-basket-text" oninput="rerenderCurrentBasket()" placeholder="Filtrer dans la liste..." class="w-full border border-gray-300 rounded px-2 py-1 text-sm pl-7 focus:outline-none focus:border-indigo-500"><i class="fa-solid fa-filter absolute left-2 top-2 text-gray-400 text-xs"></i></div>
                     <select id="filter-basket-zone" onchange="rerenderCurrentBasket()" class="border border-gray-300 rounded px-2 py-1 text-sm bg-white focus:outline-none max-w-[120px]"><option value="">Toutes Zones</option></select>
                     <select id="filter-basket-family" onchange="rerenderCurrentBasket()" class="border border-gray-300 rounded px-2 py-1 text-sm bg-white focus:outline-none max-w-[120px]"><option value="">Toutes Familles</option></select>
+                    <select id="sort-basket" onchange="rerenderCurrentBasket()" class="border border-gray-300 rounded px-2 py-1 text-sm bg-white focus:outline-none" title="Ordre d'affichage et d'impression">
+                        <option value="zone">Trier par zone</option>
+                        <option value="name">Trier par nom</option>
+                        <option value="family">Trier par famille</option>
+                        <option value="added">Ordre d'ajout</option>
+                    </select>
+                    <button onclick="printBasket()" class="border border-gray-300 rounded px-3 py-1 text-sm bg-white hover:bg-gray-50 whitespace-nowrap" title="Imprimer ou enregistrer en PDF">
+                        <i class="fa-solid fa-print mr-1 text-gray-500"></i>Imprimer
+                    </button>
                 </div>
                 <div class="p-0 overflow-y-auto flex-grow bg-white">
                     <table class="min-w-full divide-y divide-gray-200">
@@ -1744,26 +1753,50 @@ function updateHeaderPie(basket) {
     document.getElementById('header-pie-text').textContent = p + '%';
 }
 
-function renderBasketItems(basket) {
-    if (!basket) return;
-    const items = itemsOf(basket);
-    const tbody = document.getElementById('basket-items-list');
-    const emptyMsg = document.getElementById('basket-empty-list-msg');
-    tbody.innerHTML = '';
-
+/** Articles d'un chantier, filtres et tries comme a l'ecran.
+ *  Sert aussi a l'impression, pour que le papier suive exactement le meme
+ *  ordre que ce que l'on a sous les yeux. */
+function visibleBasketItems(basket) {
     const fText = document.getElementById('filter-basket-text').value.toLowerCase();
     const fZone = document.getElementById('filter-basket-zone').value;
     const fFam = document.getElementById('filter-basket-family').value;
-    const isDraft = basket.status === 'draft';
+    const sortMode = document.getElementById('sort-basket').value;
 
-    const visible = items.filter(item => {
-        const part = parts.find(p => p.id === item.partId);
+    const rows = itemsOf(basket).map(item => ({
+        item, part: parts.find(p => p.id === item.partId)
+    })).filter(({ item, part }) => {
         if (!part) return false;
         if (fText && !String(part.name).toLowerCase().includes(fText)) return false;
         if (fZone && part.location !== fZone) return false;
         if (fFam && String(part.familyId) !== fFam) return false;
         return true;
     });
+
+    const cmp = (a, b) => String(a || '').localeCompare(String(b || ''), 'fr', { sensitivity: 'base' });
+    const byName = (a, b) => cmp(a.part.name, b.part.name);
+    const famName = r => {
+        const f = families.find(x => x.id == r.part.familyId);
+        return f ? f.name : '￿';          // sans famille en dernier
+    };
+    const zoneName = r => r.part.location || '￿';   // sans zone en dernier
+
+    if (sortMode === 'name') rows.sort(byName);
+    else if (sortMode === 'family') rows.sort((a, b) => cmp(famName(a), famName(b)) || byName(a, b));
+    else if (sortMode === 'zone') rows.sort((a, b) => cmp(zoneName(a), zoneName(b)) || byName(a, b));
+    // 'added' : on garde l'ordre d'ajout
+
+    return rows;
+}
+
+function renderBasketItems(basket) {
+    if (!basket) return;
+    const tbody = document.getElementById('basket-items-list');
+    const emptyMsg = document.getElementById('basket-empty-list-msg');
+    tbody.innerHTML = '';
+
+    const isDraft = basket.status === 'draft';
+    const rows = visibleBasketItems(basket);
+    const visible = rows.map(r => r.item);
 
     emptyMsg.classList.toggle('hidden', visible.length > 0);
 
@@ -1772,6 +1805,11 @@ function renderBasketItems(basket) {
         const tr = document.createElement('tr');
         const commentHtml = item.comment
             ? `<div class="text-xs text-indigo-600 italic mt-1"><i class="fa-regular fa-comment-dots mr-1"></i>${esc(item.comment)}</div>` : '';
+        // Zone et famille visibles : sans elles, un tri par zone serait illisible.
+        const fam = families.find(f => f.id == part.familyId);
+        const situ = `<div class="text-xs text-gray-400 truncate">
+                <i class="fa-solid fa-location-dot"></i> ${esc(part.location || 'Sans zone')}
+                &nbsp;·&nbsp; ${esc(fam ? fam.name : 'Sans famille')}</div>`;
 
         if (isDraft) {
             const deductStatus = item.deduct
@@ -1781,6 +1819,7 @@ function renderBasketItems(basket) {
             tr.innerHTML = `
                 <td class="px-6 py-3 cursor-pointer group" data-open-part="${part.id}">
                     <div class="text-sm font-bold text-gray-900 group-hover:text-indigo-600 transition">${esc(part.name)}</div>
+                    ${situ}
                     ${commentHtml}
                     <div class="text-xs ${short ? 'text-red-600 font-bold' : 'text-gray-500'}">Stock: ${num(part.qty)}${short ? ' — insuffisant' : ''}</div>
                 </td>
@@ -1794,6 +1833,7 @@ function renderBasketItems(basket) {
                 <td class="px-4 py-3 text-center"><input type="checkbox" data-toggle-item="${item.uid}" ${item.loaded ? 'checked' : ''} class="w-6 h-6 text-green-600 rounded cursor-pointer"></td>
                 <td class="px-4 py-3 cursor-pointer group" data-open-part="${part.id}">
                     <div class="text-sm font-bold text-gray-900 group-hover:text-indigo-600 transition">${esc(part.name)}</div>
+                    ${situ}
                     <div class="text-xs text-gray-500">Prévu: ${num(item.qty)}</div>
                     ${commentHtml}
                 </td>
@@ -1816,6 +1856,144 @@ function renderBasketItems(basket) {
         el.onchange = () => updateLoadQty(el.dataset.loadQty, el.value));
     tbody.querySelectorAll('[data-load-comment]').forEach(el =>
         el.onchange = () => updateLoadComment(el.dataset.loadComment, el.value));
+}
+
+/* ------------------------------------------------------ Impression / PDF */
+
+/** Bon de chantier imprimable, dans l'ordre de tri choisi a l'ecran.
+ *  Sur un tri par zone ou par famille, les articles sont regroupes sous un
+ *  intertitre : sur le papier, on suit ainsi l'atelier zone par zone. */
+function printBasket() {
+    const basket = currentBasket();
+    if (!basket) return;
+    const rows = visibleBasketItems(basket);
+    if (!rows.length) { toast("Rien à imprimer dans cette liste", 'warn'); return; }
+
+    const sortMode = document.getElementById('sort-basket').value;
+    const isDraft = basket.status === 'draft';
+    const groupBy = sortMode === 'zone' ? r => r.part.location || 'Sans zone'
+                  : sortMode === 'family' ? r => {
+                        const f = families.find(x => x.id == r.part.familyId);
+                        return f ? f.name : 'Sans famille';
+                    } : null;
+
+    const total = rows.reduce((s, r) => s + num(r.item.qty), 0);
+    const charges = rows.filter(r => r.item.loaded).length;
+
+    // Colonnes : en chargement on imprime le prévu et le chargé ; en brouillon
+    // une case vide sert de pointage papier.
+    const head = isDraft
+        ? `<th class="c">Fait</th><th>Pièce</th><th>Famille</th><th>Zone</th><th class="r">Qté</th><th>Observations</th>`
+        : `<th class="c">Chargé</th><th>Pièce</th><th>Famille</th><th>Zone</th><th class="r">Prévu</th><th class="r">Chargé</th><th>Observations</th>`;
+
+    let body = '', currentGroup = null;
+    const cols = isDraft ? 6 : 7;
+    rows.forEach(({ item, part }) => {
+        if (groupBy) {
+            const g = groupBy({ item, part });
+            if (g !== currentGroup) {
+                currentGroup = g;
+                body += `<tr class="grp"><td colspan="${cols}">${esc(g)}</td></tr>`;
+            }
+        }
+        const fam = families.find(f => f.id == part.familyId);
+        const notes = [item.comment, item.loadComment].filter(Boolean).map(esc).join(' — ');
+        const loadedQty = item.loadedQty === undefined ? num(item.qty) : num(item.loadedQty);
+        const ecart = !isDraft && loadedQty !== num(item.qty);
+
+        body += `<tr>
+            <td class="c">${isDraft ? '<span class="box"></span>'
+                : (item.loaded ? '<span class="box on">✓</span>' : '<span class="box"></span>')}</td>
+            <td class="nom">${esc(part.name)}</td>
+            <td class="sec">${esc(fam ? fam.name : '—')}</td>
+            <td class="sec">${esc(part.location || '—')}</td>
+            <td class="r">${num(item.qty)}</td>
+            ${isDraft ? '' : `<td class="r${ecart ? ' ecart' : ''}">${loadedQty}</td>`}
+            <td class="sec">${notes}</td>
+        </tr>`;
+    });
+
+    const dateStr = new Date().toLocaleDateString('fr-FR', {
+        weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    const titre = `${basket.name} — ${teamKey}`;
+
+    const html = `<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
+<title>${esc(titre)}</title><style>
+  * { box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #111; margin: 0; padding: 24px; }
+  header { border-bottom: 3px solid #4F46E5; padding-bottom: 12px; margin-bottom: 6px; }
+  h1 { margin: 0 0 4px; font-size: 21px; }
+  .meta { font-size: 12px; color: #555; display: flex; gap: 18px; flex-wrap: wrap; }
+  .meta b { color: #111; }
+  .resume { margin: 14px 0 18px; font-size: 12px; background: #F3F4F6; border-radius: 6px; padding: 8px 12px; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th { background: #4F46E5; color: #fff; text-align: left; padding: 7px 8px; font-size: 11px; text-transform: uppercase; letter-spacing: .03em; }
+  td { padding: 7px 8px; border-bottom: 1px solid #E5E7EB; vertical-align: top; }
+  tr:nth-child(even) td { background: #FAFAFA; }
+  .grp td { background: #E0E7FF !important; font-weight: bold; font-size: 12px; color: #3730A3; padding: 6px 8px; }
+  .nom { font-weight: 600; }
+  .sec { color: #555; }
+  .r { text-align: right; white-space: nowrap; }
+  .c { text-align: center; width: 44px; }
+  .ecart { color: #B91C1C; font-weight: bold; }
+  .box { display: inline-block; width: 14px; height: 14px; border: 1.5px solid #666; border-radius: 3px; line-height: 13px; font-size: 11px; }
+  .box.on { background: #16A34A; border-color: #16A34A; color: #fff; }
+  footer { margin-top: 26px; font-size: 11px; color: #666; display: flex; justify-content: space-between; gap: 20px; }
+  .sign { margin-top: 30px; border-top: 1px solid #999; width: 240px; padding-top: 4px; }
+  .barre { position: sticky; top: 0; background: #fff; padding-bottom: 14px; }
+  button { background: #4F46E5; color: #fff; border: 0; padding: 11px 22px; font-size: 15px;
+           border-radius: 6px; cursor: pointer; font-weight: bold; }
+  button:hover { background: #4338CA; }
+  .aide { font-size: 12px; color: #666; margin-left: 10px; }
+  @media print {
+    body { padding: 0; }
+    .noprint { display: none !important; }
+    thead { display: table-header-group; }   /* en-tetes repetes a chaque page */
+    tr { break-inside: avoid; }
+    .grp td { background: #E0E7FF !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style></head><body>
+<div class="barre noprint">
+  <button onclick="window.print()">Imprimer / Enregistrer en PDF</button>
+  <span class="aide">Dans la fenêtre d'impression, choisissez « Enregistrer au format PDF » comme destination.</span>
+</div>
+<header>
+  <h1>${esc(basket.name)}</h1>
+  <div class="meta">
+    <span>Équipe : <b>${esc(teamKey)}</b></span>
+    <span>État : <b>${isDraft ? 'Préparation' : 'Chargement'}</b></span>
+    <span>Édité le <b>${dateStr}</b></span>
+    ${userName ? `<span>Par <b>${esc(userName)}</b></span>` : ''}
+  </div>
+</header>
+<div class="resume">
+  <b>${rows.length}</b> référence(s) &nbsp;·&nbsp; <b>${total}</b> article(s) au total
+  ${isDraft ? '' : ` &nbsp;·&nbsp; <b>${charges}/${rows.length}</b> chargé(s) (${calculateProgress(basket)} %)`}
+  ${groupBy ? ` &nbsp;·&nbsp; regroupé par ${sortMode === 'zone' ? 'zone de rangement' : 'famille'}` : ''}
+</div>
+<table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table>
+<footer>
+  <span>Invent'RTE — ${esc(teamKey)}</span>
+  <span class="sign">Visa / observations</span>
+</footer>
+</body></html>`;
+
+    const win = window.open('', '_blank');
+    if (win) { win.document.write(html); win.document.close(); return; }
+
+    // Pop-ups bloquees (frequent sur mobile) : on imprime via un cadre masque.
+    const frame = document.createElement('iframe');
+    frame.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;';
+    document.body.appendChild(frame);
+    frame.contentDocument.write(html);
+    frame.contentDocument.close();
+    setTimeout(() => {
+        frame.contentWindow.focus();
+        frame.contentWindow.print();
+        setTimeout(() => frame.remove(), 60000);
+    }, 400);
+    toast("Fenêtre d'impression ouverte", 'ok');
 }
 
 function currentBasket() { return baskets.find(b => b.id === currentBasketId); }
