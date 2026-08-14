@@ -1,30 +1,19 @@
+// Regles de securite Invent'RTE
+//
+// Console Firebase > Realtime Database > onglet "Regles" > coller > Publier.
+// Prerequis : Authentication > Sign-in method > Anonyme > Active.
+//
+// Principe : le droit d'ecriture est accorde element par element (une piece,
+// une zone, un chantier), jamais sur une collection entiere. Firebase ne permet
+// pas de retirer plus bas un droit accorde plus haut : autoriser l'ecriture sur
+// "parts" reviendrait a autoriser l'effacement de tout l'inventaire d'un coup.
 {
-  "_commentaire": [
-    "REGLES DE SECURITE A COLLER DANS LA CONSOLE FIREBASE.",
-    "Console Firebase > Realtime Database > onglet 'Regles' > coller > Publier.",
-    "",
-    "PREREQUIS : la connexion anonyme doit etre activee.",
-    "Console Firebase > Authentication > Sign-in method > Anonyme > Activer.",
-    "L'application se connecte toute seule : les utilisateurs n'ont ni compte",
-    "ni mot de passe a saisir.",
-    "",
-    "Sans ces regles, la base est ouverte a tout Internet : n'importe qui peut",
-    "lire l'inventaire complet ou l'effacer en une seule requete.",
-    "",
-    "Principe : le droit d'ecriture est accorde element par element (une piece,",
-    "une zone, un chantier), jamais sur une collection entiere. Firebase ne",
-    "permet pas de retirer plus bas un droit accorde plus haut : accorder",
-    "l'ecriture sur 'parts' autoriserait a effacer tout l'inventaire d'un coup.",
-    "",
-    "Les cles _commentaire sont ignorees par Firebase, elles servent de notice."
-  ],
-
   "rules": {
     ".read": false,
     ".write": false,
 
+    // Index leger des equipes, lu au demarrage.
     "teams": {
-      "_commentaire": "Index leger des equipes, lu au demarrage.",
       ".read": "auth != null",
       "$team": {
         ".write": "auth != null",
@@ -42,10 +31,11 @@
 
         "meta": {
           ".write": "auth != null",
-          "name":      { ".validate": "newData.isString() && newData.val().length <= 60" },
-          "createdAt": { ".validate": "newData.isNumber()" },
-          "migratedAt":{ ".validate": "newData.isNumber()" },
-          "$autre":    { ".validate": false }
+          "name":       { ".validate": "newData.isString() && newData.val().length <= 60" },
+          "createdAt":  { ".validate": "newData.isNumber()" },
+          "migratedAt": { ".validate": "newData.isNumber()" },
+          "restoredAt": { ".validate": "newData.isNumber()" },
+          "$autre":     { ".validate": false }
         },
 
         "parts": {
@@ -78,8 +68,9 @@
         },
 
         "map": {
+          // Plan compresse cote application (~300 Ko).
+          // La limite bloque l'envoi accidentel d'une image brute.
           "image": {
-            "_commentaire": "Plan compresse cote application (~300 Ko). La limite bloque l'envoi d'une image brute.",
             ".write": "auth != null",
             ".validate": "newData.isString() && newData.val().length <= 3000000"
           },
@@ -124,8 +115,9 @@
           }
         },
 
+        // Journal en ajout seul : une entree ecrite ne peut plus etre ni
+        // modifiee ni effacee, y compris par l'application elle-meme.
         "history": {
-          "_commentaire": "Journal en ajout seul : une entree ecrite ne peut plus etre ni modifiee ni effacee, y compris par l'application elle-meme.",
           "$entry": {
             ".write": "auth != null && !data.exists() && newData.exists()",
             ".validate": "newData.hasChildren(['ts', 'text'])",
@@ -138,8 +130,9 @@
       }
     },
 
+    // Ancienne structure d'avant la migration, conservee en lecture seule
+    // comme filet de securite. Plus aucune ecriture n'est autorisee.
     "profilesData": {
-      "_commentaire": "Ancienne structure d'avant la migration, conservee en lecture seule comme filet de securite. Plus aucune ecriture n'est autorisee.",
       ".read": "auth != null",
       ".write": false
     }
