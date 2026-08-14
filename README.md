@@ -40,7 +40,8 @@ profiles/<équipe>/
     media/p<id>                 photo pleine taille + notice PDF, à la demande
     map/image                   plan de l'atelier, à la demande
     map/markers/m<id>           zones positionnées sur le plan
-    baskets/b<id>               chantiers et leur contenu
+    baskets/b<id>               chantiers
+    baskets/b<id>/items/<uid>   articles, un nœud par article
     history/<id>                journal des mouvements
 ```
 
@@ -50,6 +51,11 @@ le nœud concerné au lieu de réécrire la base entière.
 
 Concrètement, une modification de quantité coûte quelques centaines d'octets au
 lieu des 16,7 Mo que représentait l'ancienne structure.
+
+Corollaire important : **rien n'est jamais réécrit en bloc**. Deux personnes qui
+ajoutent un article au même chantier au même moment écrivent chacune son propre
+nœud, donc aucune ne peut effacer le travail de l'autre. C'est pour cette raison
+que les articles sont indexés par identifiant plutôt que rangés dans une liste.
 
 `profilesData` est l'ancienne structure, conservée intacte en lecture seule comme
 filet de sécurité. Elle n'est plus utilisée par l'application et peut être

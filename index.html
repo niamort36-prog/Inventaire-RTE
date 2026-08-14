@@ -722,7 +722,9 @@ function attachListeners() {
         renderMap(); populatePartsFilters(); updateStats();
     });
     bind('baskets', v => {
-        baskets = toArray(v).map(b => ({ ...b, items: toArray(b.items) }));
+        // items est conserve tel quel (indexe par identifiant) : le convertir en
+        // tableau ici obligerait a le reecrire en entier a chaque modification.
+        baskets = toArray(v);
         renderBaskets(); updateStats(); rerenderCurrentBasket();
     });
 
@@ -1077,11 +1079,14 @@ async function deletePart() {
     const p = parts.find(x => x.id === id);
     if (!confirm(`Supprimer définitivement « ${p ? p.name : 'cette pièce'} » ?`)) return;
 
-    // On retire aussi la pièce des paniers pour éviter les références fantômes.
-    const touched = baskets.filter(b => (b.items || []).some(i => i.partId === id));
-    for (const b of touched) {
-        b.items = b.items.filter(i => i.partId !== id);
-        await write('baskets/b' + b.id, b);
+    // On retire aussi la pièce des paniers pour éviter les références fantômes,
+    // article par article afin de ne pas écraser le travail en cours des autres.
+    let touched = 0;
+    for (const b of baskets) {
+        const concerned = itemsOf(b).filter(i => i.partId === id);
+        if (!concerned.length) continue;
+        touched++;
+        for (const item of concerned) await write(itemRef(b.id, item.uid), null);
     }
 
     await write('parts/p' + id, null);
@@ -1091,7 +1096,7 @@ async function deletePart() {
 
     logHistory(`Suppression de « ${p ? p.name : id} »`);
     closeModal('modal-part');
-    toast("Pièce supprimée" + (touched.length ? ` (retirée de ${touched.length} chantier(s))` : ''), 'ok');
+    toast("Pièce supprimée" + (touched ? ` (retirée de ${touched} chantier(s))` : ''), 'ok');
 }
 
 /* -------------------------------------------------------- Compression images */
@@ -1604,8 +1609,26 @@ async function deleteMarker(id) {
 /* ============================================================================
    PANIERS / CHANTIERS
    ========================================================================== */
+/** Articles d'un chantier, sous forme de tableau, avec un identifiant garanti.
+ *  Les articles sont stockes indexes par identifiant (items/<uid>) et non dans
+ *  un tableau : c'est ce qui permet d'ecrire un article sans reecrire les
+ *  autres, donc a deux personnes d'en ajouter en meme temps sans s'effacer.
+ *  Le format tableau des anciens chantiers reste lu correctement. */
+function itemsOf(basket) {
+    const raw = basket && basket.items;
+    if (!raw) return [];
+    if (Array.isArray(raw)) {
+        return raw.filter(Boolean).map((it, i) => ({ ...it, uid: it.uid || 'i' + i }));
+    }
+    return Object.keys(raw).filter(k => raw[k]).map(k => ({ ...raw[k], uid: raw[k].uid || k }));
+}
+
+function newItemUid() {
+    return 'i' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+}
+
 function calculateProgress(basket) {
-    const items = toArray(basket.items);
+    const items = itemsOf(basket);
     if (!items.length) return 0;
     return Math.round((items.filter(i => i.loaded).length / items.length) * 100);
 }
@@ -1614,7 +1637,7 @@ async function createBasket() {
     const name = prompt("Nom du nouveau chantier :", "Chantier " + (baskets.length + 1));
     if (!name || !name.trim()) return;
     const id = Date.now();
-    await write('baskets/b' + id, { id, name: name.trim(), status: 'draft', items: [], createdAt: id });
+    await write('baskets/b' + id, { id, name: name.trim(), status: 'draft', createdAt: id });
     logHistory(`Chantier « ${name.trim()} » créé`);
     openBasketDetail(id);
 }
@@ -1628,7 +1651,7 @@ function renderBaskets() {
     baskets.slice().sort((a, b) => num(b.createdAt || b.id) - num(a.createdAt || a.id)).forEach(b => {
         const isDraft = b.status === 'draft';
         const percent = calculateProgress(b);
-        const items = toArray(b.items);
+        const items = itemsOf(b);
         const card = document.createElement('div');
         card.className = "bg-white p-5 rounded-lg shadow cursor-pointer hover:shadow-md transition border-l-4";
         card.style.borderLeftColor = isDraft ? '#6366F1' : '#22C55E';
@@ -1723,7 +1746,7 @@ function updateHeaderPie(basket) {
 
 function renderBasketItems(basket) {
     if (!basket) return;
-    const items = toArray(basket.items);
+    const items = itemsOf(basket);
     const tbody = document.getElementById('basket-items-list');
     const emptyMsg = document.getElementById('basket-empty-list-msg');
     tbody.innerHTML = '';
@@ -1797,29 +1820,32 @@ function renderBasketItems(basket) {
 
 function currentBasket() { return baskets.find(b => b.id === currentBasketId); }
 
-function saveBasket(basket) { return write('baskets/b' + basket.id, basket); }
+/* Toutes les operations ci-dessous n'ecrivent que l'article concerne
+   (baskets/b<id>/items/<uid>) : le travail simultane d'un collegue sur le
+   meme chantier n'est jamais ecrase. */
+
+function itemRef(basketId, uid) { return 'baskets/b' + basketId + '/items/' + uid; }
+
+/** Applique un changement localement (affichage immediat) puis l'enregistre. */
+function patchItem(uid, patch, refresh) {
+    const b = currentBasket(); if (!b) return;
+    if (b.items && !Array.isArray(b.items) && b.items[uid]) Object.assign(b.items[uid], patch);
+    if (refresh) refresh(b);
+    updateNode(itemRef(b.id, uid), patch);
+}
 
 function toggleItemLoad(uid, checked) {
-    const b = currentBasket(); if (!b) return;
-    const item = b.items.find(i => i.uid === uid); if (!item) return;
-    item.loaded = checked;
-    updateHeaderPie(b); renderBasketItems(b); renderBaskets(); updateStats();
-    saveBasket(b);
+    patchItem(uid, { loaded: checked }, b => {
+        updateHeaderPie(b); renderBasketItems(b); renderBaskets(); updateStats();
+    });
 }
 
 function updateLoadQty(uid, val) {
-    const b = currentBasket(); if (!b) return;
-    const item = b.items.find(i => i.uid === uid); if (!item) return;
-    item.loadedQty = Math.max(0, num(val));      // NaN ne peut plus atteindre Firebase
-    renderBasketItems(b);
-    saveBasket(b);
+    patchItem(uid, { loadedQty: Math.max(0, num(val)) }, b => renderBasketItems(b));
 }
 
 function updateLoadComment(uid, val) {
-    const b = currentBasket(); if (!b) return;
-    const item = b.items.find(i => i.uid === uid); if (!item) return;
-    item.loadComment = val;
-    saveBasket(b);
+    patchItem(uid, { loadComment: val });
 }
 
 function renameBasket() {
@@ -1828,7 +1854,7 @@ function renameBasket() {
     if (!name || !name.trim()) return;
     b.name = name.trim();
     document.getElementById('basket-detail-title').textContent = b.name;
-    saveBasket(b);
+    updateNode('baskets/b' + b.id, { name: b.name });
 }
 
 function searchPartForBasket() {
@@ -1898,20 +1924,25 @@ function finalizeAddToBasket() {
         logHistory(`-${qty} « ${part.name} » (chantier ${basket.name})`);
     }
 
-    const existing = basket.items.find(i => i.partId === partId && i.deduct === deduct && (i.comment || '') === comment);
-    if (existing) existing.qty = num(existing.qty) + qty;
-    else basket.items.push({ uid: 'i' + Date.now() + Math.random().toString(36).slice(2, 7), partId, qty, deduct, comment });
+    // Regroupement avec une ligne identique deja presente, sinon nouvelle ligne.
+    const existing = itemsOf(basket).find(i =>
+        i.partId === partId && !!i.deduct === deduct && (i.comment || '') === comment);
+
+    if (existing) {
+        updateNode(itemRef(basket.id, existing.uid), { qty: num(existing.qty) + qty });
+    } else {
+        const uid = newItemUid();
+        write(itemRef(basket.id, uid), { uid, partId, qty, deduct, comment });
+    }
 
     closeModal('modal-confirm-add-basket');
     document.getElementById('basket-search-input').value = "";
-    renderBasketItems(basket); renderBaskets(); updateStats();
-    if (basket.status === 'active') updateHeaderPie(basket);
-    saveBasket(basket);
+    updateStats();
 }
 
 function removeItemFromBasket(uid) {
     const basket = currentBasket(); if (!basket) return;
-    const item = basket.items.find(i => i.uid === uid); if (!item) return;
+    const item = itemsOf(basket).find(i => i.uid === uid); if (!item) return;
     const part = parts.find(p => p.id === item.partId);
 
     if (basket.status === 'active' && item.deduct) {
@@ -1920,18 +1951,17 @@ function removeItemFromBasket(uid) {
         logHistory(`+${num(item.qty)} « ${part ? part.name : item.partId} » (retiré de ${basket.name})`);
     }
 
-    basket.items = basket.items.filter(i => i.uid !== uid);
-    renderBasketItems(basket); renderBaskets(); updateStats();
-    if (basket.status === 'active') updateHeaderPie(basket);
-    saveBasket(basket);
+    write(itemRef(basket.id, uid), null);
+    updateStats();
 }
 
 function validateBasketDraft() {
     const basket = currentBasket();
     if (!basket) return;
-    if (!basket.items.length) { toast("Ce chantier est vide", 'warn'); return; }
+    const items = itemsOf(basket);
+    if (!items.length) { toast("Ce chantier est vide", 'warn'); return; }
 
-    const short = basket.items.filter(i => {
+    const short = items.filter(i => {
         if (!i.deduct) return false;
         const p = parts.find(x => x.id === i.partId);
         return p && num(p.qty) < num(i.qty);
@@ -1942,10 +1972,10 @@ function validateBasketDraft() {
 
     if (short.length && !confirm("STOCK INSUFFISANT :\n" + short.join("\n") + "\n\nContinuer quand même ?")) return;
 
-    basket.items.forEach(item => { if (item.deduct) adjustQty(item.partId, -num(item.qty)); });
+    items.forEach(item => { if (item.deduct) adjustQty(item.partId, -num(item.qty)); });
     basket.status = 'active';
-    saveBasket(basket);
-    logHistory(`Chantier « ${basket.name} » validé (${basket.items.length} références)`);
+    updateNode('baskets/b' + basket.id, { status: 'active' });
+    logHistory(`Chantier « ${basket.name} » validé (${items.length} références)`);
     toast("Chantier validé — passage au chargement", 'ok');
     openBasketDetail(currentBasketId);
     updateStats();
@@ -1965,7 +1995,7 @@ function archiveBasket() {
 function deleteBasket() {
     const basket = currentBasket(); if (!basket) return;
     const toRestore = basket.status === 'active'
-        ? basket.items.filter(i => i.deduct) : [];
+        ? itemsOf(basket).filter(i => i.deduct) : [];
     let msg = `Supprimer définitivement « ${basket.name} » ?`;
     if (toRestore.length) msg += `\n\nLe stock de ${toRestore.length} référence(s) sera recrédité.`;
     if (!confirm(msg)) return;
@@ -1998,7 +2028,7 @@ function updateDashboardActiveBaskets() {
         div.onclick = () => { showPage('paniers'); openBasketDetail(b.id); };
         div.innerHTML = `<div class="min-w-0">
                 <h4 class="font-bold text-gray-800 truncate">${esc(b.name)}</h4>
-                <p class="text-xs text-gray-500">${toArray(b.items).length} référence(s) • ${isDraft ? 'Brouillon' : p + ' % chargé'}</p>
+                <p class="text-xs text-gray-500">${itemsOf(b).length} référence(s) • ${isDraft ? 'Brouillon' : p + ' % chargé'}</p>
             </div>
             ${isDraft ? '<i class="fa-solid fa-pen-to-square text-gray-300 text-xl flex-none"></i>'
                       : `<div class="pie-chart flex-none" style="width:40px;height:40px;background:conic-gradient(#16a34a ${p}%, #E5E7EB 0);">
