@@ -2269,7 +2269,22 @@ function boot() {
 window.addEventListener('beforeunload', () => { detachListeners(); stopScanner(); });
 
 if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').then(reg => {
+            // Vérifie s'il existe une version plus récente à chaque ouverture.
+            reg.update().catch(() => {});
+        }).catch(() => {});
+    });
+
+    // Quand une nouvelle version prend la main, on recharge une seule fois :
+    // sans cela l'appareil continuerait de tourner sur l'ancien code jusqu'à la
+    // prochaine fermeture complète de l'application.
+    let reloadedForUpdate = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (reloadedForUpdate) return;
+        reloadedForUpdate = true;
+        location.reload();
+    });
 }
 
 boot();

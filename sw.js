@@ -10,7 +10,7 @@
  *    cache d'abord, car leurs URL sont versionnées ;
  *  - Firebase (base de données) : jamais interceptée.
  */
-const CACHE = 'inventrte-v1';
+const CACHE = 'inventrte-v2';
 
 const APP_SHELL = [
     './',
@@ -24,7 +24,10 @@ self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE)
             // addAll échoue en bloc si une seule ressource manque : on tolère les absences.
-            .then(c => Promise.allSettled(APP_SHELL.map(u => c.add(u))))
+            // `cache: 'reload'` garantit qu'on installe la version du serveur et
+            // non une copie déjà périmée du cache HTTP.
+            .then(c => Promise.allSettled(
+                APP_SHELL.map(u => c.add(new Request(u, { cache: 'reload' })))))
             .then(() => self.skipWaiting())
     );
 });
@@ -63,8 +66,14 @@ self.addEventListener('fetch', event => {
     }
 
     // Fichiers de l'application : réseau d'abord, cache en secours hors ligne.
+    //
+    // `cache: 'reload'` contourne le cache HTTP du navigateur. Sans cela, GitHub
+    // Pages renvoyant "Cache-Control: max-age=600", cette requête réseau pouvait
+    // être satisfaite par une copie périmée : l'appareil restait alors sur
+    // l'ancienne version de l'application, et le service worker la remettait en
+    // cache, prolongeant le décalage bien au-delà des 10 minutes.
     event.respondWith(
-        fetch(req).then(res => {
+        fetch(req.url, { cache: 'reload', credentials: 'same-origin' }).then(res => {
             if (res && res.status === 200) {
                 const copy = res.clone();
                 caches.open(CACHE).then(c => c.put(req, copy));
