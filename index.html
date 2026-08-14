@@ -3,22 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Invent'RTE - Atelier & Chantiers</title>
-    
+    <title>Invent'RTE - Atelier &amp; Chantiers</title>
+
     <link rel="apple-touch-icon" href="LogoAcceuil.png">
     <link rel="icon" href="LogoAcceuil.png">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4F46E5">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Invent'RTE">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-database-compat.js"></script>
 
     <script>
@@ -26,8 +29,7 @@
             theme: {
                 extend: {
                     colors: { primary: '#4F46E5', bgLight: '#F3F4F6' },
-                    animation: { 'ping-slow': 'ping 2s cubic-bezier(0, 0, 0.2, 1) infinite' },
-                    zIndex: { '60': '60', '70': '70' }
+                    zIndex: { '60': '60', '70': '70', '80': '80' }
                 }
             }
         }
@@ -36,6 +38,7 @@
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #F8F9FA; overscroll-behavior: none; }
         .nav-item.active { color: #4F46E5; border-bottom: 2px solid #4F46E5; }
         .badge { padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
+        .card-hover { transition: transform .12s, box-shadow .12s; }
         .card-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
         .map-marker { position: absolute; transform: translate(-50%, -100%); cursor: pointer; transition: transform 0.1s; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4)); z-index: 10; touch-action: none; }
         .map-marker:active { cursor: grabbing; z-index: 50; transform: translate(-50%, -100%) scale(1.1); }
@@ -47,13 +50,16 @@
         #reader video { object-fit: cover; border-radius: 8px; width: 100% !important; }
         .search-result-item:hover { background-color: #F3F4F6; }
 
-        .pie-chart {
-            width: 60px; height: 60px; border-radius: 50%;
-            background: conic-gradient(#4F46E5 0% 0%, #E5E7EB 0% 100%);
-            transition: background 0.5s ease;
-            display: flex; align-items: center; justify-content: center;
-        }
+        .pie-chart { width: 60px; height: 60px; border-radius: 50%; background: conic-gradient(#4F46E5 0% 0%, #E5E7EB 0% 100%); transition: background 0.5s ease; display: flex; align-items: center; justify-content: center; }
         .pie-chart-inner { width: 40px; height: 40px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; }
+
+        /* Squelette affiche pendant le chargement des vignettes */
+        .img-skeleton { background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 37%, #f3f4f6 63%); background-size: 400% 100%; animation: shimmer 1.4s ease infinite; }
+        @keyframes shimmer { 0% { background-position: 100% 0 } 100% { background-position: -100% 0 } }
+
+        #toast-zone { position: fixed; bottom: 1rem; left: 50%; transform: translateX(-50%); z-index: 90; display: flex; flex-direction: column; gap: .5rem; align-items: center; pointer-events: none; }
+        .toast { padding: .6rem 1.1rem; border-radius: 9999px; color: #fff; font-size: .875rem; font-weight: 600; box-shadow: 0 10px 15px -3px rgba(0,0,0,.25); animation: toastIn .2s ease; }
+        @keyframes toastIn { from { opacity: 0; transform: translateY(10px) } to { opacity: 1; transform: none } }
     </style>
 </head>
 <body class="text-gray-700 h-screen flex flex-col overflow-hidden">
@@ -67,38 +73,45 @@
                         <span class="font-bold text-xl text-gray-800 hidden md:inline">Invent'RTE</span>
                     </div>
                     <div class="ml-4 sm:ml-10 flex space-x-4 sm:space-x-8 overflow-x-auto">
-                        <a href="#" onclick="showPage('dashboard')" id="nav-dashboard" class="nav-item active inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900">Accueil</a>
-                        <a href="#" onclick="showPage('pieces')" id="nav-pieces" class="nav-item inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700">Pièces</a>
-                        <a href="#" onclick="showPage('familles')" id="nav-familles" class="nav-item inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700">Familles</a>
-                        <a href="#" onclick="showPage('plan')" id="nav-plan" class="nav-item inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700">Plan</a>
-                        <a href="#" onclick="showPage('paniers')" id="nav-paniers" class="nav-item inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700">Paniers</a>
-                        <a href="#" onclick="showPage('scanner')" id="nav-scanner" class="nav-item inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700">Scan</a>
+                        <a href="#" onclick="showPage('dashboard');return false" id="nav-dashboard" class="nav-item active inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900">Accueil</a>
+                        <a href="#" onclick="showPage('pieces');return false" id="nav-pieces" class="nav-item inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700">Pièces</a>
+                        <a href="#" onclick="showPage('familles');return false" id="nav-familles" class="nav-item inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700">Familles</a>
+                        <a href="#" onclick="showPage('plan');return false" id="nav-plan" class="nav-item inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700">Plan</a>
+                        <a href="#" onclick="showPage('paniers');return false" id="nav-paniers" class="nav-item inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700">Paniers</a>
+                        <a href="#" onclick="showPage('scanner');return false" id="nav-scanner" class="nav-item inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-700">Scan</a>
                     </div>
                 </div>
-                <div class="flex items-center ml-2 flex-shrink-0 border-l pl-4 relative">
-                    <div id="sync-indicator" class="absolute -left-3 top-1/2 transform -translate-y-1/2 w-2 h-2 rounded-full bg-gray-300" title="Synchronisation désactivée"></div>
-                    <div class="relative">
-                        <select id="profile-selector" onchange="switchProfile(this.value)" class="block w-full pl-3 pr-8 py-1.5 text-sm border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md shadow-sm font-bold bg-white text-indigo-700 cursor-pointer">
-                            <option value="EL Feytiat">EL Feytiat</option>
-                            <option value="EL Aurillac">EL Aurillac</option>
-                        </select>
-                    </div>
+                <div class="flex items-center ml-2 flex-shrink-0 border-l pl-3 gap-2">
+                    <button onclick="openTeamModal()" id="team-button" class="flex items-center gap-2 px-3 py-1.5 rounded-md border border-gray-300 shadow-sm bg-white hover:bg-gray-50 transition">
+                        <span id="sync-dot" class="w-2 h-2 rounded-full bg-gray-300 flex-none" title="Connexion..."></span>
+                        <span id="team-label" class="text-sm font-bold text-indigo-700 whitespace-nowrap">EL Feytiat</span>
+                        <i class="fa-solid fa-chevron-down text-xs text-gray-400"></i>
+                    </button>
                 </div>
             </div>
         </div>
     </nav>
 
     <main class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex-grow w-full overflow-y-auto" id="main-content">
-        
+
         <div id="page-dashboard" class="space-y-6">
-            <h1 class="text-2xl font-bold text-gray-900">Tableau de bord</h1>
-             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="flex justify-between items-center flex-wrap gap-2">
+                <h1 class="text-2xl font-bold text-gray-900">Tableau de bord</h1>
+                <button onclick="openHistory()" class="text-sm bg-white border border-gray-300 px-3 py-2 rounded-md shadow-sm hover:bg-gray-50">
+                    <i class="fa-solid fa-clock-rotate-left mr-2 text-gray-500"></i>Historique
+                </button>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div class="bg-white shadow rounded-lg p-5 border-l-4 border-indigo-500">
                     <dt class="text-sm font-medium text-gray-500">Total Pièces</dt>
                     <dd class="mt-1 text-3xl font-semibold text-gray-900" id="stat-total-parts">0</dd>
                 </div>
+                <div class="bg-white shadow rounded-lg p-5 border-l-4 border-blue-500">
+                    <dt class="text-sm font-medium text-gray-500">Quantité totale</dt>
+                    <dd class="mt-1 text-3xl font-semibold text-gray-900" id="stat-total-qty">0</dd>
+                </div>
                 <div class="bg-white shadow rounded-lg p-5 border-l-4 border-purple-500">
-                    <dt class="text-sm font-medium text-gray-500">Chantiers Actifs</dt>
+                    <dt class="text-sm font-medium text-gray-500">Chantiers en cours</dt>
                     <dd class="mt-1 text-3xl font-semibold text-gray-900" id="stat-total-active-baskets">0</dd>
                 </div>
                 <div class="bg-white shadow rounded-lg p-5 border-l-4 border-green-500">
@@ -121,6 +134,11 @@
                     <div id="stock-alerts-list" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
                 </div>
             </div>
+
+            <div id="dashboard-families" class="hidden">
+                <h3 class="text-lg font-bold text-gray-800 mb-3"><i class="fa-solid fa-layer-group mr-2 text-indigo-600"></i>Répartition par famille</h3>
+                <div id="dashboard-families-list" class="bg-white rounded-lg shadow border border-gray-200 divide-y"></div>
+            </div>
         </div>
 
         <div id="page-pieces" class="hidden space-y-6">
@@ -138,23 +156,34 @@
                     </button>
                 </div>
             </div>
-            
+
             <div class="flex flex-col md:flex-row gap-3 bg-white p-3 rounded-md shadow-sm border border-gray-200">
                 <div class="relative flex-grow">
-                    <input type="text" id="search-input-parts" onkeyup="renderPartsGrid()" class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-gray-50 placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Rechercher une pièce...">
+                    <input type="text" id="search-input-parts" oninput="renderPartsGrid()" class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-gray-50 placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Rechercher une pièce...">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i class="fa-solid fa-search text-gray-400"></i></div>
                 </div>
-                <div class="flex gap-3 w-full md:w-auto">
-                    <select id="filter-parts-family" onchange="renderPartsGrid()" class="block w-full md:w-48 pl-3 pr-8 py-2 text-sm border border-gray-300 bg-gray-50 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md">
+                <div class="flex gap-3 w-full md:w-auto flex-wrap">
+                    <select id="filter-parts-family" onchange="renderPartsGrid()" class="block w-full md:w-44 pl-3 pr-8 py-2 text-sm border border-gray-300 bg-gray-50 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md">
                         <option value="">Toutes Familles</option>
                     </select>
-                    <select id="filter-parts-zone" onchange="renderPartsGrid()" class="block w-full md:w-48 pl-3 pr-8 py-2 text-sm border border-gray-300 bg-gray-50 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md">
+                    <select id="filter-parts-zone" onchange="renderPartsGrid()" class="block w-full md:w-44 pl-3 pr-8 py-2 text-sm border border-gray-300 bg-gray-50 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md">
                         <option value="">Toutes Zones</option>
+                    </select>
+                    <select id="sort-parts" onchange="renderPartsGrid()" class="block w-full md:w-44 pl-3 pr-8 py-2 text-sm border border-gray-300 bg-gray-50 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md">
+                        <option value="name">Trier : Nom (A-Z)</option>
+                        <option value="qty-asc">Trier : Stock croissant</option>
+                        <option value="qty-desc">Trier : Stock décroissant</option>
+                        <option value="alert">Trier : Stock bas d'abord</option>
+                        <option value="recent">Trier : Plus récentes</option>
                     </select>
                 </div>
             </div>
 
+            <p class="text-sm text-gray-500" id="parts-count-label"></p>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="all-parts-grid"></div>
+            <div id="empty-parts-msg" class="text-center py-10 text-gray-500 hidden">
+                <i class="fa-solid fa-box-open fa-3x mb-3 text-gray-300"></i><p>Aucune pièce ne correspond.</p>
+            </div>
         </div>
 
         <div id="page-familles" class="hidden space-y-6">
@@ -171,8 +200,9 @@
                 <div class="flex gap-2"><label class="bg-white border border-gray-300 text-gray-700 px-3 py-2 rounded-md text-sm font-medium shadow-sm hover:bg-gray-50 cursor-pointer"><i class="fa-solid fa-upload mr-1"></i> <span class="hidden sm:inline">Changer plan</span><input type="file" accept="image/*" class="hidden" onchange="uploadMap(event)"></label></div>
             </div>
             <div class="flex flex-col lg:flex-row gap-4 flex-grow overflow-hidden">
-                <div class="w-full lg:w-3/4 bg-gray-100 p-1 rounded-lg shadow border border-gray-200 relative overflow-hidden flex flex-col">
+                <div class="w-full lg:w-3/4 bg-gray-100 p-1 rounded-lg shadow border border-gray-200 relative overflow-hidden flex flex-col" style="min-height:320px">
                     <div id="no-map-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-gray-400 z-0"><i class="fa-regular fa-map fa-4x mb-4"></i><p class="text-lg font-medium">Aucun plan chargé</p></div>
+                    <div id="map-loading" class="absolute inset-0 flex items-center justify-center text-gray-400 z-20 bg-gray-100 hidden"><i class="fa-solid fa-spinner fa-spin fa-2x"></i></div>
                     <div id="map-container" class="hidden relative w-full h-full cursor-crosshair overflow-hidden touch-none" onmousemove="handleContainerMove(event)" ontouchmove="handleContainerMove(event)" onmouseup="handleContainerUp(event)" ontouchend="handleContainerUp(event)" onclick="handleMapBackgroundClick(event)">
                         <img id="atelier-map-img" src="" class="w-full h-full object-contain pointer-events-none select-none" alt="Plan">
                         <div id="map-markers-layer" class="absolute inset-0 w-full h-full"></div>
@@ -184,7 +214,7 @@
 
         <div id="page-paniers" class="hidden space-y-6">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                <h1 class="text-2xl font-bold text-gray-900">Paniers & Chantiers</h1>
+                <h1 class="text-2xl font-bold text-gray-900">Paniers &amp; Chantiers</h1>
                 <button onclick="createBasket()" class="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium shadow-sm hover:bg-indigo-700 transition w-full md:w-auto">
                     <i class="fa-solid fa-cart-plus mr-2"></i> Nouveau Chantier
                 </button>
@@ -199,13 +229,49 @@
             <h1 class="text-2xl font-bold text-gray-900">Scanner</h1>
             <div class="max-w-md mx-auto bg-white p-4 rounded-lg shadow">
                 <div id="reader"></div>
-                <p class="text-center text-sm text-gray-500 mt-4">Pointez vers un QR Code.</p>
+                <p class="text-center text-sm text-gray-500 mt-4">Pointez vers un QR Code d'une pièce.</p>
             </div>
         </div>
 
     </main>
 
-    <div id="modal-confirm-add-basket" class="hidden fixed z-[60] inset-0 overflow-y-auto">
+    <div id="toast-zone"></div>
+
+    <!-- Choix / gestion des equipes -->
+    <div id="modal-team" class="hidden fixed z-80 inset-0 overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="fixed inset-0 bg-gray-600 bg-opacity-75" onclick="closeModal('modal-team')"></div>
+            <div class="bg-white rounded-lg w-full max-w-sm p-6 relative z-10 shadow-xl">
+                <h3 class="text-lg font-bold mb-1">Équipe</h3>
+                <p class="text-xs text-gray-500 mb-4">Chaque équipe possède son propre stock, ses familles, son plan et ses chantiers.</p>
+                <div id="team-list" class="space-y-2 mb-4 max-h-64 overflow-y-auto"></div>
+                <button onclick="createTeam()" class="w-full border border-dashed border-gray-300 text-gray-600 py-2 rounded hover:bg-gray-50 text-sm mb-4">
+                    <i class="fa-solid fa-plus mr-2"></i>Nouvelle équipe
+                </button>
+                <div class="border-t pt-4">
+                    <label class="block text-sm font-semibold mb-1">Votre nom <span class="font-normal text-gray-400">(pour l'historique)</span></label>
+                    <input type="text" id="input-user-name" class="w-full border p-2 rounded text-sm" placeholder="Ex: Julien" onchange="saveUserName(this.value)">
+                </div>
+                <button onclick="closeModal('modal-team')" class="mt-4 w-full bg-gray-100 py-2 rounded hover:bg-gray-200 text-sm font-medium">Fermer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Historique des mouvements -->
+    <div id="modal-history" class="hidden fixed z-70 inset-0 overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="fixed inset-0 bg-gray-600 bg-opacity-75" onclick="closeModal('modal-history')"></div>
+            <div class="bg-white rounded-lg w-full max-w-lg p-6 relative z-10 shadow-xl flex flex-col max-h-[85vh]">
+                <div class="flex justify-between items-center border-b pb-3 mb-3">
+                    <h3 class="text-xl font-bold">Historique</h3>
+                    <button onclick="closeModal('modal-history')"><i class="fa-solid fa-times text-xl text-gray-400"></i></button>
+                </div>
+                <div id="history-list" class="overflow-y-auto divide-y text-sm"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-confirm-add-basket" class="hidden fixed z-60 inset-0 overflow-y-auto">
         <div class="flex items-center justify-center min-h-screen px-4">
             <div class="fixed inset-0 bg-gray-600 bg-opacity-75" onclick="closeModal('modal-confirm-add-basket')"></div>
             <div class="bg-white rounded-lg p-6 max-w-sm w-full shadow-xl relative z-50 transform transition-all">
@@ -239,18 +305,21 @@
                 <div class="px-6 py-4 border-b flex justify-between items-center bg-gray-50 rounded-t-lg">
                     <div class="flex items-center gap-3">
                          <div id="header-pie-chart" class="pie-chart hidden"><div class="pie-chart-inner" id="header-pie-text">0%</div></div>
-                         <div><h3 class="text-xl font-bold text-gray-900" id="basket-detail-title">Panier</h3><span id="basket-status-badge" class="text-xs font-bold px-2 py-0.5 rounded bg-gray-200 text-gray-600">Brouillon</span></div>
+                         <div>
+                            <h3 class="text-xl font-bold text-gray-900 cursor-pointer hover:text-indigo-600" id="basket-detail-title" onclick="renameBasket()" title="Cliquer pour renommer">Panier</h3>
+                            <span id="basket-status-badge" class="text-xs font-bold px-2 py-0.5 rounded bg-gray-200 text-gray-600">Brouillon</span>
+                         </div>
                     </div>
                     <button onclick="closeModal('modal-basket-detail')" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-times fa-lg"></i></button>
                 </div>
                 <div id="basket-search-container" class="px-6 py-4 bg-white border-b relative">
-                    <div class="relative"><input type="text" id="basket-search-input" onkeyup="searchPartForBasket()" class="w-full border p-3 pl-10 rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="Ajouter une pièce (Recherche)..."><div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i class="fa-solid fa-plus text-gray-400"></i></div></div>
+                    <div class="relative"><input type="text" id="basket-search-input" oninput="searchPartForBasket()" class="w-full border p-3 pl-10 rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="Ajouter une pièce (Recherche)..."><div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i class="fa-solid fa-plus text-gray-400"></i></div></div>
                     <div id="basket-search-results" class="absolute left-6 right-6 top-14 bg-white shadow-xl rounded-b-lg border border-t-0 border-gray-200 z-20 max-h-48 overflow-y-auto hidden"></div>
                 </div>
                 <div class="px-6 py-3 bg-gray-100 border-b flex flex-wrap gap-2 items-center">
-                    <div class="flex-grow relative"><input type="text" id="filter-basket-text" onkeyup="renderBasketItems(baskets.find(b=>b.id===currentBasketId))" placeholder="Filtrer dans la liste..." class="w-full border border-gray-300 rounded px-2 py-1 text-sm pl-7 focus:outline-none focus:border-indigo-500"><i class="fa-solid fa-filter absolute left-2 top-2 text-gray-400 text-xs"></i></div>
-                    <select id="filter-basket-zone" onchange="renderBasketItems(baskets.find(b=>b.id===currentBasketId))" class="border border-gray-300 rounded px-2 py-1 text-sm bg-white focus:outline-none max-w-[120px]"><option value="">Toutes Zones</option></select>
-                    <select id="filter-basket-family" onchange="renderBasketItems(baskets.find(b=>b.id===currentBasketId))" class="border border-gray-300 rounded px-2 py-1 text-sm bg-white focus:outline-none max-w-[120px]"><option value="">Toutes Familles</option></select>
+                    <div class="flex-grow relative"><input type="text" id="filter-basket-text" oninput="rerenderCurrentBasket()" placeholder="Filtrer dans la liste..." class="w-full border border-gray-300 rounded px-2 py-1 text-sm pl-7 focus:outline-none focus:border-indigo-500"><i class="fa-solid fa-filter absolute left-2 top-2 text-gray-400 text-xs"></i></div>
+                    <select id="filter-basket-zone" onchange="rerenderCurrentBasket()" class="border border-gray-300 rounded px-2 py-1 text-sm bg-white focus:outline-none max-w-[120px]"><option value="">Toutes Zones</option></select>
+                    <select id="filter-basket-family" onchange="rerenderCurrentBasket()" class="border border-gray-300 rounded px-2 py-1 text-sm bg-white focus:outline-none max-w-[120px]"><option value="">Toutes Familles</option></select>
                 </div>
                 <div class="p-0 overflow-y-auto flex-grow bg-white">
                     <table class="min-w-full divide-y divide-gray-200">
@@ -260,20 +329,20 @@
                     <div id="basket-empty-list-msg" class="text-center py-8 text-gray-400 hidden">Aucun élément trouvé.</div>
                 </div>
                 <div class="bg-gray-50 px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4 border-t">
-                    <button onclick="deleteBasket()" class="text-red-600 hover:text-red-800 text-sm font-medium">Supprimer / Archiver</button>
+                    <button onclick="deleteBasket()" class="text-red-600 hover:text-red-800 text-sm font-medium">Supprimer le chantier</button>
                     <div class="flex gap-2 w-full sm:w-auto" id="basket-footer-actions"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="modal-quick-view" class="hidden fixed z-[70] inset-0 overflow-y-auto">
+    <div id="modal-quick-view" class="hidden fixed z-70 inset-0 overflow-y-auto">
         <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
             <div class="fixed inset-0 bg-gray-600 bg-opacity-75 transition-opacity" onclick="closeModal('modal-quick-view')"></div>
             <div class="inline-block align-middle bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-md sm:w-full">
                 <input type="hidden" id="quick-view-id">
                 <div class="h-48 bg-gray-100 relative">
-                    <img id="quick-view-img" class="w-full h-full object-cover" src="" style="display:none;">
+                    <img id="quick-view-img" class="w-full h-full object-cover" src="" style="display:none;" alt="">
                     <div id="quick-view-no-img" class="absolute inset-0 flex items-center justify-center text-gray-400"><i class="fa-solid fa-image fa-4x"></i></div>
                     <button onclick="closeModal('modal-quick-view')" class="absolute top-2 right-2 bg-black bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-70"><i class="fa-solid fa-times"></i></button>
                 </div>
@@ -283,7 +352,7 @@
                         <span id="quick-view-family" class="badge">Famille</span>
                     </div>
                     <div class="flex gap-2 mb-4">
-                        <button onclick="locateZoneOnMap()" class="flex-grow flex items-center text-sm text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded transition justify-center"><i class="fa-solid fa-location-dot mr-2"></i>Zone</button>
+                        <button onclick="locateZoneOnMap()" class="flex-grow flex items-center text-sm text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded transition justify-center"><i class="fa-solid fa-location-dot mr-2"></i><span id="quick-view-zone-label">Zone</span></button>
                         <button onclick="showQRCode()" class="flex-none bg-gray-100 text-gray-600 px-3 py-1.5 rounded hover:bg-gray-200"><i class="fa-solid fa-qrcode"></i></button>
                     </div>
                     <div class="bg-gray-50 p-3 rounded-md mb-4 border border-gray-100"><p id="quick-view-desc" class="text-sm text-gray-700 italic">Desc</p></div>
@@ -302,7 +371,7 @@
     </div>
 
     <div id="modal-family" class="hidden fixed z-50 inset-0 overflow-y-auto">
-        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 sm:items-center">
             <div class="fixed inset-0 bg-gray-600 bg-opacity-75" onclick="closeModal('modal-family')"></div>
             <div class="bg-white rounded-lg w-full max-w-lg p-6 relative z-10">
                 <form id="form-family" onsubmit="handleFamilySubmit(event)">
@@ -336,7 +405,7 @@
     </div>
 
     <div id="modal-family-details" class="hidden fixed z-50 inset-0 overflow-y-auto">
-        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 sm:items-center">
             <div class="fixed inset-0 bg-gray-600 bg-opacity-75" onclick="closeModal('modal-family-details')"></div>
             <div class="bg-white rounded-lg w-full max-w-lg p-6 relative z-10">
                 <div class="flex justify-between border-b pb-3 mb-4">
@@ -349,7 +418,7 @@
     </div>
 
     <div id="modal-zone-details" class="hidden fixed z-50 inset-0 overflow-y-auto">
-        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 sm:items-center">
             <div class="fixed inset-0 bg-gray-600 bg-opacity-75" onclick="closeModal('modal-zone-details')"></div>
             <div class="bg-white rounded-lg w-full max-w-lg p-6 relative z-10">
                 <div class="flex justify-between border-b pb-3 mb-4 items-start">
@@ -368,7 +437,7 @@
     </div>
 
     <div id="modal-marker" class="hidden fixed z-50 inset-0 overflow-y-auto">
-        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 sm:items-center">
             <div class="fixed inset-0 bg-gray-600 bg-opacity-75" onclick="closeModal('modal-marker')"></div>
             <div class="bg-white rounded-lg w-full max-w-sm p-6 relative z-10">
                 <form id="form-marker" onsubmit="handleMarkerSubmit(event)">
@@ -384,442 +453,1763 @@
                         <label class="block text-sm font-semibold mb-1">Description</label>
                         <textarea id="input-marker-desc" rows="2" class="w-full border p-2 rounded text-sm" placeholder="Ex: Étagère du haut..."></textarea>
                     </div>
-                    <div class="flex justify-end gap-2 mt-4">
-                        <button type="button" class="border px-4 py-2 rounded" onclick="closeModal('modal-marker')">Annuler</button>
-                        <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded">Valider</button>
+                    <div class="flex justify-between items-center gap-2 mt-4">
+                        <button type="button" id="btn-delete-marker" class="hidden text-red-600 hover:text-red-800 text-sm font-medium" onclick="deleteMarkerFromModal()"><i class="fa-solid fa-trash mr-1"></i>Supprimer</button>
+                        <div class="flex gap-2 ml-auto">
+                            <button type="button" class="border px-4 py-2 rounded" onclick="closeModal('modal-marker')">Annuler</button>
+                            <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded">Valider</button>
+                        </div>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <div id="modal-qr-display" class="hidden fixed z-50 inset-0 overflow-y-auto"><div class="flex items-center justify-center min-h-screen px-4"><div class="fixed inset-0 bg-gray-600 bg-opacity-75" onclick="closeModal('modal-qr-display')"></div><div class="relative bg-white rounded-lg p-8 max-w-sm w-full text-center shadow-xl"><h3 class="text-lg font-bold mb-4">QR Code Pièce</h3><div id="qrcode-container" class="flex justify-center mb-4"></div><button onclick="closeModal('modal-qr-display')" class="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 w-full">Fermer</button></div></div></div>
-    <div id="modal-part" class="hidden fixed z-50 inset-0 overflow-y-auto"><div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20"><div class="fixed inset-0 bg-gray-600 bg-opacity-75" onclick="closeModal('modal-part')"></div><div class="bg-white rounded-lg w-full max-w-lg p-6 relative z-10"><form id="form-part" onsubmit="handlePartSubmit(event)"><h3 class="text-xl font-bold mb-4">Pièce</h3><input type="hidden" id="part-edit-id"><div class="space-y-4 max-h-[70vh] overflow-y-auto pr-2"><div><label class="block text-sm font-semibold">Nom</label><input type="text" id="input-part-name" required class="w-full border p-2 rounded"></div><div class="grid grid-cols-2 gap-4"><div><label class="block text-sm font-semibold">Qté</label><input type="number" id="input-part-qty" required class="w-full border p-2 rounded"></div><div><label class="block text-sm font-semibold">Seuil</label><input type="number" id="input-part-alert" class="w-full border p-2 rounded"></div></div><div class="grid grid-cols-2 gap-4"><div><label class="block text-sm font-semibold">Famille</label><select id="input-part-family" class="w-full border p-2 rounded bg-white"></select></div><div><label class="block text-sm font-semibold">Lieu</label><select id="input-part-location" class="w-full border p-2 rounded bg-white"></select></div></div><div><label class="block text-sm font-semibold">Desc</label><textarea id="input-part-desc" class="w-full border p-2 rounded"></textarea></div><div><label class="block text-sm font-semibold">PDF</label><input type="file" id="input-part-doc" accept=".pdf" onchange="previewDoc(event)"></div><div><label class="block text-sm font-semibold">Photo</label><div class="flex gap-2 items-center"><input type="file" id="input-part-photo" accept="image/*" class="w-full border p-1.5 rounded text-sm bg-white" onchange="previewImage(event)"><label class="bg-indigo-50 border border-indigo-200 text-indigo-700 p-1.5 px-3 rounded cursor-pointer hover:bg-indigo-100 flex-none flex items-center shadow-sm" title="Prendre une photo"><i class="fa-solid fa-camera"></i><input type="file" accept="image/*" capture="environment" class="hidden" onchange="previewImage(event)"></label></div></div></div><div class="flex justify-between items-center gap-2 mt-4"><button type="button" id="btn-delete-part" class="hidden text-red-600 hover:text-red-800 text-sm font-medium px-2 py-2" onclick="deletePart()"><i class="fa-solid fa-trash mr-1"></i> Supprimer</button><div class="flex gap-2 ml-auto"><button type="button" class="border px-4 py-2 rounded" onclick="closeModal('modal-part')">Annuler</button><button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded">Sauvegarder</button></div></div></form></div></div></div>
-    
-    <script>
-        // --- CONFIGURATION FIREBASE ---
-        let isFirebaseConfigured = false;
-        let dataLoadedFromFirebase = false; // NOUVEAU : VERROU DE SÉCURITÉ
-        
-        const firebaseConfig = {
-            apiKey: "AIzaSyCq73TBSEROdPNWe58xFBBYJqALDO8pNnU",
-            authDomain: "inventaire-rte.firebaseapp.com",
-            databaseURL: "https://inventaire-rte-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "inventaire-rte",
-            storageBucket: "inventaire-rte.firebasestorage.app",
-            messagingSenderId: "105067826948",
-            appId: "1:105067826948:web:545a35991a5d9a1ef1ca51"
+    <div id="modal-qr-display" class="hidden fixed z-70 inset-0 overflow-y-auto"><div class="flex items-center justify-center min-h-screen px-4"><div class="fixed inset-0 bg-gray-600 bg-opacity-75" onclick="closeModal('modal-qr-display')"></div><div class="relative bg-white rounded-lg p-8 max-w-sm w-full text-center shadow-xl"><h3 class="text-lg font-bold mb-1">QR Code Pièce</h3><p class="text-sm text-gray-500 mb-4" id="qr-part-name"></p><div id="qrcode-container" class="flex justify-center mb-4"></div><button onclick="closeModal('modal-qr-display')" class="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 w-full">Fermer</button></div></div></div>
+
+    <div id="modal-part" class="hidden fixed z-50 inset-0 overflow-y-auto"><div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 sm:items-center"><div class="fixed inset-0 bg-gray-600 bg-opacity-75" onclick="closeModal('modal-part')"></div><div class="bg-white rounded-lg w-full max-w-lg p-6 relative z-10"><form id="form-part" onsubmit="handlePartSubmit(event)"><h3 class="text-xl font-bold mb-4" id="modal-part-title">Pièce</h3><input type="hidden" id="part-edit-id"><div class="space-y-4 max-h-[70vh] overflow-y-auto pr-2"><div><label class="block text-sm font-semibold">Nom</label><input type="text" id="input-part-name" required class="w-full border p-2 rounded"></div><div class="grid grid-cols-2 gap-4"><div><label class="block text-sm font-semibold">Qté</label><input type="number" id="input-part-qty" required min="0" class="w-full border p-2 rounded"></div><div><label class="block text-sm font-semibold">Seuil d'alerte</label><input type="number" id="input-part-alert" min="0" class="w-full border p-2 rounded"></div></div><div class="grid grid-cols-2 gap-4"><div><label class="block text-sm font-semibold">Famille</label><select id="input-part-family" class="w-full border p-2 rounded bg-white"></select></div><div><label class="block text-sm font-semibold">Lieu</label><select id="input-part-location" class="w-full border p-2 rounded bg-white"></select></div></div><div><label class="block text-sm font-semibold">Description</label><textarea id="input-part-desc" class="w-full border p-2 rounded"></textarea></div><div><label class="block text-sm font-semibold">Notice PDF</label><input type="file" id="input-part-doc" accept=".pdf" onchange="previewDoc(event)" class="w-full text-sm"><p class="text-xs text-gray-500 mt-1" id="doc-status"></p></div><div><label class="block text-sm font-semibold">Photo</label><div class="flex gap-2 items-center"><input type="file" id="input-part-photo" accept="image/*" class="w-full border p-1.5 rounded text-sm bg-white" onchange="previewImage(event)"><label class="bg-indigo-50 border border-indigo-200 text-indigo-700 p-1.5 px-3 rounded cursor-pointer hover:bg-indigo-100 flex-none flex items-center shadow-sm" title="Prendre une photo"><i class="fa-solid fa-camera"></i><input type="file" accept="image/*" capture="environment" class="hidden" onchange="previewImage(event)"></label></div><div class="mt-2 flex items-center gap-3"><img id="part-photo-preview" class="hidden h-20 w-20 object-cover rounded border" alt=""><button type="button" id="btn-remove-photo" class="hidden text-xs text-red-600 hover:underline" onclick="removePhoto()">Retirer la photo</button></div></div></div><div class="flex justify-between items-center gap-2 mt-4"><button type="button" id="btn-delete-part" class="hidden text-red-600 hover:text-red-800 text-sm font-medium px-2 py-2" onclick="deletePart()"><i class="fa-solid fa-trash mr-1"></i> Supprimer</button><div class="flex gap-2 ml-auto"><button type="button" class="border px-4 py-2 rounded" onclick="closeModal('modal-part')">Annuler</button><button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded">Sauvegarder</button></div></div></form></div></div></div>
+
+<script>
+/* ============================================================================
+   Invent'RTE — Inventaire d'atelier multi-équipes
+   ----------------------------------------------------------------------------
+   Modèle de données Firebase (un noeud par équipe, écritures ciblées) :
+
+     teams/<equipe>              { name }                  index léger des équipes
+     profiles/<equipe>/
+        meta                     { name, createdAt }
+        families/f<id>           { id, name, desc, color }
+        parts/p<id>              { id, name, qty, alertQty, familyId,
+                                   location, desc, hasImage, hasDoc }
+        thumbs/p<id>             vignette 220px  (chargée 1x par session)
+        media/p<id>              { image, doc }  (chargé à la demande)
+        map/image                plan de l'atelier (chargé à la demande)
+        map/markers/m<id>        { id, x, y, name, desc }
+        baskets/b<id>            { id, name, status, items[] }
+        history/<pushId>         { ts, user, text }
+
+   Les images ne transitent JAMAIS dans le flux temps réel : seul le "coeur"
+   (~40 Ko) est synchronisé en continu, et chaque modification n'écrit que le
+   noeud concerné au lieu de réécrire la base entière.
+   ========================================================================== */
+
+/* ---------------------------------------------------------------- Constantes */
+const firebaseConfig = {
+    apiKey: "AIzaSyCq73TBSEROdPNWe58xFBBYJqALDO8pNnU",
+    authDomain: "inventaire-rte.firebaseapp.com",
+    databaseURL: "https://inventaire-rte-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "inventaire-rte",
+    storageBucket: "inventaire-rte.firebasestorage.app",
+    messagingSenderId: "105067826948",
+    appId: "1:105067826948:web:545a35991a5d9a1ef1ca51"
+};
+
+const DEFAULT_TEAM = "EL Feytiat";
+const PHOTO_MAX_PX = 1024, PHOTO_QUALITY = 0.7;      // photo pleine taille
+const THUMB_MAX_PX = 220,  THUMB_QUALITY = 0.6;      // vignette de la grille
+const MAP_MAX_PX = 1600,   MAP_QUALITY = 0.88;       // plan de l'atelier
+const MAX_DOC_MB = 5;
+const HISTORY_KEEP = 150;
+
+const colorMap = {
+    'red':    { bg: 'bg-red-100',    text: 'text-red-800',    hex: '#FCA5A5' },
+    'blue':   { bg: 'bg-blue-100',   text: 'text-blue-800',   hex: '#93C5FD' },
+    'green':  { bg: 'bg-green-100',  text: 'text-green-800',  hex: '#86EFAC' },
+    'yellow': { bg: 'bg-yellow-100', text: 'text-yellow-800', hex: '#FDE047' },
+    'purple': { bg: 'bg-purple-100', text: 'text-purple-800', hex: '#D8B4FE' },
+    'orange': { bg: 'bg-orange-100', text: 'text-orange-800', hex: '#FDBA74' },
+    'pink':   { bg: 'bg-pink-100',   text: 'text-pink-800',   hex: '#F9A8D4' },
+    'teal':   { bg: 'bg-teal-100',   text: 'text-teal-800',   hex: '#5EEAD4' },
+    'gray':   { bg: 'bg-gray-100',   text: 'text-gray-800',   hex: '#D1D5DB' },
+    'indigo': { bg: 'bg-indigo-100', text: 'text-indigo-800', hex: '#A5B4FC' }
+};
+
+/* -------------------------------------------------------------------- État */
+let db = null, isOnline = false;
+let teamKey = localStorage.getItem('inventrte.team') || DEFAULT_TEAM;
+let userName = localStorage.getItem('inventrte.user') || '';
+let teams = {};
+
+let families = [], parts = [], markers = [], baskets = [];
+let thumbs = {};                      // { p<id>: dataURL }
+let mapImage = null, mapImageLoaded = false;
+const mediaCache = new Map();         // partId -> { image, doc }
+
+let activeRefs = [];                  // listeners Firebase à détacher
+let currentBasketId = null;
+let currentImageBuffer, currentDocBuffer;   // undefined = inchangé, null = supprimé
+let html5QrcodeScanner = null, scannerStarting = false;
+let isDragging = false, dragId = null, dragStartTime = 0, ignoreClick = false;
+
+/* ------------------------------------------------------------------ Outils */
+const esc = s => String(s ?? '').replace(/[&<>"']/g,
+    c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+const num = (v, def = 0) => { const n = parseInt(v, 10); return Number.isFinite(n) ? n : def; };
+
+/** Firebase renvoie tantôt un objet {clé: valeur}, tantôt un tableau à trous. */
+function toArray(v) {
+    if (!v) return [];
+    return (Array.isArray(v) ? v : Object.values(v)).filter(Boolean);
+}
+
+function toast(msg, type = 'info') {
+    const colors = { info: 'bg-gray-800', ok: 'bg-green-600', warn: 'bg-orange-500', err: 'bg-red-600' };
+    const el = document.createElement('div');
+    el.className = `toast ${colors[type] || colors.info}`;
+    el.textContent = msg;
+    document.getElementById('toast-zone').appendChild(el);
+    setTimeout(() => el.remove(), 2800);
+}
+
+function setSyncState(state) {
+    const dot = document.getElementById('sync-dot');
+    const map = {
+        online:  ['bg-green-500', 'Synchronisé'],
+        offline: ['bg-red-500', 'Hors ligne — les données affichées datent de la dernière connexion'],
+        wait:    ['bg-orange-400', 'Connexion...']
+    };
+    const [cls, title] = map[state] || map.wait;
+    dot.className = `w-2 h-2 rounded-full flex-none ${cls}`;
+    dot.title = title;
+}
+
+/* --------------------------------------------------------- Cache hors ligne */
+const cacheKey = () => 'inventrte.cache.' + teamKey;
+
+function saveCache() {
+    try {
+        localStorage.setItem(cacheKey(), JSON.stringify({
+            families, parts, markers, baskets, thumbs, ts: Date.now()
+        }));
+    } catch (e) {
+        // Quota dépassé : on abandonne les vignettes, le reste tient toujours.
+        try {
+            localStorage.setItem(cacheKey(), JSON.stringify({
+                families, parts, markers, baskets, thumbs: {}, ts: Date.now()
+            }));
+        } catch (_) { /* cache indisponible, l'app reste fonctionnelle en ligne */ }
+    }
+}
+
+function loadCache() {
+    try {
+        const raw = localStorage.getItem(cacheKey());
+        if (!raw) return false;
+        const c = JSON.parse(raw);
+        families = c.families || []; parts = c.parts || [];
+        markers = c.markers || [];   baskets = c.baskets || [];
+        thumbs = c.thumbs || {};
+        return true;
+    } catch (e) { return false; }
+}
+
+/* ============================================================================
+   COUCHE DONNÉES — écritures ciblées
+   ========================================================================== */
+const teamRef = sub => db.ref('profiles/' + teamKey + (sub ? '/' + sub : ''));
+
+/** Écrit un noeud et signale l'échec à l'utilisateur (au lieu d'échouer en silence). */
+function write(path, value) {
+    if (!db) { toast("Hors ligne : modification non enregistrée", 'err'); return Promise.resolve(); }
+    const p = value === null ? teamRef(path).remove() : teamRef(path).set(value);
+    return p.catch(err => { console.error('Écriture', path, err); toast("Échec de l'enregistrement", 'err'); });
+}
+
+function updateNode(path, patch) {
+    if (!db) { toast("Hors ligne : modification non enregistrée", 'err'); return Promise.resolve(); }
+    return teamRef(path).update(patch)
+        .catch(err => { console.error('Update', path, err); toast("Échec de l'enregistrement", 'err'); });
+}
+
+/** Ajuste un stock via une transaction : deux personnes peuvent modifier en
+ *  même temps sans que l'une écrase la valeur de l'autre. */
+function adjustQty(partId, delta) {
+    const local = parts.find(p => p.id === partId);
+    if (local) local.qty = Math.max(0, num(local.qty) + delta);   // retour visuel immédiat
+    if (!db) { toast("Hors ligne : modification non enregistrée", 'err'); return; }
+    teamRef('parts/p' + partId + '/qty').transaction(cur => Math.max(0, num(cur) + delta))
+        .catch(err => { console.error('Transaction qty', err); toast("Échec de l'enregistrement", 'err'); });
+}
+
+function logHistory(text) {
+    if (!db) return;
+    teamRef('history').push({ ts: Date.now(), user: userName || 'Anonyme', text }).catch(() => {});
+}
+
+/* ------------------------------------------------------- Médias à la demande */
+async function getMedia(partId) {
+    if (mediaCache.has(partId)) return mediaCache.get(partId);
+    if (!db) return {};
+    try {
+        const snap = await teamRef('media/p' + partId).once('value');
+        const val = snap.val() || {};
+        mediaCache.set(partId, val);
+        return val;
+    } catch (e) { console.error('Média', e); return {}; }
+}
+
+async function ensureMapImage() {
+    if (mapImageLoaded) return mapImage;
+    const cached = localStorage.getItem('inventrte.map.' + teamKey);
+    if (cached) { mapImage = cached; mapImageLoaded = true; return mapImage; }
+    if (!db) return null;
+    document.getElementById('map-loading').classList.remove('hidden');
+    try {
+        const snap = await teamRef('map/image').once('value');
+        mapImage = snap.val() || null;
+        mapImageLoaded = true;
+        if (mapImage) { try { localStorage.setItem('inventrte.map.' + teamKey, mapImage); } catch (_) {} }
+    } catch (e) { console.error('Plan', e); }
+    document.getElementById('map-loading').classList.add('hidden');
+    return mapImage;
+}
+
+/* ------------------------------------------------------------- Synchronisation */
+function detachListeners() {
+    activeRefs.forEach(({ ref, cb }) => ref.off('value', cb));
+    activeRefs = [];
+}
+
+function bind(path, handler) {
+    const ref = teamRef(path);
+    const cb = ref.on('value', snap => {
+        handler(snap.val());
+        setSyncState('online');
+        saveCache();
+    }, err => { console.error('Lecture', path, err); setSyncState('offline'); });
+    activeRefs.push({ ref, cb });
+}
+
+function attachListeners() {
+    detachListeners();
+
+    bind('parts', v => {
+        parts = toArray(v).map(p => ({ ...p, location: p.location || '', desc: p.desc || '' }));
+        populatePartsFilters(); renderPartsGrid(); updateStats(); rerenderCurrentBasket();
+    });
+    bind('families', v => {
+        families = toArray(v);
+        renderFamiliesGrid(); populatePartsFilters(); renderPartsGrid(); updateStats();
+    });
+    bind('map/markers', v => {
+        markers = toArray(v).map(m => ({ ...m, x: parseFloat(m.x) || 0, y: parseFloat(m.y) || 0 }));
+        renderMap(); populatePartsFilters(); updateStats();
+    });
+    bind('baskets', v => {
+        baskets = toArray(v).map(b => ({ ...b, items: toArray(b.items) }));
+        renderBaskets(); updateStats(); rerenderCurrentBasket();
+    });
+
+    // Vignettes : une seule lecture par session (elles changent rarement).
+    teamRef('thumbs').once('value')
+        .then(snap => { thumbs = snap.val() || {}; renderPartsGrid(); saveCache(); })
+        .catch(e => console.error('Vignettes', e));
+}
+
+/* ============================================================================
+   ÉQUIPES
+   ========================================================================== */
+function renderTeamLabel() {
+    document.getElementById('team-label').textContent = teamKey;
+}
+
+function openTeamModal() {
+    const list = document.getElementById('team-list');
+    list.innerHTML = '';
+    Object.keys(teams).sort().forEach(key => {
+        const active = key === teamKey;
+        const btn = document.createElement('button');
+        btn.className = `w-full text-left px-4 py-3 rounded border transition flex justify-between items-center ${
+            active ? 'border-indigo-500 bg-indigo-50 text-indigo-800 font-bold' : 'border-gray-200 hover:bg-gray-50'}`;
+        btn.innerHTML = `<span>${esc(key)}</span>${active ? '<i class="fa-solid fa-check"></i>' : ''}`;
+        btn.onclick = () => { switchTeam(key); closeModal('modal-team'); };
+        list.appendChild(btn);
+    });
+    document.getElementById('input-user-name').value = userName;
+    document.getElementById('modal-team').classList.remove('hidden');
+}
+
+function saveUserName(v) {
+    userName = (v || '').trim();
+    localStorage.setItem('inventrte.user', userName);
+}
+
+function createTeam() {
+    const name = prompt("Nom de la nouvelle équipe :", "");
+    if (!name) return;
+    const key = name.trim();
+    // Firebase interdit ces caractères dans une clé.
+    if (/[.#$\[\]\/]/.test(key)) { toast("Caractères interdits : . # $ [ ] /", 'err'); return; }
+    if (teams[key]) { toast("Cette équipe existe déjà", 'warn'); return; }
+    if (!db) { toast("Connexion requise pour créer une équipe", 'err'); return; }
+
+    db.ref('teams/' + key).set({ name: key, createdAt: Date.now() })
+      .then(() => db.ref('profiles/' + key + '/meta').set({ name: key, createdAt: Date.now() }))
+      .then(() => { toast("Équipe créée", 'ok'); switchTeam(key); closeModal('modal-team'); })
+      .catch(err => { console.error(err); toast("Échec de la création", 'err'); });
+}
+
+function switchTeam(key) {
+    if (key === teamKey) return;
+    teamKey = key;
+    localStorage.setItem('inventrte.team', key);
+
+    // Réinitialisation complète : aucune donnée d'une équipe ne doit rester affichée.
+    detachListeners();
+    families = []; parts = []; markers = []; baskets = []; thumbs = {};
+    mediaCache.clear();
+    mapImage = null; mapImageLoaded = false;
+    currentBasketId = null;
+    document.querySelectorAll('div[id^="modal-"]').forEach(m => m.classList.add('hidden'));
+
+    renderTeamLabel();
+    loadCache();                 // affichage instantané des données connues
+    renderAll();
+    if (db) { setSyncState('wait'); attachListeners(); }
+    toast("Équipe : " + key, 'ok');
+}
+
+/* ============================================================================
+   NAVIGATION
+   ========================================================================== */
+function showPage(pageId) {
+    document.querySelectorAll('main > div[id^="page-"]').forEach(el => el.classList.add('hidden'));
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active', 'text-gray-900'));
+    const p = document.getElementById('page-' + pageId); if (p) p.classList.remove('hidden');
+    const n = document.getElementById('nav-' + pageId); if (n) n.classList.add('active', 'text-gray-900');
+
+    if (pageId === 'scanner') startScanner(); else stopScanner();
+    if (pageId === 'paniers') renderBaskets();
+    if (pageId === 'pieces') { populatePartsFilters(); renderPartsGrid(); }
+    if (pageId === 'familles') renderFamiliesGrid();
+    if (pageId === 'plan') renderMap();
+    updateStats();
+}
+
+function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+function renderAll() {
+    renderFamiliesGrid(); populatePartsFilters(); renderPartsGrid();
+    renderMap(); renderBaskets(); updateStats();
+}
+
+/* ============================================================================
+   PIÈCES
+   ========================================================================== */
+function populatePartsFilters() {
+    const fSelect = document.getElementById('filter-parts-family');
+    const zSelect = document.getElementById('filter-parts-zone');
+    const curF = fSelect.value, curZ = zSelect.value;
+
+    fSelect.innerHTML = '<option value="">Toutes Familles</option>' +
+        families.map(f => `<option value="${f.id}">${esc(f.name)}</option>`).join('');
+    fSelect.value = curF;
+
+    zSelect.innerHTML = '<option value="">Toutes Zones</option>' +
+        markers.map(m => `<option value="${esc(m.name)}">${esc(m.name)}</option>`).join('');
+    zSelect.value = curZ;
+}
+
+function sortParts(list, mode) {
+    const byName = (a, b) => String(a.name || '').localeCompare(String(b.name || ''), 'fr', { sensitivity: 'base' });
+    switch (mode) {
+        case 'qty-asc':  return list.sort((a, b) => num(a.qty) - num(b.qty) || byName(a, b));
+        case 'qty-desc': return list.sort((a, b) => num(b.qty) - num(a.qty) || byName(a, b));
+        case 'recent':   return list.sort((a, b) => num(b.id) - num(a.id));
+        case 'alert':    return list.sort((a, b) => {
+            const da = num(a.qty) - num(a.alertQty), dbb = num(b.qty) - num(b.alertQty);
+            return da - dbb || byName(a, b);
+        });
+        default:         return list.sort(byName);
+    }
+}
+
+function renderPartsGrid() {
+    const t = document.getElementById('search-input-parts').value.trim().toLowerCase();
+    const fFilter = document.getElementById('filter-parts-family').value;
+    const zFilter = document.getElementById('filter-parts-zone').value;
+    const sortMode = document.getElementById('sort-parts').value;
+
+    const g = document.getElementById('all-parts-grid');
+    g.innerHTML = '';
+
+    const filtered = parts.filter(p => {
+        const name = String(p.name || '').toLowerCase();
+        const loc = String(p.location || '').toLowerCase();
+        const desc = String(p.desc || '').toLowerCase();
+        const matchTxt = !t || name.includes(t) || loc.includes(t) || desc.includes(t);
+        const matchFam = fFilter === "" || String(p.familyId) === fFilter;
+        const matchZone = zFilter === "" || p.location === zFilter;
+        return matchTxt && matchFam && matchZone;
+    });
+
+    sortParts(filtered, sortMode);
+
+    document.getElementById('parts-count-label').textContent =
+        `${filtered.length} pièce${filtered.length > 1 ? 's' : ''}` +
+        (filtered.length !== parts.length ? ` sur ${parts.length}` : '');
+    document.getElementById('empty-parts-msg').classList.toggle('hidden', filtered.length > 0);
+
+    filtered.forEach(p => {
+        const f = families.find(x => x.id == p.familyId);
+        const s = f ? (colorMap[f.color] || colorMap.gray) : colorMap.gray;
+        const low = num(p.qty) <= num(p.alertQty);
+        const thumb = thumbs['p' + p.id];
+
+        const imgHtml = thumb
+            ? `<img src="${thumb}" class="w-full h-40 object-cover rounded-t-lg" alt="">`
+            : (p.hasImage
+                ? `<div class="w-full h-40 img-skeleton rounded-t-lg" data-lazy-part="${p.id}"></div>`
+                : `<div class="w-full h-40 bg-gray-100 rounded-t-lg flex items-center justify-center text-gray-300"><i class="fa-solid fa-image fa-3x"></i></div>`);
+
+        const d = document.createElement('div');
+        d.className = "card-hover bg-white rounded-lg shadow border border-gray-200 cursor-pointer overflow-hidden";
+        d.onclick = () => openQuickView(p.id);
+        d.innerHTML = `
+            <div class="relative">${imgHtml}
+                <span class="absolute top-2 right-2 badge ${s.bg} ${s.text}">${esc(f ? f.name : 'Sans famille')}</span>
+            </div>
+            <div class="p-4">
+                <h3 class="font-bold truncate" title="${esc(p.name)}">${esc(p.name)}</h3>
+                <p class="text-xs text-gray-500 mb-3 truncate"><i class="fa-solid fa-location-dot"></i> ${esc(p.location || 'Zone non définie')}</p>
+                <div class="flex justify-between items-center border-t pt-2 mt-2">
+                    <span class="text-2xl font-bold ${low ? 'text-red-600' : ''}">${num(p.qty)}</span>
+                    ${low ? '<span class="badge bg-red-100 text-red-800"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Stock bas</span>' : ''}
+                </div>
+            </div>`;
+        g.appendChild(d);
+    });
+
+    lazyLoadVisibleImages();
+}
+
+/** Charge les photos des cartes visibles uniquement (les vignettes couvrent
+ *  déjà la plupart des cas ; ceci ne sert qu'aux pièces sans vignette). */
+let imgObserver = null;
+function lazyLoadVisibleImages() {
+    if (imgObserver) imgObserver.disconnect();
+    if (!('IntersectionObserver' in window)) return;
+
+    imgObserver = new IntersectionObserver(entries => {
+        entries.forEach(async entry => {
+            if (!entry.isIntersecting) return;
+            const el = entry.target;
+            imgObserver.unobserve(el);
+            const partId = num(el.dataset.lazyPart);
+            const media = await getMedia(partId);
+            if (media.image && el.isConnected) {
+                el.outerHTML = `<img src="${media.image}" class="w-full h-40 object-cover rounded-t-lg" alt="">`;
+                ensureThumb(partId, media.image);      // génère la vignette manquante
+            }
+        });
+    }, { rootMargin: '200px' });
+
+    document.querySelectorAll('[data-lazy-part]').forEach(el => imgObserver.observe(el));
+}
+
+/** Crée et enregistre la vignette d'une pièce qui n'en a pas encore. */
+async function ensureThumb(partId, fullDataUrl) {
+    if (thumbs['p' + partId] || !db) return;
+    try {
+        const t = await compressImage(fullDataUrl, THUMB_MAX_PX, THUMB_QUALITY);
+        thumbs['p' + partId] = t;
+        teamRef('thumbs/p' + partId).set(t).catch(() => {});
+    } catch (_) { /* sans gravité : la photo pleine taille reste affichée */ }
+}
+
+function openPartModal(id) {
+    document.getElementById('modal-part').classList.remove('hidden');
+    document.getElementById('modal-part-title').textContent = id ? "Modifier la pièce" : "Nouvelle pièce";
+
+    const btnSave = document.querySelector('#form-part button[type="submit"]');
+    if (btnSave) { btnSave.disabled = false; btnSave.textContent = "Sauvegarder"; }
+
+    const s = document.getElementById('input-part-family');
+    s.innerHTML = '<option value="">-- Sans famille --</option>' +
+        families.map(f => `<option value="${f.id}">${esc(f.name)}</option>`).join('');
+
+    const loc = document.getElementById('input-part-location');
+    loc.innerHTML = '<option value="">-- Choisir une zone --</option>' +
+        markers.map(m => `<option value="${esc(m.name)}">${esc(m.name)}</option>`).join('');
+
+    currentImageBuffer = undefined; currentDocBuffer = undefined;
+    document.getElementById('doc-status').textContent = '';
+    document.getElementById('part-photo-preview').classList.add('hidden');
+    document.getElementById('btn-remove-photo').classList.add('hidden');
+    document.getElementById('input-part-photo').value = '';
+    document.getElementById('input-part-doc').value = '';
+
+    const btnDel = document.getElementById('btn-delete-part');
+    if (id) {
+        const p = parts.find(x => x.id == id);
+        if (!p) return;
+        document.getElementById('part-edit-id').value = p.id;
+        document.getElementById('input-part-name').value = p.name || '';
+        document.getElementById('input-part-qty').value = num(p.qty);
+        document.getElementById('input-part-alert').value = num(p.alertQty);
+        document.getElementById('input-part-family').value = p.familyId ?? '';
+
+        // Une zone supprimée du plan reste sélectionnable pour ne pas la perdre.
+        if (p.location && !markers.find(m => m.name === p.location)) {
+            const o = document.createElement('option');
+            o.value = p.location; o.text = p.location + " (zone supprimée)";
+            loc.appendChild(o);
+        }
+        loc.value = p.location || "";
+        document.getElementById('input-part-desc').value = p.desc || "";
+
+        if (p.hasDoc) document.getElementById('doc-status').textContent = "Une notice est déjà enregistrée.";
+        if (p.hasImage) {
+            const prev = document.getElementById('part-photo-preview');
+            getMedia(p.id).then(m => {
+                if (m.image) { prev.src = m.image; prev.classList.remove('hidden'); }
+            });
+            document.getElementById('btn-remove-photo').classList.remove('hidden');
+        }
+        btnDel.classList.remove('hidden');
+    } else {
+        document.getElementById('form-part').reset();
+        document.getElementById('part-edit-id').value = "";
+        document.getElementById('input-part-qty').value = 0;
+        document.getElementById('input-part-alert').value = 0;
+        btnDel.classList.add('hidden');
+    }
+}
+
+function removePhoto() {
+    currentImageBuffer = null;
+    document.getElementById('part-photo-preview').classList.add('hidden');
+    document.getElementById('btn-remove-photo').classList.add('hidden');
+    document.getElementById('input-part-photo').value = '';
+    toast("Photo retirée (enregistrez pour valider)", 'warn');
+}
+
+async function handlePartSubmit(e) {
+    e.preventDefault();
+    const btn = document.querySelector('#form-part button[type="submit"]');
+    const idRaw = document.getElementById('part-edit-id').value;
+    const existing = idRaw ? parts.find(x => x.id == idRaw) : null;
+    const id = existing ? existing.id : Date.now();
+
+    const famVal = document.getElementById('input-part-family').value;
+    const part = {
+        id,
+        name: document.getElementById('input-part-name').value.trim(),
+        qty: Math.max(0, num(document.getElementById('input-part-qty').value)),
+        alertQty: Math.max(0, num(document.getElementById('input-part-alert').value)),
+        familyId: famVal === '' ? null : num(famVal, null),
+        location: document.getElementById('input-part-location').value,
+        desc: document.getElementById('input-part-desc').value,
+        hasImage: currentImageBuffer !== undefined ? !!currentImageBuffer : !!(existing && existing.hasImage),
+        hasDoc:   currentDocBuffer   !== undefined ? !!currentDocBuffer   : !!(existing && existing.hasDoc)
+    };
+
+    if (!part.name) { toast("Le nom est obligatoire", 'err'); return; }
+
+    btn.disabled = true; btn.textContent = "Enregistrement...";
+    try {
+        await write('parts/p' + id, part);
+
+        // Médias écrits séparément : ils ne polluent pas le flux temps réel.
+        if (currentImageBuffer !== undefined || currentDocBuffer !== undefined) {
+            const prev = await getMedia(id);
+            const image = currentImageBuffer !== undefined ? currentImageBuffer : (prev.image || null);
+            const doc   = currentDocBuffer   !== undefined ? currentDocBuffer   : (prev.doc || null);
+            const payload = {};
+            if (image) payload.image = image;
+            if (doc) payload.doc = doc;
+            mediaCache.set(id, payload);
+            await write('media/p' + id, Object.keys(payload).length ? payload : null);
+
+            if (currentImageBuffer) {
+                const t = await compressImage(currentImageBuffer, THUMB_MAX_PX, THUMB_QUALITY);
+                thumbs['p' + id] = t;
+                await write('thumbs/p' + id, t);
+            } else if (currentImageBuffer === null) {
+                delete thumbs['p' + id];
+                await write('thumbs/p' + id, null);
+            }
+        }
+
+        logHistory(existing ? `Modification de « ${part.name} »` : `Ajout de « ${part.name} »`);
+        closeModal('modal-part');
+        toast(existing ? "Pièce modifiée" : "Pièce ajoutée", 'ok');
+    } finally {
+        btn.disabled = false; btn.textContent = "Sauvegarder";
+    }
+}
+
+async function deletePart() {
+    const id = num(document.getElementById('part-edit-id').value);
+    const p = parts.find(x => x.id === id);
+    if (!confirm(`Supprimer définitivement « ${p ? p.name : 'cette pièce'} » ?`)) return;
+
+    // On retire aussi la pièce des paniers pour éviter les références fantômes.
+    const touched = baskets.filter(b => (b.items || []).some(i => i.partId === id));
+    for (const b of touched) {
+        b.items = b.items.filter(i => i.partId !== id);
+        await write('baskets/b' + b.id, b);
+    }
+
+    await write('parts/p' + id, null);
+    await write('media/p' + id, null);
+    await write('thumbs/p' + id, null);
+    mediaCache.delete(id); delete thumbs['p' + id];
+
+    logHistory(`Suppression de « ${p ? p.name : id} »`);
+    closeModal('modal-part');
+    toast("Pièce supprimée" + (touched.length ? ` (retirée de ${touched.length} chantier(s))` : ''), 'ok');
+}
+
+/* -------------------------------------------------------- Compression images */
+function compressImage(src, maxPx, quality) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+            let w = img.width, h = img.height;
+            if (w > maxPx || h > maxPx) {
+                if (w > h) { h = Math.round(h * maxPx / w); w = maxPx; }
+                else { w = Math.round(w * maxPx / h); h = maxPx; }
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width = w; canvas.height = h;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h);   // évite le fond noir des PNG transparents
+            ctx.drawImage(img, 0, 0, w, h);
+            resolve(canvas.toDataURL('image/jpeg', quality));
         };
+        img.onerror = reject;
+        img.src = src;
+    });
+}
 
-        // On démarre avec des profils VIDES pour ne pas écraser la base de données avec des exemples
-        let profilesData = {
-            "EL Feytiat": { families: [], parts: [], mapData: { image: null, markers: [] }, baskets: [] },
-            "EL Aurillac": { families: [], parts: [], mapData: { image: null, markers: [] }, baskets: [] }
-        };
+function previewImage(e) {
+    const f = e.target.files[0];
+    if (!f) return;
+    const btn = document.querySelector('#form-part button[type="submit"]');
+    if (btn) { btn.disabled = true; btn.textContent = "Compression..."; }
+    const r = new FileReader();
+    r.onload = async ev => {
+        try {
+            currentImageBuffer = await compressImage(ev.target.result, PHOTO_MAX_PX, PHOTO_QUALITY);
+            const prev = document.getElementById('part-photo-preview');
+            prev.src = currentImageBuffer; prev.classList.remove('hidden');
+            document.getElementById('btn-remove-photo').classList.remove('hidden');
+        } catch (_) { toast("Image illisible", 'err'); }
+        if (btn) { btn.disabled = false; btn.textContent = "Sauvegarder"; }
+    };
+    r.readAsDataURL(f);
+}
 
-        let currentProfileName = "EL Feytiat";
-        let families = profilesData[currentProfileName].families;
-        let parts = profilesData[currentProfileName].parts;
-        let mapData = profilesData[currentProfileName].mapData;
-        let baskets = profilesData[currentProfileName].baskets;
+function previewDoc(e) {
+    const f = e.target.files[0];
+    if (!f) return;
+    if (f.size > MAX_DOC_MB * 1024 * 1024) {
+        toast(`Notice trop lourde (max ${MAX_DOC_MB} Mo)`, 'err');
+        e.target.value = ""; return;
+    }
+    const btn = document.querySelector('#form-part button[type="submit"]');
+    if (btn) { btn.disabled = true; btn.textContent = "Chargement..."; }
+    const r = new FileReader();
+    r.onload = ev => {
+        currentDocBuffer = ev.target.result;
+        document.getElementById('doc-status').textContent = `Notice prête : ${f.name}`;
+        if (btn) { btn.disabled = false; btn.textContent = "Sauvegarder"; }
+    };
+    r.readAsDataURL(f);
+}
 
-        if (firebaseConfig.apiKey !== "VOTRE_API_KEY") {
-            firebase.initializeApp(firebaseConfig);
-            isFirebaseConfigured = true;
-            document.getElementById('sync-indicator').classList.replace('bg-gray-300', 'bg-green-500');
-            document.getElementById('sync-indicator').title = "Synchronisation Active";
-            
-            firebase.database().ref('profilesData').on('value', (snapshot) => {
-                dataLoadedFromFirebase = true; // DÉVERROUILLAGE : Firebase a fini de charger !
-                
-                const data = snapshot.val();
-                if (data) {
-                    profilesData = data;
-                    families = profilesData[currentProfileName].families || [];
-                    parts = profilesData[currentProfileName].parts || [];
-                    
-                    mapData = profilesData[currentProfileName].mapData || { image: null, markers: [] };
-                    if (!mapData.markers) mapData.markers = [];
-                    
-                    baskets = profilesData[currentProfileName].baskets || [];
-                    baskets.forEach(b => { if(!b.items) b.items = []; });
-                    
-                    renderFamiliesGrid();
-                    populatePartsFilters(); 
-                    renderPartsGrid();
-                    renderMap();
-                    renderBaskets();
-                    updateStats();
+/* ============================================================================
+   FICHE PIÈCE (aperçu rapide)
+   ========================================================================== */
+async function openQuickView(id) {
+    const p = parts.find(x => x.id === id);
+    if (!p) { toast("Pièce introuvable", 'err'); return; }
 
-                    if (!document.getElementById('modal-basket-detail').classList.contains('hidden') && currentBasketId) {
-                        const b = baskets.find(x => x.id === currentBasketId);
-                        if(b) renderBasketItems(b);
-                    }
-                } else {
-                    // Si la base est totalement vide, on l'initialise avec nos structures vides
-                    saveDataToFirebase();
-                }
-            });
-        }
+    document.getElementById('quick-view-id').value = p.id;
+    document.getElementById('quick-view-name').textContent = p.name || '';
+    document.getElementById('quick-view-qty').textContent = num(p.qty);
+    document.getElementById('quick-view-desc').textContent = p.desc || "Aucune description";
+    document.getElementById('quick-view-zone-label').textContent = p.location || "Zone non définie";
 
-        function saveDataToFirebase() {
-            // SÉCURITÉ ABSOLUE : Si Firebase est configuré mais n'a pas encore chargé, on bloque la sauvegarde !
-            if (isFirebaseConfigured && !dataLoadedFromFirebase) {
-                console.warn("Sauvegarde bloquée : Firebase n'a pas encore chargé les données.");
-                return;
-            }
+    const f = families.find(x => x.id == p.familyId);
+    const fel = document.getElementById('quick-view-family');
+    fel.textContent = f ? f.name : "Sans famille";
+    const s = f ? (colorMap[f.color] || colorMap.gray) : colorMap.gray;
+    fel.className = `badge ${s.bg} ${s.text}`;
 
-            profilesData[currentProfileName] = { families, parts, mapData, baskets };
-            if (isFirebaseConfigured) {
-                firebase.database().ref('profilesData').set(profilesData);
-            }
-        }
+    const imgEl = document.getElementById('quick-view-img');
+    const noImg = document.getElementById('quick-view-no-img');
+    const thumb = thumbs['p' + p.id];
+    if (thumb) { imgEl.src = thumb; imgEl.style.display = 'block'; noImg.style.display = 'none'; }
+    else { imgEl.style.display = 'none'; noImg.style.display = 'flex'; }
 
-        function switchProfile(newProfileName) {
-            if (currentProfileName === newProfileName) return;
-            profilesData[currentProfileName] = { families, parts, mapData, baskets };
-            currentProfileName = newProfileName;
-            families = profilesData[currentProfileName].families || [];
-            parts = profilesData[currentProfileName].parts || [];
-            
-            mapData = profilesData[currentProfileName].mapData || { image: null, markers: [] };
-            if (!mapData.markers) mapData.markers = [];
-            baskets = profilesData[currentProfileName].baskets || [];
-            baskets.forEach(b => { if(!b.items) b.items = []; });
-            
-            renderFamiliesGrid(); populatePartsFilters(); renderPartsGrid(); renderMap(); renderBaskets(); updateStats();
-            document.querySelectorAll('div[id^="modal-"]').forEach(m => m.classList.add('hidden'));
-        }
+    document.getElementById('quick-view-doc-btn').classList.toggle('hidden', !p.hasDoc);
+    document.getElementById('modal-quick-view').classList.remove('hidden');
 
-        const colorMap = { 
-            'red': { bg: 'bg-red-100', text: 'text-red-800', hex: '#FCA5A5' }, 
-            'blue': { bg: 'bg-blue-100', text: 'text-blue-800', hex: '#93C5FD' }, 
-            'green': { bg: 'bg-green-100', text: 'text-green-800', hex: '#86EFAC' }, 
-            'yellow': { bg: 'bg-yellow-100', text: 'text-yellow-800', hex: '#FDE047' }, 
-            'purple': { bg: 'bg-purple-100', text: 'text-purple-800', hex: '#D8B4FE' },
-            'orange': { bg: 'bg-orange-100', text: 'text-orange-800', hex: '#FDBA74' },
-            'pink': { bg: 'bg-pink-100', text: 'text-pink-800', hex: '#F9A8D4' },
-            'teal': { bg: 'bg-teal-100', text: 'text-teal-800', hex: '#5EEAD4' },
-            'gray': { bg: 'bg-gray-100', text: 'text-gray-800', hex: '#D1D5DB' },
-            'indigo': { bg: 'bg-indigo-100', text: 'text-indigo-800', hex: '#A5B4FC' }
-        };
-        
-        let currentImageBuffer = null; let currentDocBuffer = null; let html5QrcodeScanner = null; let currentBasketId = null;
+    // Photo pleine taille en arrière-plan (la vignette reste affichée en attendant).
+    if (p.hasImage) {
+        const media = await getMedia(p.id);
+        if (media.image && document.getElementById('quick-view-id').value == p.id) {
+            imgEl.src = media.image; imgEl.style.display = 'block'; noImg.style.display = 'none';
+            ensureThumb(p.id, media.image);
+        }
+    }
+}
 
-        function showPage(pageId) {
-            document.querySelectorAll('main > div[id^="page-"]').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active', 'text-gray-900'));
-            const p = document.getElementById('page-' + pageId); if(p) p.classList.remove('hidden');
-            const n = document.getElementById('nav-' + pageId); if(n) n.classList.add('active', 'text-gray-900');
-            if(pageId === 'scanner') startScanner(); else stopScanner();
-            if(pageId === 'paniers') renderBaskets();
-            if(pageId === 'pieces') { populatePartsFilters(); renderPartsGrid(); }
-            if(pageId === 'familles') renderFamiliesGrid();
-            if(pageId === 'plan') renderMap(); 
-            updateStats();
-        }
-        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+function updateQuickQty(delta) {
+    const id = num(document.getElementById('quick-view-id').value);
+    const p = parts.find(x => x.id === id);
+    if (!p) return;
+    if (delta < 0 && num(p.qty) === 0) return;
 
-        function downloadAllQRCodes() {
-            if (parts.length === 0) { alert("Aucune pièce à exporter dans l'inventaire."); return; }
-            const tempContainer = document.createElement('div'); tempContainer.style.display = 'none'; document.body.appendChild(tempContainer);
-            let htmlContent = `<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>QR Codes - Inventaire</title><style>body { font-family: 'Segoe UI', Tahoma, sans-serif; text-align: center; color: #333; background: #f8f9fa; }.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; padding: 20px; max-w-6xl; margin: 0 auto; }.label { border: 1px dashed #aaa; padding: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #fff; border-radius: 8px; page-break-inside: avoid; }.name { margin-bottom: 15px; font-weight: bold; font-size: 14px; word-wrap: break-word; color: #111; }img { max-width: 100%; height: auto; }.btn-print { background: #4F46E5; color: white; border: none; padding: 12px 24px; font-size: 16px; border-radius: 6px; cursor: pointer; margin-top: 20px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }.btn-print:hover { background: #4338CA; }@media print { body { background: #fff; } .no-print { display: none !important; } .label { border: 1px solid #000; break-inside: avoid; } .grid { display: flex; flex-wrap: wrap; gap: 10px; padding: 0; } .label { width: 140px; } }</style></head><body><div class="no-print"><h2 style="margin-top:20px;">Planche d'étiquettes QR Codes</h2><button class="btn-print" onclick="window.print()">Imprimer / Sauvegarder en PDF</button></div><div class="grid">`;
-            parts.forEach(p => {
-                const qrDiv = document.createElement('div'); tempContainer.appendChild(qrDiv);
-                new QRCode(qrDiv, { text: "PART:" + p.id, width: 128, height: 128 });
-                const canvas = qrDiv.querySelector('canvas'); const dataURL = canvas ? canvas.toDataURL("image/png") : "";
-                if(dataURL) { htmlContent += `<div class="label"><div class="name">${p.name}</div><img src="${dataURL}" alt="QR Code"></div>`; }
-            });
-            htmlContent += `</div></body></html>`;
-            document.body.removeChild(tempContainer);
-            const printWin = window.open('', '_blank');
-            if (printWin) { printWin.document.write(htmlContent); printWin.document.close(); } else { alert("Pop-ups bloquées."); }
-        }
+    adjustQty(id, delta);
+    document.getElementById('quick-view-qty').textContent = num(p.qty);
+    renderPartsGrid(); updateStats();
+    logHistory(`Stock ${delta > 0 ? '+' : ''}${delta} sur « ${p.name} » (→ ${num(p.qty)})`);
+}
 
-        function downloadExcel() {
-            if (parts.length === 0) { alert("Aucune pièce à exporter dans l'inventaire."); return; }
-            const dataToExport = parts.map(p => {
-                const family = families.find(f => f.id === p.familyId);
-                return { "Nom de la pièce": p.name, "Quantité": p.qty, "Seuil d'alerte": p.alertQty || 0, "Famille": family ? family.name : "Aucune", "Lieu de stockage": p.location || "Non défini" };
-            });
-            const worksheet = XLSX.utils.json_to_sheet(dataToExport);
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, "Inventaire Matériel");
-            XLSX.writeFile(workbook, `Inventaire_Atelier_${currentProfileName}.xlsx`);
-        }
+function editFromQuickView() {
+    const id = num(document.getElementById('quick-view-id').value);
+    closeModal('modal-quick-view');
+    openPartModal(id);
+}
 
-        function renderFamiliesGrid() {
-            const g = document.getElementById('all-families-grid'); g.innerHTML = '';
-            families.forEach(f => {
-                const s = colorMap[f.color] || colorMap.red;
-                const d = document.createElement('div'); 
-                d.className="bg-white shadow rounded p-5 border-t-4 card-hover cursor-pointer flex flex-col justify-between"; 
-                d.style.borderTopColor=s.hex; 
-                d.onclick=()=>openFamilyDetails(f.id);
-                const descHtml = f.desc ? `<p class="text-sm text-gray-500 mt-2 italic line-clamp-2">${f.desc}</p>` : '';
-                d.innerHTML=`<div><div class="flex justify-between items-start"><h3 class="font-bold">${f.name}</h3><div class="flex items-center gap-2"><button onclick="event.stopPropagation(); openFamilyModal(${f.id})" class="text-gray-400 hover:text-indigo-600 transition" title="Modifier la famille"><i class="fa-solid fa-pen"></i></button><span class="bg-gray-100 text-xs px-2 py-1 rounded font-bold">${parts.filter(p=>p.familyId===f.id).length}</span></div></div>${descHtml}</div>`;
-                g.appendChild(d);
-            });
-        }
-        function openFamilyDetails(i){const f=families.find(k=>k.id===i);if(!f)return;document.getElementById('detail-family-title').innerText="Famille : "+f.name;const l=document.getElementById('family-items-list');l.innerHTML='';const associated=parts.filter(p=>p.familyId===i);if(associated.length===0){l.innerHTML='<p class="text-center text-gray-400 py-4">Aucune pièce dans cette famille</p>';}else{associated.forEach(p=>{const d=document.createElement('div');d.className="flex justify-between items-center p-3 border-b cursor-pointer hover:bg-gray-50 transition";d.onclick=()=>{closeModal('modal-family-details');openQuickView(p.id)};d.innerHTML=`<span class="font-medium text-gray-800">${p.name}</span><span class="text-sm text-gray-500 font-bold bg-gray-100 px-2 py-1 rounded">Stock: ${p.qty}</span>`;l.appendChild(d);});}document.getElementById('modal-family-details').classList.remove('hidden');}
-        function openFamilyModal(id) { document.getElementById('modal-family').classList.remove('hidden'); const ct = document.getElementById('color-picker-container'); ct.innerHTML = ''; Object.keys(colorMap).forEach(k => { const d=document.createElement('div'); d.className='color-option w-6 h-6 rounded-full cursor-pointer border'; d.style.backgroundColor=colorMap[k].hex; d.onclick=()=>selectColor(k); d.dataset.color=k; ct.appendChild(d); }); const btnDel = document.getElementById('btn-delete-family'); if(id) { const f=families.find(x=>x.id===id); document.getElementById('family-edit-id').value=f.id; document.getElementById('input-family-name').value=f.name; document.getElementById('input-family-desc').value=f.desc || ""; selectColor(f.color); btnDel.classList.remove('hidden'); } else { document.getElementById('form-family').reset(); document.getElementById('family-edit-id').value=""; document.getElementById('input-family-desc').value=""; selectColor('red'); btnDel.classList.add('hidden'); } }
-        function selectColor(c) { document.getElementById('input-family-color').value=c; document.querySelectorAll('.color-option').forEach(e => { e.classList.remove('ring-2','ring-offset-1'); if(e.dataset.color==c) e.classList.add('ring-2','ring-offset-1') }); }
-        
-        function handleFamilySubmit(e) { e.preventDefault(); const id = document.getElementById('family-edit-id').value; const data = { name: document.getElementById('input-family-name').value, desc: document.getElementById('input-family-desc').value, color: document.getElementById('input-family-color').value }; if(id) { const i=families.findIndex(x=>x.id==id); families[i]={id:parseInt(id), ...data}; } else { families.push({id:Date.now(), ...data}); } closeModal('modal-family'); renderFamiliesGrid(); populatePartsFilters(); renderPartsGrid(); updateStats(); saveDataToFirebase(); }
-        function deleteFamily() { const id = parseInt(document.getElementById('family-edit-id').value); const linkedParts = parts.filter(p => p.familyId === id); if(linkedParts.length > 0) { if(!confirm(`Cette famille est liée à ${linkedParts.length} pièce(s).\n\nVoulez-vous vraiment la supprimer ?`)) return; linkedParts.forEach(p => p.familyId = null); } else { if(!confirm("Voulez-vous vraiment supprimer cette famille ?")) return; } families = families.filter(f => f.id !== id); closeModal('modal-family'); renderFamiliesGrid(); populatePartsFilters(); renderPartsGrid(); updateStats(); saveDataToFirebase(); }
+async function openDocFromQuickView() {
+    const id = num(document.getElementById('quick-view-id').value);
+    const media = await getMedia(id);
+    if (!media.doc) { toast("Notice indisponible", 'err'); return; }
+    // Blob plutôt que data: URI — les navigateurs bloquent la navigation vers data:
+    try {
+        const res = await fetch(media.doc);
+        const url = URL.createObjectURL(await res.blob());
+        window.open(url, '_blank');
+        setTimeout(() => URL.revokeObjectURL(url), 60000);
+    } catch (e) { toast("Impossible d'ouvrir la notice", 'err'); }
+}
 
-        function createBasket() { 
-            const name = prompt("Nom du nouveau chantier / panier :", "Chantier " + (baskets.length + 1)); 
-            if(name) { 
-                const newBasket = { id: Date.now(), name: name, status: 'draft', items: [] }; 
-                baskets.push(newBasket); 
-                renderBaskets(); 
-                updateStats(); 
-                saveDataToFirebase(); 
-                openBasketDetail(newBasket.id); 
-            } 
-        }
-        function renderBaskets() { const grid = document.getElementById('baskets-grid'); grid.innerHTML = ''; const emptyMsg = document.getElementById('empty-baskets-msg'); if(baskets.length === 0) { emptyMsg.classList.remove('hidden'); } else { emptyMsg.classList.add('hidden'); baskets.forEach(b => { const isDraft = b.status === 'draft'; const color = isDraft ? 'indigo' : 'green'; const icon = isDraft ? 'fa-pen-to-square' : 'fa-truck-loading'; const statusText = isDraft ? 'Brouillon' : 'En Chargement'; const percent = calculateProgress(b); const card = document.createElement('div'); card.className = `bg-white p-5 rounded-lg shadow border-l-4 border-${color}-500 cursor-pointer hover:shadow-md transition`; card.onclick = () => openBasketDetail(b.id); card.innerHTML = ` <div class="flex justify-between items-start mb-2"> <div><h3 class="font-bold text-lg text-gray-800">${b.name}</h3><span class="text-xs font-semibold px-2 py-0.5 rounded bg-${color}-100 text-${color}-800">${statusText}</span></div> ${!isDraft ? `<div class="pie-chart" style="width:40px; height:40px; background: conic-gradient(#16a34a ${percent}%, #E5E7EB 0);"><div class="pie-chart-inner" style="width:28px; height:28px;">${percent}%</div></div>` : `<i class="fa-solid ${icon} text-gray-300 text-xl"></i>`} </div> <p class="text-sm text-gray-500 mt-2">${b.items ? b.items.length : 0} références</p> `; grid.appendChild(card); }); } }
-        function calculateProgress(basket) { if(!basket.items || basket.items.length === 0) return 0; const total = basket.items.length; const checked = basket.items.filter(i => i.loaded).length; return Math.round((checked / total) * 100); }
-        function openBasketDetail(id) { currentBasketId = id; const basket = baskets.find(b => b.id === id); if(!basket) return; document.getElementById('basket-detail-title').innerText = basket.name; const badge = document.getElementById('basket-status-badge'); const searchContainer = document.getElementById('basket-search-container'); const footerActions = document.getElementById('basket-footer-actions'); const headerPie = document.getElementById('header-pie-chart'); const headerTable = document.getElementById('basket-table-header'); document.getElementById('basket-search-results').classList.add('hidden'); document.getElementById('basket-search-input').value = ""; document.getElementById('filter-basket-text').value = ""; populateBasketFilters(); if(basket.status === 'draft') { badge.innerText = "Brouillon"; badge.className = "text-xs font-bold px-2 py-0.5 rounded bg-indigo-100 text-indigo-800"; searchContainer.classList.remove('hidden'); headerPie.classList.add('hidden'); headerTable.innerHTML = `<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Pièce</th><th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Qté</th><th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Déduire</th><th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Action</th>`; footerActions.innerHTML = `<button onclick="closeModal('modal-basket-detail')" class="bg-white border px-4 py-2 rounded">Fermer</button><button onclick="validateBasketDraft()" class="bg-indigo-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-700">Valider & Charger</button>`; } else { badge.innerText = "Chargement en cours"; badge.className = "text-xs font-bold px-2 py-0.5 rounded bg-green-100 text-green-800"; searchContainer.classList.remove('hidden'); headerPie.classList.remove('hidden'); updateHeaderPie(basket); headerTable.innerHTML = `<th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Vu</th><th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Pièce</th><th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Qté Chargée</th><th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Note</th><th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Action</th>`; footerActions.innerHTML = `<button onclick="closeModal('modal-basket-detail')" class="bg-white border px-4 py-2 rounded">Fermer</button>`; } renderBasketItems(basket); document.getElementById('modal-basket-detail').classList.remove('hidden'); }
-        function populateBasketFilters() { const z = document.getElementById('filter-basket-zone'); z.innerHTML = '<option value="">Toutes Zones</option>'; const f = document.getElementById('filter-basket-family'); f.innerHTML = '<option value="">Toutes Familles</option>'; mapData.markers.forEach(m => { z.innerHTML += `<option value="${m.name}">${m.name}</option>`; }); families.forEach(fam => { f.innerHTML += `<option value="${fam.id}">${fam.name}</option>`; }); }
-        function updateHeaderPie(basket) { const p = calculateProgress(basket); const pie = document.getElementById('header-pie-chart'); pie.style.background = `conic-gradient(#16a34a ${p}%, #E5E7EB 0)`; document.getElementById('header-pie-text').innerText = p + '%'; }
-        function renderBasketItems(basket) { if(!basket) return; if(!basket.items) basket.items = []; const tbody = document.getElementById('basket-items-list'); const emptyMsg = document.getElementById('basket-empty-list-msg'); tbody.innerHTML = ''; const filterText = document.getElementById('filter-basket-text').value.toLowerCase(); const filterZone = document.getElementById('filter-basket-zone').value; const filterFam = document.getElementById('filter-basket-family').value; const filteredItems = basket.items.filter((item, index) => { const part = parts.find(p => p.id === item.partId); if(!part) return false; if(filterText && !part.name.toLowerCase().includes(filterText)) return false; if(filterZone && part.location !== filterZone) return false; if(filterFam && part.familyId && part.familyId.toString() !== filterFam) return false; item.originalIndex = index; return true; }); if(filteredItems.length === 0) { emptyMsg.classList.remove('hidden'); return; } emptyMsg.classList.add('hidden'); filteredItems.forEach(item => { const index = item.originalIndex; const part = parts.find(p => p.id === item.partId); const tr = document.createElement('tr'); const commentHtml = item.comment ? `<div class="text-xs text-indigo-600 italic mt-1"><i class="fa-regular fa-comment-dots mr-1"></i>${item.comment}</div>` : ''; if(basket.status === 'draft') { const deductStatus = item.deduct ? '<span class="text-green-600 text-xs font-bold bg-green-100 px-2 py-1 rounded">OUI</span>' : '<span class="text-gray-400 text-xs bg-gray-100 px-2 py-1 rounded">NON</span>'; tr.innerHTML = ` <td class="px-6 py-3 cursor-pointer group" onclick="openQuickView(${part.id})"> <div class="text-sm font-bold text-gray-900 group-hover:text-indigo-600 transition">${part ? part.name : 'Inconnu'} <i class="fa-solid fa-eye text-xs opacity-0 group-hover:opacity-100 ml-1"></i></div> ${commentHtml} <div class="text-xs text-gray-500">Stock: ${part ? part.qty : '?'}</div> </td> <td class="px-6 py-3 text-right text-sm font-bold">${item.qty}</td> <td class="px-6 py-3 text-center">${deductStatus}</td> <td class="px-6 py-3 text-right"><button onclick="removeItemFromBasket(${index})" class="text-red-600 hover:text-red-900 bg-red-50 p-2 rounded-full"><i class="fa-solid fa-trash"></i></button></td> `; } else { if(item.loaded === undefined) item.loaded = false; if(item.loadedQty === undefined) item.loadedQty = item.qty; if(item.loadComment === undefined) item.loadComment = ""; const bgClass = item.loaded ? 'bg-green-50' : ''; tr.className = bgClass; tr.innerHTML = ` <td class="px-4 py-3 text-center"><input type="checkbox" onchange="toggleItemLoad(${index}, this.checked)" ${item.loaded ? 'checked' : ''} class="w-6 h-6 text-green-600 rounded focus:ring-green-50 cursor-pointer"></td> <td class="px-4 py-3 cursor-pointer group" onclick="openQuickView(${part.id})"> <div class="text-sm font-bold text-gray-900 group-hover:text-indigo-600 transition">${part ? part.name : 'Inconnu'} <i class="fa-solid fa-eye text-xs opacity-0 group-hover:opacity-100 ml-1"></i></div> <div class="text-xs text-gray-500">Prévu: ${item.qty}</div> ${commentHtml} </td> <td class="px-4 py-3 text-right"><input type="number" value="${item.loadedQty}" onchange="updateLoadQty(${index}, this.value)" class="w-20 text-right border rounded p-1 text-sm font-bold ${item.qty !== item.loadedQty ? 'text-red-600 border-red-300' : 'text-gray-700'}" min="0"></td> <td class="px-4 py-3"><input type="text" value="${item.loadComment}" onchange="updateLoadComment(${index}, this.value)" placeholder="..." class="w-full border-b border-gray-300 focus:border-indigo-500 text-sm bg-transparent p-1"></td> <td class="px-4 py-3 text-center"><button onclick="removeItemFromBasket(${index})" class="text-red-600 hover:text-red-900 bg-red-50 p-2 rounded-full" title="Retirer du panier"><i class="fa-solid fa-trash"></i></button></td> `; } tbody.appendChild(tr); }); }
-        
-        function toggleItemLoad(index, isChecked) { const basket = baskets.find(b => b.id === currentBasketId); basket.items[index].loaded = isChecked; updateHeaderPie(basket); renderBasketItems(basket); updateDashboardActiveBaskets(); saveDataToFirebase(); }
-        function updateLoadQty(index, val) { baskets.find(b => b.id === currentBasketId).items[index].loadedQty = parseInt(val); saveDataToFirebase(); }
-        function updateLoadComment(index, val) { baskets.find(b => b.id === currentBasketId).items[index].loadComment = val; saveDataToFirebase(); }
-        
-        function searchPartForBasket() { const query = document.getElementById('basket-search-input').value.toLowerCase(); const resultsDiv = document.getElementById('basket-search-results'); if(query.length < 1) { resultsDiv.classList.add('hidden'); return; } const matchedParts = parts.filter(p => p.name.toLowerCase().includes(query) || p.location.toLowerCase().includes(query)); resultsDiv.innerHTML = ''; if(matchedParts.length > 0) { matchedParts.forEach(p => { const div = document.createElement('div'); div.className = "search-result-item flex justify-between items-center p-3 border-b cursor-pointer transition"; div.onclick = () => openConfirmAddModal(p.id); div.innerHTML = `<div class="flex items-center gap-3"><div class="h-8 w-8 bg-gray-100 rounded flex items-center justify-center overflow-hidden">${p.image ? `<img src="${p.image}" class="h-full w-full object-cover">` : `<i class="fa-solid fa-box text-gray-400"></i>`}</div><div><p class="text-sm font-bold text-gray-800">${p.name}</p><p class="text-xs text-gray-500">${p.location} • Stock: ${p.qty}</p></div></div><i class="fa-solid fa-cart-plus text-indigo-500 text-xl hover:text-indigo-600"></i>`; resultsDiv.appendChild(div); }); resultsDiv.classList.remove('hidden'); } else { resultsDiv.innerHTML = '<div class="p-3 text-sm text-gray-500 text-center">Aucun résultat</div>'; resultsDiv.classList.remove('hidden'); } }
-        function openConfirmAddModal(partId) { const part = parts.find(p => p.id === partId); if(!part) return; document.getElementById('confirm-add-part-id').value = partId; document.getElementById('confirm-add-title').innerText = "Ajouter : " + part.name; document.getElementById('confirm-add-qty').value = 1; document.getElementById('confirm-add-comment').value = ""; document.getElementById('confirm-add-stock-info').innerText = "Stock disponible : " + part.qty; document.getElementById('confirm-add-deduct').checked = true; document.getElementById('modal-confirm-add-basket').classList.remove('hidden'); document.getElementById('basket-search-results').classList.add('hidden'); }
-        
-        function finalizeAddToBasket() { const partId = parseInt(document.getElementById('confirm-add-part-id').value); const qty = parseInt(document.getElementById('confirm-add-qty').value); const deduct = document.getElementById('confirm-add-deduct').checked; const comment = document.getElementById('confirm-add-comment').value; if(qty <= 0) { alert("Quantité invalide"); return; } const basket = baskets.find(b => b.id === currentBasketId); if (basket.status === 'active' && deduct) { const part = parts.find(p => p.id === partId); if (part) { if (part.qty < qty) { if (!confirm("STOCK INSUFFISANT :\n- " + part.name + "\nContinuer ?")) return; } part.qty -= qty; } } const existingItem = basket.items.find(i => i.partId === partId && i.deduct === deduct && i.comment === comment); if(existingItem) { existingItem.qty += qty; } else { basket.items.push({ partId: partId, qty: qty, deduct: deduct, comment: comment }); } closeModal('modal-confirm-add-basket'); document.getElementById('basket-search-input').value = ""; renderBasketItems(basket); if(basket.status === 'active') { updateHeaderPie(basket); updateDashboardActiveBaskets(); updateStats(); } saveDataToFirebase(); }
-        function removeItemFromBasket(index) { const basket = baskets.find(b => b.id === currentBasketId); const item = basket.items[index]; if(basket.status === 'active' && item.deduct) { if(!confirm("Supprimer cet élément va re-créditer le stock (" + item.qty + "). Continuer ?")) return; const part = parts.find(p => p.id === item.partId); if(part) part.qty += item.qty; } basket.items.splice(index, 1); renderBasketItems(basket); if(basket.status === 'active') { updateHeaderPie(basket); updateDashboardActiveBaskets(); updateStats(); } saveDataToFirebase(); }
-        function validateBasketDraft() { const basket = baskets.find(b => b.id === currentBasketId); if(!basket || !basket.items || basket.items.length === 0) return alert("Panier vide."); let warning = ""; basket.items.forEach(item => { if(item.deduct) { const part = parts.find(p => p.id === item.partId); if(part && part.qty < item.qty) warning += `- ${part.name}\n`; } }); if(warning && !confirm("STOCK INSUFFISANT :\n" + warning + "\nContinuer ?")) return; basket.items.forEach(item => { if(item.deduct) { const part = parts.find(p => p.id === item.partId); if(part) part.qty -= item.qty; } }); basket.status = 'active'; alert("Validé ! Passage au mode chargement."); openBasketDetail(currentBasketId); updateDashboardActiveBaskets(); updateStats(); saveDataToFirebase(); }
-        function deleteBasket() { if(confirm("Supprimer ce chantier/panier définitivement ?")) { baskets = baskets.filter(b => b.id !== currentBasketId); closeModal('modal-basket-detail'); renderBaskets(); updateStats(); updateDashboardActiveBaskets(); saveDataToFirebase(); } }
-        
-        function updateDashboardActiveBaskets() { 
-            const activeBaskets = baskets; 
-            const container = document.getElementById('active-baskets-dashboard-container'); 
-            const list = document.getElementById('active-baskets-dashboard-list'); 
-            document.getElementById('stat-total-active-baskets').innerText = activeBaskets.length; 
-            if(activeBaskets.length > 0) { 
-                container.classList.remove('hidden'); 
-                list.innerHTML = ''; 
-                activeBaskets.forEach(b => { 
-                    const p = calculateProgress(b); 
-                    const div = document.createElement('div'); 
-                    div.className = "bg-white p-4 rounded shadow border border-green-100 cursor-pointer flex justify-between items-center hover:bg-green-50"; 
-                    div.onclick = () => { showPage('paniers'); openBasketDetail(b.id); }; 
-                    div.innerHTML = `<div><h4 class="font-bold text-gray-800">${b.name}</h4><p class="text-xs text-gray-500">${b.items ? b.items.length : 0} items • ${b.status === 'draft' ? 'Brouillon' : p + '% chargé'}</p></div><div class="pie-chart" style="width:40px; height:40px; background: conic-gradient(#16a34a ${p}%, #E5E7EB 0);"><div class="pie-chart-inner" style="width:28px; height:28px;">${p}%</div></div>`; 
-                    list.appendChild(div); 
-                }); 
-            } else { 
-                container.classList.add('hidden'); 
-            } 
-        }
+function locateZoneOnMap() {
+    const id = num(document.getElementById('quick-view-id').value);
+    const p = parts.find(x => x.id === id);
+    if (!p) return;
+    if (!p.location) { toast("Aucune zone définie pour cette pièce", 'warn'); return; }
 
-        function updateStats() { document.getElementById('stat-total-parts').innerText = parts.length; document.getElementById('stat-total-locations').innerText = mapData.markers.length; updateDashboardActiveBaskets(); const lowStock = parts.filter(p => p.qty <= (p.alertQty || 0)); const alertContainer = document.getElementById('stock-alerts-container'); const list = document.getElementById('stock-alerts-list'); const badge = document.getElementById('alert-count-badge'); if(lowStock.length > 0) { alertContainer.classList.remove('hidden'); badge.innerText = lowStock.length; list.innerHTML = ''; lowStock.forEach(p => { const div = document.createElement('div'); div.className = "flex justify-between items-center bg-white p-3 rounded shadow-sm border border-red-100 cursor-pointer hover:bg-red-50"; div.onclick = () => { showPage('pieces'); openQuickView(p.id); }; div.innerHTML = `<div><p class="font-bold text-gray-800">${p.name}</p><p class="text-xs text-red-500 font-semibold">Stock: ${p.qty} / Seuil: ${p.alertQty || 0}</p></div><button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">Voir</button>`; list.appendChild(div); }); } else { alertContainer.classList.add('hidden'); } }
-        
-        function startScanner(){ 
-            if(html5QrcodeScanner) return; 
-            setTimeout(() => {
-                html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: { width: 200, height: 200 }, aspectRatio: 1.0 }, false);
-                html5QrcodeScanner.render(onScanSuccess, onScanFailure);
-            }, 300);
-        }
-        
-        function stopScanner(){
-            if(html5QrcodeScanner){
-                let scannerToClear = html5QrcodeScanner;
-                html5QrcodeScanner = null; 
-                scannerToClear.clear().catch(console.error);
-            }
-        }
+    const m = markers.find(x => String(x.name).toLowerCase() === String(p.location).toLowerCase());
+    closeModal('modal-quick-view');
+    showPage('plan');
+    if (!m) { toast(`La zone « ${p.location} » n'existe pas sur le plan`, 'warn'); return; }
 
-        function onScanSuccess(t){if(t.startsWith("PART:")){const id=parseInt(t.split(":")[1]);if(parts.find(p=>p.id===id)){stopScanner();showPage('pieces');openQuickView(id);}else alert("Inconnu");}}
-        function onScanFailure(e){}
-        function showQRCode(){const id=document.getElementById('quick-view-id').value; document.getElementById('qrcode-container').innerHTML=""; new QRCode(document.getElementById('qrcode-container'),{text:"PART:"+id,width:128,height:128}); document.getElementById('modal-qr-display').classList.remove('hidden');}
-        function openQuickView(id){ const p=parts.find(x=>x.id===id); if(!p)return; document.getElementById('quick-view-id').value=p.id; document.getElementById('quick-view-name').innerText=p.name; document.getElementById('quick-view-qty').innerText=p.qty; document.getElementById('quick-view-desc').innerText=p.desc||""; const f=families.find(x=>x.id===p.familyId); const fel=document.getElementById('quick-view-family'); fel.innerText=f?f.name:"Inconnu"; fel.className=f?`badge ${colorMap[f.color]?.bg} ${colorMap[f.color]?.text}`:"badge bg-gray-100 text-gray-800"; if(p.image){document.getElementById('quick-view-img').src=p.image;document.getElementById('quick-view-img').style.display='block';document.getElementById('quick-view-no-img').style.display='none';}else{document.getElementById('quick-view-img').style.display='none';document.getElementById('quick-view-no-img').style.display='flex';} const db=document.getElementById('quick-view-doc-btn'); if(p.docData) db.classList.remove('hidden'); else db.classList.add('hidden'); document.getElementById('modal-quick-view').classList.remove('hidden');}
-        
-        function updateQuickQty(c){const id=parseInt(document.getElementById('quick-view-id').value); const p=parts.find(x=>x.id===id); if(p){p.qty=Math.max(0,p.qty+c); document.getElementById('quick-view-qty').innerText=p.qty; renderPartsGrid(); updateStats(); saveDataToFirebase();}}
-        
-        function editFromQuickView(){closeModal('modal-quick-view'); openPartModal(parseInt(document.getElementById('quick-view-id').value));}
-        function openDocFromQuickView(){const p=parts.find(x=>x.id==document.getElementById('quick-view-id').value); if(p&&p.docData){const w=window.open();w.document.write('<iframe src="'+p.docData+'" style="border:0;top:0;left:0;bottom:0;right:0;width:100%;height:100%" allowfullscreen></iframe>');}}
-        function locateZoneOnMap(){const p=parts.find(x=>x.id==document.getElementById('quick-view-id').value); const m=mapData.markers.find(x=>x.name.toLowerCase()==p.location.toLowerCase()); closeModal('modal-quick-view'); showPage('plan'); if(m)setTimeout(()=>{const e=document.getElementById('marker-'+m.id); if(e){e.scrollIntoView({behavior:'smooth',block:'center'});e.classList.add('highlight-marker');setTimeout(()=>e.classList.remove('highlight-marker'),2000)}},300);}
-        let isDragging=false, dragId=null, dragStartTime=0, ignoreClick=false;
-        function uploadMap(e){const f=e.target.files[0];if(f){const r=new FileReader();r.onload=(ev)=>{mapData.image=ev.target.result; renderMap(); saveDataToFirebase(); };r.readAsDataURL(f)}}
-        
-        function renderMap(){ const c=document.getElementById('map-container');const p=document.getElementById('no-map-placeholder');const i=document.getElementById('atelier-map-img');const l=document.getElementById('map-markers-layer');const z=document.getElementById('zones-list-container');z.innerHTML='';if(!mapData.image&&mapData.markers.length===0){c.classList.add('hidden');p.classList.remove('hidden');i.src='';}else{c.classList.remove('hidden');p.classList.add('hidden');i.src=mapData.image||'';};l.innerHTML='';mapData.markers.forEach(m=>{const e=document.createElement('div');e.id='marker-'+m.id;e.className='map-marker flex flex-col items-center group';e.style.left=m.x+'%';e.style.top=m.y+'%';e.innerHTML=`<i class="fa-solid fa-location-dot text-red-600 text-3xl drop-shadow-md"></i><span class="bg-gray-900 text-white text-xs px-2 py-1 rounded shadow-lg mt-1">${m.name}</span>`;e.onmousedown=ev=>startDrag(ev,m.id);e.ontouchstart=ev=>startDrag(ev,m.id);l.appendChild(e);const li=document.createElement('div');li.className="zone-item flex justify-between p-2 border-b cursor-pointer";li.innerHTML=`<span>${m.name}</span><button onclick="deleteMarker(${m.id})"><i class="fa-solid fa-trash text-gray-400"></i></button>`;li.onclick=()=>openZoneDetails(m.id);z.appendChild(li)});}
-        
-        function startDrag(e,i){e.preventDefault();e.stopPropagation();isDragging=true;dragId=i;dragStartTime=Date.now()}
-        function handleContainerMove(e){if(!isDragging||!dragId)return;e.preventDefault();const r=document.getElementById('atelier-map-img').getBoundingClientRect();const cx=e.touches?e.touches[0].clientX:e.clientX;const cy=e.touches?e.touches[0].clientY:e.clientY;let x=((cx-r.left)/r.width)*100;let y=((cy-r.top)/r.height)*100;x=Math.max(0,Math.min(100,x));y=Math.max(0,Math.min(100,y));const el=document.getElementById('marker-'+dragId);if(el){el.style.left=x+'%';el.style.top=y+'%'}const m=mapData.markers.find(k=>k.id===dragId);if(m){m.x=x;m.y=y}}
-        function handleContainerUp(){if(isDragging){if(Date.now()-dragStartTime<150)openZoneDetails(dragId);else{ignoreClick=true;setTimeout(()=>ignoreClick=false,100); saveDataToFirebase(); }isDragging=false;dragId=null}}
-        function handleMapBackgroundClick(e){if(isDragging||ignoreClick)return;const r=document.getElementById('atelier-map-img').getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;const x=((e.clientX-r.left)/r.width)*100;const y=((e.clientY-r.top)/r.height)*100;openMarkerModal(null,x,y)}
-        
-        function openZoneDetails(i){
-            const m = mapData.markers.find(k=>k.id===i);
-            if(!m) return;
-            document.getElementById('detail-zone-title').innerText = m.name;
-            document.getElementById('detail-zone-desc').innerText = m.desc || "";
-            document.getElementById('btn-edit-zone').onclick = () => { closeModal('modal-zone-details'); openMarkerModal(m.id); };
-            const l = document.getElementById('zone-items-list');
-            l.innerHTML = '';
-            const zoneParts = parts.filter(p => p.location.toLowerCase() == m.name.toLowerCase());
-            
-            if(zoneParts.length === 0){
-                l.innerHTML = '<p class="text-center text-gray-400 py-4">Aucune pièce dans cette zone</p>';
-            } else {
-                const familyGroups = {};
-                zoneParts.forEach(p => {
-                    const fId = p.familyId || 0;
-                    if(!familyGroups[fId]) familyGroups[fId] = [];
-                    familyGroups[fId].push(p);
-                });
-                
-                Object.keys(familyGroups).forEach(fId => {
-                    const fam = families.find(f => f.id == fId);
-                    const famName = fam ? fam.name : "Sans famille";
-                    const s = fam ? (colorMap[fam.color] || colorMap.gray) : {bg:'bg-gray-100', text:'text-gray-800'};
-                    
-                    const fh = document.createElement('div');
-                    fh.className = "bg-gray-50 p-2 mt-3 mb-1 rounded flex justify-between items-center";
-                    fh.innerHTML = `<span class="badge ${s.bg} ${s.text}">${famName}</span><span class="text-xs font-bold text-gray-500">${familyGroups[fId].length} pièces</span>`;
-                    l.appendChild(fh);
-                    
-                    familyGroups[fId].forEach(p => {
-                        const d = document.createElement('div');
-                        d.className = "flex justify-between items-center p-2 border-b cursor-pointer hover:bg-gray-50 ml-2";
-                        d.onclick = () => { closeModal('modal-zone-details'); openQuickView(p.id); };
-                        d.innerHTML = `<span class="text-sm font-medium text-gray-800">${p.name}</span><b class="text-sm text-gray-600">Stock: ${p.qty}</b>`;
-                        l.appendChild(d);
-                    });
-                });
-            }
-            document.getElementById('modal-zone-details').classList.remove('hidden');
+    setTimeout(() => {
+        const e = document.getElementById('marker-' + m.id);
+        if (e) {
+            e.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            e.classList.add('highlight-marker');
+            setTimeout(() => e.classList.remove('highlight-marker'), 2500);
         }
+    }, 400);
+}
 
-        function populatePartsFilters() {
-            const fSelect = document.getElementById('filter-parts-family');
-            const zSelect = document.getElementById('filter-parts-zone');
-            
-            const currentF = fSelect.value;
-            const currentZ = zSelect.value;
-            
-            fSelect.innerHTML = '<option value="">Toutes Familles</option>';
-            families.forEach(fam => { fSelect.innerHTML += `<option value="${fam.id}">${fam.name}</option>`; });
-            fSelect.value = currentF;
-            
-            zSelect.innerHTML = '<option value="">Toutes Zones</option>';
-            mapData.markers.forEach(m => { zSelect.innerHTML += `<option value="${m.name}">${m.name}</option>`; });
-            zSelect.value = currentZ;
-        }
-        
-        function renderPartsGrid() {
-            const t = document.getElementById('search-input-parts').value.toLowerCase();
-            const fFilter = document.getElementById('filter-parts-family').value;
-            const zFilter = document.getElementById('filter-parts-zone').value;
-            
-            const g = document.getElementById('all-parts-grid');
-            g.innerHTML = '';
-            
-            parts.filter(p => {
-                const matchTxt = p.name.toLowerCase().includes(t) || (p.location && p.location.toLowerCase().includes(t));
-                const matchFam = fFilter === "" || (p.familyId && p.familyId.toString() === fFilter);
-                const matchZone = zFilter === "" || (p.location && p.location === zFilter);
-                return matchTxt && matchFam && matchZone;
-            }).forEach(p => {
-                const f=families.find(x=>x.id==p.familyId);
-                const s=f?colorMap[f.color]:colorMap.red;
-                const ih=p.image?`<img src="${p.image}" class="w-full h-40 object-cover rounded-t-lg">`:`<div class="w-full h-40 bg-gray-100 rounded-t-lg flex items-center justify-center text-gray-300"><i class="fa-solid fa-image fa-3x"></i></div>`;
-                const d=document.createElement('div');
-                d.className="card-hover bg-white rounded-lg shadow border border-gray-200 cursor-pointer";
-                d.onclick=()=>openQuickView(p.id);
-                d.innerHTML=`<div class="relative">${ih}<span class="absolute top-2 right-2 badge ${s.bg} ${s.text}">${f?f.name:'?'}</span></div><div class="p-4"><h3 class="font-bold truncate">${p.name}</h3><p class="text-xs text-gray-500 mb-3"><i class="fa-solid fa-location-dot"></i> ${p.location}</p><div class="flex justify-between border-t pt-2 mt-2"><span class="text-2xl font-bold">${p.qty}</span></div></div>`;
-                g.appendChild(d);
-            });
-        }
-        
-        function openPartModal(id){document.getElementById('modal-part').classList.remove('hidden');const btnSave=document.querySelector('#form-part button[type="submit"]');if(btnSave){btnSave.disabled=false;btnSave.innerText="Sauvegarder";}const s=document.getElementById('input-part-family');s.innerHTML='';families.forEach(f=>{const o=document.createElement('option');o.value=f.id;o.text=f.name;s.appendChild(o)});const loc=document.getElementById('input-part-location');loc.innerHTML='<option value="">-- Choisir une zone --</option>';mapData.markers.forEach(m=>{const o=document.createElement('option');o.value=m.name;o.text=m.name;loc.appendChild(o)});currentImageBuffer=null;currentDocBuffer=null;const btnDel=document.getElementById('btn-delete-part');if(id){const p=parts.find(x=>x.id==id);document.getElementById('part-edit-id').value=p.id;document.getElementById('input-part-name').value=p.name;document.getElementById('input-part-qty').value=p.qty;document.getElementById('input-part-family').value=p.familyId;if(p.location&&!mapData.markers.find(m=>m.name===p.location)){const o=document.createElement('option');o.value=p.location;o.text=p.location+" (Ancien)";loc.appendChild(o);}loc.value=p.location||"";document.getElementById('input-part-desc').value=p.desc||"";document.getElementById('input-part-alert').value=p.alertQty||0;if(p.image)currentImageBuffer=p.image;if(p.docData)currentDocBuffer=p.docData;if(btnDel)btnDel.classList.remove('hidden');}else{document.getElementById('form-part').reset();document.getElementById('part-edit-id').value="";if(btnDel)btnDel.classList.add('hidden');}}
-        
-        function handlePartSubmit(e){
-            e.preventDefault();
-            const id=document.getElementById('part-edit-id').value;
-            const d={
-                name:document.getElementById('input-part-name').value,
-                qty:parseInt(document.getElementById('input-part-qty').value) || 0,
-                alertQty:parseInt(document.getElementById('input-part-alert').value) || 0,
-                familyId:parseInt(document.getElementById('input-part-family').value) || null,
-                location:document.getElementById('input-part-location').value,
-                desc:document.getElementById('input-part-desc').value,
-                image:currentImageBuffer || null,
-                docData:currentDocBuffer || null
-            };
-            if(id){
-                const i=parts.findIndex(x=>x.id==id);
-                if(!d.docData)d.docData=parts[i].docData || null;
-                if(!d.image)d.image=parts[i].image || null;
-                parts[i]={...parts[i],...d}
-            }else{
-                parts.unshift({id:Date.now(),...d})
-            }
-            closeModal('modal-part');
-            renderPartsGrid();
-            updateStats(); 
-            saveDataToFirebase(); 
-        }
-        
-        function deletePart(){const id=parseInt(document.getElementById('part-edit-id').value);if(confirm("Voulez-vous vraiment supprimer cette pièce ?")){parts=parts.filter(p=>p.id!==id);closeModal('modal-part');renderPartsGrid();updateStats();saveDataToFirebase();}}
-        function previewImage(e){const f=e.target.files[0];if(f){const btn=document.querySelector('#form-part button[type="submit"]');if(btn){btn.disabled=true;btn.innerText="Compression...";}const r=new FileReader();r.onload=ev=>{const img=new Image();img.onload=()=>{const canvas=document.createElement('canvas');let w=img.width,h=img.height;if(w>1024||h>1024){if(w>h){h=Math.floor(h*1024/w);w=1024;}else{w=Math.floor(w*1024/h);h=1024;}}canvas.width=w;canvas.height=h;canvas.getContext('2d').drawImage(img,0,0,w,h);currentImageBuffer=canvas.toDataURL('image/jpeg',0.7);if(btn){btn.disabled=false;btn.innerText="Sauvegarder";}};img.src=ev.target.result;};r.readAsDataURL(f);}}
-        function previewDoc(e){const f=e.target.files[0];if(f){if(f.size>5*1024*1024){alert("Le document est trop lourd (Max 5 Mo). Firebase risque de bloquer la sauvegarde.");e.target.value="";return;}const btn=document.querySelector('#form-part button[type="submit"]');if(btn){btn.disabled=true;btn.innerText="Chargement...";}const r=new FileReader();r.onload=ev=>{currentDocBuffer=ev.target.result;if(btn){btn.disabled=false;btn.innerText="Sauvegarder";}};r.readAsDataURL(f);}}
-        
-        function openMarkerModal(i,x,y){
-            document.getElementById('modal-marker').classList.remove('hidden');
-            if(i){
-                const m = mapData.markers.find(k=>k.id==i);
-                document.getElementById('marker-id').value = m.id;
-                document.getElementById('input-marker-name').value = m.name;
-                document.getElementById('input-marker-desc').value = m.desc || "";
-            }else{
-                document.getElementById('form-marker').reset();
-                document.getElementById('marker-id').value = "";
-                document.getElementById('marker-x').value = x;
-                document.getElementById('marker-y').value = y;
-                document.getElementById('input-marker-desc').value = "";
-            }
-        }
-        
-        function handleMarkerSubmit(e){
-            e.preventDefault();
-            const id = document.getElementById('marker-id').value;
-            const n = document.getElementById('input-marker-name').value;
-            const desc = document.getElementById('input-marker-desc').value;
-            
-            if(id){
-                const m = mapData.markers.find(k=>k.id==id);
-                const oldName = m.name;
-                m.name = n;
-                m.desc = desc;
-                
-                if(oldName !== n){
-                    parts.forEach(p => { if(p.location === oldName) p.location = n; });
-                }
-            }else{
-                mapData.markers.push({id:Date.now(), x:document.getElementById('marker-x').value, y:document.getElementById('marker-y').value, name:n, desc:desc});
-            }
-            
-            closeModal('modal-marker');
+function showQRCode() {
+    const id = document.getElementById('quick-view-id').value;
+    const p = parts.find(x => x.id == id);
+    document.getElementById('qr-part-name').textContent = p ? p.name : '';
+    document.getElementById('qrcode-container').innerHTML = "";
+    new QRCode(document.getElementById('qrcode-container'), { text: "PART:" + id, width: 160, height: 160 });
+    document.getElementById('modal-qr-display').classList.remove('hidden');
+}
+
+/* ============================================================================
+   FAMILLES
+   ========================================================================== */
+function renderFamiliesGrid() {
+    const g = document.getElementById('all-families-grid');
+    g.innerHTML = '';
+    if (!families.length) {
+        g.innerHTML = '<p class="text-gray-400 col-span-full text-center py-8">Aucune famille. Créez-en une pour trier vos pièces.</p>';
+        return;
+    }
+    families.slice().sort((a, b) => String(a.name).localeCompare(String(b.name), 'fr')).forEach(f => {
+        const s = colorMap[f.color] || colorMap.gray;
+        const count = parts.filter(p => p.familyId == f.id).length;
+        const d = document.createElement('div');
+        d.className = "bg-white shadow rounded p-5 border-t-4 card-hover cursor-pointer flex flex-col justify-between";
+        d.style.borderTopColor = s.hex;
+        d.onclick = () => openFamilyDetails(f.id);
+        d.innerHTML = `<div>
+            <div class="flex justify-between items-start gap-2">
+                <h3 class="font-bold">${esc(f.name)}</h3>
+                <div class="flex items-center gap-2 flex-none">
+                    <button data-edit-family="${f.id}" class="text-gray-400 hover:text-indigo-600 transition" title="Modifier"><i class="fa-solid fa-pen"></i></button>
+                    <span class="bg-gray-100 text-xs px-2 py-1 rounded font-bold">${count}</span>
+                </div>
+            </div>
+            ${f.desc ? `<p class="text-sm text-gray-500 mt-2 italic line-clamp-2">${esc(f.desc)}</p>` : ''}
+        </div>`;
+        d.querySelector('[data-edit-family]').onclick = ev => { ev.stopPropagation(); openFamilyModal(f.id); };
+        g.appendChild(d);
+    });
+}
+
+function openFamilyDetails(id) {
+    const f = families.find(k => k.id === id);
+    if (!f) return;
+    document.getElementById('detail-family-title').textContent = "Famille : " + f.name;
+    const l = document.getElementById('family-items-list');
+    l.innerHTML = '';
+    const associated = parts.filter(p => p.familyId == id)
+        .sort((a, b) => String(a.name).localeCompare(String(b.name), 'fr'));
+
+    if (!associated.length) {
+        l.innerHTML = '<p class="text-center text-gray-400 py-4">Aucune pièce dans cette famille</p>';
+    } else {
+        associated.forEach(p => {
+            const d = document.createElement('div');
+            d.className = "flex justify-between items-center p-3 border-b cursor-pointer hover:bg-gray-50 transition";
+            d.onclick = () => { closeModal('modal-family-details'); openQuickView(p.id); };
+            d.innerHTML = `<span class="font-medium text-gray-800">${esc(p.name)}</span>
+                <span class="text-sm text-gray-500 font-bold bg-gray-100 px-2 py-1 rounded">Stock: ${num(p.qty)}</span>`;
+            l.appendChild(d);
+        });
+    }
+    document.getElementById('modal-family-details').classList.remove('hidden');
+}
+
+function openFamilyModal(id) {
+    document.getElementById('modal-family').classList.remove('hidden');
+    const ct = document.getElementById('color-picker-container');
+    ct.innerHTML = '';
+    Object.keys(colorMap).forEach(k => {
+        const d = document.createElement('div');
+        d.className = 'color-option w-7 h-7 rounded-full cursor-pointer border';
+        d.style.backgroundColor = colorMap[k].hex;
+        d.onclick = () => selectColor(k);
+        d.dataset.color = k;
+        ct.appendChild(d);
+    });
+    const btnDel = document.getElementById('btn-delete-family');
+    if (id) {
+        const f = families.find(x => x.id === id);
+        if (!f) return;
+        document.getElementById('family-edit-id').value = f.id;
+        document.getElementById('input-family-name').value = f.name || '';
+        document.getElementById('input-family-desc').value = f.desc || "";
+        selectColor(f.color || 'red');
+        btnDel.classList.remove('hidden');
+    } else {
+        document.getElementById('form-family').reset();
+        document.getElementById('family-edit-id').value = "";
+        selectColor('red');
+        btnDel.classList.add('hidden');
+    }
+}
+
+function selectColor(c) {
+    document.getElementById('input-family-color').value = c;
+    document.querySelectorAll('.color-option').forEach(e => {
+        e.classList.remove('ring-2', 'ring-offset-1');
+        if (e.dataset.color === c) e.classList.add('ring-2', 'ring-offset-1');
+    });
+}
+
+async function handleFamilySubmit(e) {
+    e.preventDefault();
+    const idRaw = document.getElementById('family-edit-id').value;
+    const id = idRaw ? num(idRaw) : Date.now();
+    const data = {
+        id,
+        name: document.getElementById('input-family-name').value.trim(),
+        desc: document.getElementById('input-family-desc').value,
+        color: document.getElementById('input-family-color').value || 'red'
+    };
+    if (!data.name) { toast("Le nom est obligatoire", 'err'); return; }
+    await write('families/f' + id, data);
+    closeModal('modal-family');
+    toast(idRaw ? "Famille modifiée" : "Famille créée", 'ok');
+}
+
+async function deleteFamily() {
+    const id = num(document.getElementById('family-edit-id').value);
+    const linked = parts.filter(p => p.familyId == id);
+    const msg = linked.length
+        ? `Cette famille contient ${linked.length} pièce(s).\nElles seront conservées mais sans famille.\n\nSupprimer quand même ?`
+        : "Supprimer cette famille ?";
+    if (!confirm(msg)) return;
+
+    for (const p of linked) await updateNode('parts/p' + p.id, { familyId: null });
+    await write('families/f' + id, null);
+    closeModal('modal-family');
+    toast("Famille supprimée", 'ok');
+}
+
+/* ============================================================================
+   PLAN DE L'ATELIER
+   ========================================================================== */
+async function renderMap() {
+    const c = document.getElementById('map-container');
+    const ph = document.getElementById('no-map-placeholder');
+    const img = document.getElementById('atelier-map-img');
+    const layer = document.getElementById('map-markers-layer');
+    const zoneList = document.getElementById('zones-list-container');
+
+    // Zones (toujours affichées, même sans plan)
+    zoneList.innerHTML = '';
+    if (!markers.length) {
+        zoneList.innerHTML = '<p class="text-sm text-gray-400 text-center py-4">Aucune zone.<br>Cliquez sur le plan pour en créer une.</p>';
+    }
+    markers.slice().sort((a, b) => String(a.name).localeCompare(String(b.name), 'fr')).forEach(m => {
+        const count = parts.filter(p => String(p.location).toLowerCase() === String(m.name).toLowerCase()).length;
+        const li = document.createElement('div');
+        li.className = "zone-item flex justify-between items-center p-2 border-b cursor-pointer rounded";
+        li.innerHTML = `<span class="truncate">${esc(m.name)}</span>
+            <span class="flex items-center gap-2 flex-none">
+                <span class="bg-gray-100 text-xs px-2 py-0.5 rounded font-bold">${count}</span>
+                <button data-del-marker="${m.id}" title="Supprimer la zone"><i class="fa-solid fa-trash text-gray-400 hover:text-red-600"></i></button>
+            </span>`;
+        li.querySelector('[data-del-marker]').onclick = ev => { ev.stopPropagation(); deleteMarker(m.id); };
+        li.onclick = () => openZoneDetails(m.id);
+        zoneList.appendChild(li);
+    });
+
+    const src = await ensureMapImage();
+    if (!src && !markers.length) {
+        c.classList.add('hidden'); ph.classList.remove('hidden'); img.src = '';
+    } else {
+        c.classList.remove('hidden'); ph.classList.add('hidden');
+        if (src && img.src !== src) img.src = src;
+    }
+
+    layer.innerHTML = '';
+    markers.forEach(m => {
+        const e = document.createElement('div');
+        e.id = 'marker-' + m.id;
+        e.className = 'map-marker flex flex-col items-center group';
+        e.style.left = m.x + '%';
+        e.style.top = m.y + '%';
+        e.innerHTML = `<i class="fa-solid fa-location-dot text-red-600 text-3xl drop-shadow-md"></i>
+            <span class="bg-gray-900 text-white text-xs px-2 py-1 rounded shadow-lg mt-1 whitespace-nowrap">${esc(m.name)}</span>`;
+        e.onmousedown = ev => startDrag(ev, m.id);
+        e.ontouchstart = ev => startDrag(ev, m.id);
+        layer.appendChild(e);
+    });
+}
+
+async function uploadMap(e) {
+    const f = e.target.files[0];
+    if (!f) return;
+    toast("Compression du plan...");
+    const r = new FileReader();
+    r.onload = async ev => {
+        try {
+            // Le plan était auparavant stocké brut (jusqu'à 3 Mo) : on le compresse.
+            const compressed = await compressImage(ev.target.result, MAP_MAX_PX, MAP_QUALITY);
+            mapImage = compressed; mapImageLoaded = true;
+            try { localStorage.setItem('inventrte.map.' + teamKey, compressed); } catch (_) {}
+            await write('map/image', compressed);
             renderMap();
-            populatePartsFilters(); // Met à jour les sélecteurs de filtres
-            renderPartsGrid();
-            updateStats();
-            saveDataToFirebase();
+            logHistory("Plan de l'atelier remplacé");
+            toast("Plan mis à jour", 'ok');
+        } catch (_) { toast("Image illisible", 'err'); }
+    };
+    r.readAsDataURL(f);
+    e.target.value = '';
+}
+
+function startDrag(e, i) { e.preventDefault(); e.stopPropagation(); isDragging = true; dragId = i; dragStartTime = Date.now(); }
+
+function handleContainerMove(e) {
+    if (!isDragging || dragId === null) return;
+    e.preventDefault();
+    const r = document.getElementById('atelier-map-img').getBoundingClientRect();
+    if (!r.width || !r.height) return;
+    const cx = e.touches ? e.touches[0].clientX : e.clientX;
+    const cy = e.touches ? e.touches[0].clientY : e.clientY;
+    let x = Math.max(0, Math.min(100, ((cx - r.left) / r.width) * 100));
+    let y = Math.max(0, Math.min(100, ((cy - r.top) / r.height) * 100));
+    const el = document.getElementById('marker-' + dragId);
+    if (el) { el.style.left = x + '%'; el.style.top = y + '%'; }
+    const m = markers.find(k => k.id === dragId);
+    if (m) { m.x = x; m.y = y; }
+}
+
+function handleContainerUp() {
+    if (!isDragging) return;
+    const wasQuickTap = Date.now() - dragStartTime < 150;
+    const id = dragId;
+    isDragging = false; dragId = null;
+
+    if (wasQuickTap) { openZoneDetails(id); return; }
+
+    ignoreClick = true;
+    setTimeout(() => ignoreClick = false, 150);
+    const m = markers.find(k => k.id === id);
+    if (m) updateNode('map/markers/m' + m.id, { x: m.x, y: m.y });   // seule la position est écrite
+}
+
+function handleMapBackgroundClick(e) {
+    if (isDragging || ignoreClick) return;
+    const r = document.getElementById('atelier-map-img').getBoundingClientRect();
+    if (!r.width || !r.height) return;
+    if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) return;
+    const x = ((e.clientX - r.left) / r.width) * 100;
+    const y = ((e.clientY - r.top) / r.height) * 100;
+    openMarkerModal(null, x, y);
+}
+
+function openZoneDetails(id) {
+    const m = markers.find(k => k.id === id);
+    if (!m) return;
+    document.getElementById('detail-zone-title').textContent = m.name;
+    document.getElementById('detail-zone-desc').textContent = m.desc || "";
+    document.getElementById('btn-edit-zone').onclick = () => { closeModal('modal-zone-details'); openMarkerModal(m.id); };
+
+    const l = document.getElementById('zone-items-list');
+    l.innerHTML = '';
+    const zoneParts = parts.filter(p => String(p.location).toLowerCase() === String(m.name).toLowerCase());
+
+    if (!zoneParts.length) {
+        l.innerHTML = '<p class="text-center text-gray-400 py-4">Aucune pièce dans cette zone</p>';
+    } else {
+        const groups = {};
+        zoneParts.forEach(p => { (groups[p.familyId || 0] ||= []).push(p); });
+
+        Object.keys(groups).forEach(fId => {
+            const fam = families.find(f => f.id == fId);
+            const s = fam ? (colorMap[fam.color] || colorMap.gray) : colorMap.gray;
+            const fh = document.createElement('div');
+            fh.className = "bg-gray-50 p-2 mt-3 mb-1 rounded flex justify-between items-center";
+            fh.innerHTML = `<span class="badge ${s.bg} ${s.text}">${esc(fam ? fam.name : 'Sans famille')}</span>
+                <span class="text-xs font-bold text-gray-500">${groups[fId].length} pièce(s)</span>`;
+            l.appendChild(fh);
+
+            groups[fId].sort((a, b) => String(a.name).localeCompare(String(b.name), 'fr')).forEach(p => {
+                const d = document.createElement('div');
+                d.className = "flex justify-between items-center p-2 border-b cursor-pointer hover:bg-gray-50 ml-2";
+                d.onclick = () => { closeModal('modal-zone-details'); openQuickView(p.id); };
+                d.innerHTML = `<span class="text-sm font-medium text-gray-800">${esc(p.name)}</span>
+                    <b class="text-sm text-gray-600">Stock: ${num(p.qty)}</b>`;
+                l.appendChild(d);
+            });
+        });
+    }
+    document.getElementById('modal-zone-details').classList.remove('hidden');
+}
+
+function openMarkerModal(id, x, y) {
+    document.getElementById('modal-marker').classList.remove('hidden');
+    const btnDel = document.getElementById('btn-delete-marker');
+    if (id) {
+        const m = markers.find(k => k.id == id);
+        if (!m) return;
+        document.getElementById('modal-marker-title').textContent = "Modifier la zone";
+        document.getElementById('marker-id').value = m.id;
+        document.getElementById('input-marker-name').value = m.name || '';
+        document.getElementById('input-marker-desc').value = m.desc || "";
+        btnDel.classList.remove('hidden');
+    } else {
+        document.getElementById('form-marker').reset();
+        document.getElementById('modal-marker-title').textContent = "Nouvelle zone";
+        document.getElementById('marker-id').value = "";
+        document.getElementById('marker-x').value = x;
+        document.getElementById('marker-y').value = y;
+        btnDel.classList.add('hidden');
+    }
+}
+
+async function handleMarkerSubmit(e) {
+    e.preventDefault();
+    const idRaw = document.getElementById('marker-id').value;
+    const name = document.getElementById('input-marker-name').value.trim();
+    const desc = document.getElementById('input-marker-desc').value;
+    if (!name) { toast("Le nom est obligatoire", 'err'); return; }
+
+    if (idRaw) {
+        const m = markers.find(k => k.id == idRaw);
+        if (!m) return;
+        const oldName = m.name;
+        await updateNode('map/markers/m' + m.id, { name, desc });
+        // Les pièces référencent la zone par son nom : on répercute le renommage.
+        if (oldName !== name) {
+            const affected = parts.filter(p => p.location === oldName);
+            for (const p of affected) await updateNode('parts/p' + p.id, { location: name });
+            if (affected.length) toast(`${affected.length} pièce(s) mise(s) à jour`, 'ok');
         }
-        
-        function deleteMarker(i){if(confirm("Supprimer?")){mapData.markers=mapData.markers.filter(x=>x.id!=i);renderMap();populatePartsFilters();renderPartsGrid();updateStats(); saveDataToFirebase();}}
-        
-        populatePartsFilters(); // Initialisation au démarrage
-        updateStats();
-    </script>
+    } else {
+        const id = Date.now();
+        await write('map/markers/m' + id, {
+            id,
+            x: parseFloat(document.getElementById('marker-x').value) || 0,
+            y: parseFloat(document.getElementById('marker-y').value) || 0,
+            name, desc
+        });
+        logHistory(`Zone « ${name} » créée`);
+    }
+    closeModal('modal-marker');
+    toast("Zone enregistrée", 'ok');
+}
+
+function deleteMarkerFromModal() {
+    const id = num(document.getElementById('marker-id').value);
+    closeModal('modal-marker');
+    deleteMarker(id);
+}
+
+async function deleteMarker(id) {
+    const m = markers.find(x => x.id === id);
+    if (!m) return;
+    const linked = parts.filter(p => p.location === m.name);
+    const msg = linked.length
+        ? `${linked.length} pièce(s) sont rangées dans « ${m.name} ».\nElles resteront dans l'inventaire mais sans zone.\n\nSupprimer la zone ?`
+        : `Supprimer la zone « ${m.name} » ?`;
+    if (!confirm(msg)) return;
+
+    for (const p of linked) await updateNode('parts/p' + p.id, { location: '' });
+    await write('map/markers/m' + id, null);
+    logHistory(`Zone « ${m.name} » supprimée`);
+    toast("Zone supprimée", 'ok');
+}
+
+/* ============================================================================
+   PANIERS / CHANTIERS
+   ========================================================================== */
+function calculateProgress(basket) {
+    const items = toArray(basket.items);
+    if (!items.length) return 0;
+    return Math.round((items.filter(i => i.loaded).length / items.length) * 100);
+}
+
+async function createBasket() {
+    const name = prompt("Nom du nouveau chantier :", "Chantier " + (baskets.length + 1));
+    if (!name || !name.trim()) return;
+    const id = Date.now();
+    await write('baskets/b' + id, { id, name: name.trim(), status: 'draft', items: [], createdAt: id });
+    logHistory(`Chantier « ${name.trim()} » créé`);
+    openBasketDetail(id);
+}
+
+function renderBaskets() {
+    const grid = document.getElementById('baskets-grid');
+    const emptyMsg = document.getElementById('empty-baskets-msg');
+    grid.innerHTML = '';
+    emptyMsg.classList.toggle('hidden', baskets.length > 0);
+
+    baskets.slice().sort((a, b) => num(b.createdAt || b.id) - num(a.createdAt || a.id)).forEach(b => {
+        const isDraft = b.status === 'draft';
+        const percent = calculateProgress(b);
+        const items = toArray(b.items);
+        const card = document.createElement('div');
+        card.className = "bg-white p-5 rounded-lg shadow cursor-pointer hover:shadow-md transition border-l-4";
+        card.style.borderLeftColor = isDraft ? '#6366F1' : '#22C55E';
+        card.onclick = () => openBasketDetail(b.id);
+        card.innerHTML = `
+            <div class="flex justify-between items-start mb-2 gap-2">
+                <div class="min-w-0">
+                    <h3 class="font-bold text-lg text-gray-800 truncate">${esc(b.name)}</h3>
+                    <span class="text-xs font-semibold px-2 py-0.5 rounded ${isDraft ? 'bg-indigo-100 text-indigo-800' : 'bg-green-100 text-green-800'}">
+                        ${isDraft ? 'Brouillon' : 'En chargement'}
+                    </span>
+                </div>
+                ${isDraft
+                    ? '<i class="fa-solid fa-pen-to-square text-gray-300 text-xl flex-none"></i>'
+                    : `<div class="pie-chart flex-none" style="width:40px;height:40px;background:conic-gradient(#16a34a ${percent}%, #E5E7EB 0);">
+                         <div class="pie-chart-inner" style="width:28px;height:28px;">${percent}%</div></div>`}
+            </div>
+            <p class="text-sm text-gray-500 mt-2">${items.length} référence(s)</p>`;
+        grid.appendChild(card);
+    });
+}
+
+function openBasketDetail(id) {
+    currentBasketId = id;
+    const basket = baskets.find(b => b.id === id);
+    if (!basket) { toast("Chantier introuvable", 'err'); return; }
+
+    document.getElementById('basket-detail-title').textContent = basket.name;
+    document.getElementById('basket-search-results').classList.add('hidden');
+    document.getElementById('basket-search-input').value = "";
+    document.getElementById('filter-basket-text').value = "";
+    populateBasketFilters();
+
+    const badge = document.getElementById('basket-status-badge');
+    const headerPie = document.getElementById('header-pie-chart');
+    const headerTable = document.getElementById('basket-table-header');
+    const footerActions = document.getElementById('basket-footer-actions');
+    const isDraft = basket.status === 'draft';
+
+    if (isDraft) {
+        badge.textContent = "Brouillon";
+        badge.className = "text-xs font-bold px-2 py-0.5 rounded bg-indigo-100 text-indigo-800";
+        headerPie.classList.add('hidden');
+        headerTable.innerHTML = `
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Pièce</th>
+            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Qté</th>
+            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Déduire</th>
+            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Action</th>`;
+        footerActions.innerHTML = `
+            <button onclick="closeModal('modal-basket-detail')" class="bg-white border px-4 py-2 rounded">Fermer</button>
+            <button onclick="validateBasketDraft()" class="bg-indigo-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-700">Valider &amp; Charger</button>`;
+    } else {
+        badge.textContent = "Chargement en cours";
+        badge.className = "text-xs font-bold px-2 py-0.5 rounded bg-green-100 text-green-800";
+        headerPie.classList.remove('hidden');
+        updateHeaderPie(basket);
+        headerTable.innerHTML = `
+            <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Vu</th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Pièce</th>
+            <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Qté chargée</th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Note</th>
+            <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Action</th>`;
+        footerActions.innerHTML = `
+            <button onclick="closeModal('modal-basket-detail')" class="bg-white border px-4 py-2 rounded">Fermer</button>
+            <button onclick="archiveBasket()" class="bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700">Chantier terminé</button>`;
+    }
+
+    renderBasketItems(basket);
+    document.getElementById('modal-basket-detail').classList.remove('hidden');
+}
+
+function rerenderCurrentBasket() {
+    if (document.getElementById('modal-basket-detail').classList.contains('hidden')) return;
+    const b = baskets.find(x => x.id === currentBasketId);
+    if (b) renderBasketItems(b);
+}
+
+function populateBasketFilters() {
+    document.getElementById('filter-basket-zone').innerHTML =
+        '<option value="">Toutes Zones</option>' +
+        markers.map(m => `<option value="${esc(m.name)}">${esc(m.name)}</option>`).join('');
+    document.getElementById('filter-basket-family').innerHTML =
+        '<option value="">Toutes Familles</option>' +
+        families.map(f => `<option value="${f.id}">${esc(f.name)}</option>`).join('');
+}
+
+function updateHeaderPie(basket) {
+    const p = calculateProgress(basket);
+    document.getElementById('header-pie-chart').style.background = `conic-gradient(#16a34a ${p}%, #E5E7EB 0)`;
+    document.getElementById('header-pie-text').textContent = p + '%';
+}
+
+function renderBasketItems(basket) {
+    if (!basket) return;
+    const items = toArray(basket.items);
+    const tbody = document.getElementById('basket-items-list');
+    const emptyMsg = document.getElementById('basket-empty-list-msg');
+    tbody.innerHTML = '';
+
+    const fText = document.getElementById('filter-basket-text').value.toLowerCase();
+    const fZone = document.getElementById('filter-basket-zone').value;
+    const fFam = document.getElementById('filter-basket-family').value;
+    const isDraft = basket.status === 'draft';
+
+    const visible = items.filter(item => {
+        const part = parts.find(p => p.id === item.partId);
+        if (!part) return false;
+        if (fText && !String(part.name).toLowerCase().includes(fText)) return false;
+        if (fZone && part.location !== fZone) return false;
+        if (fFam && String(part.familyId) !== fFam) return false;
+        return true;
+    });
+
+    emptyMsg.classList.toggle('hidden', visible.length > 0);
+
+    visible.forEach(item => {
+        const part = parts.find(p => p.id === item.partId);
+        const tr = document.createElement('tr');
+        const commentHtml = item.comment
+            ? `<div class="text-xs text-indigo-600 italic mt-1"><i class="fa-regular fa-comment-dots mr-1"></i>${esc(item.comment)}</div>` : '';
+
+        if (isDraft) {
+            const deductStatus = item.deduct
+                ? '<span class="text-green-600 text-xs font-bold bg-green-100 px-2 py-1 rounded">OUI</span>'
+                : '<span class="text-gray-400 text-xs bg-gray-100 px-2 py-1 rounded">NON</span>';
+            const short = num(part.qty) < num(item.qty);
+            tr.innerHTML = `
+                <td class="px-6 py-3 cursor-pointer group" data-open-part="${part.id}">
+                    <div class="text-sm font-bold text-gray-900 group-hover:text-indigo-600 transition">${esc(part.name)}</div>
+                    ${commentHtml}
+                    <div class="text-xs ${short ? 'text-red-600 font-bold' : 'text-gray-500'}">Stock: ${num(part.qty)}${short ? ' — insuffisant' : ''}</div>
+                </td>
+                <td class="px-6 py-3 text-right text-sm font-bold">${num(item.qty)}</td>
+                <td class="px-6 py-3 text-center">${deductStatus}</td>
+                <td class="px-6 py-3 text-right"><button data-remove-item="${item.uid}" class="text-red-600 hover:text-red-900 bg-red-50 p-2 rounded-full"><i class="fa-solid fa-trash"></i></button></td>`;
+        } else {
+            const loadedQty = item.loadedQty === undefined ? num(item.qty) : num(item.loadedQty);
+            tr.className = item.loaded ? 'bg-green-50' : '';
+            tr.innerHTML = `
+                <td class="px-4 py-3 text-center"><input type="checkbox" data-toggle-item="${item.uid}" ${item.loaded ? 'checked' : ''} class="w-6 h-6 text-green-600 rounded cursor-pointer"></td>
+                <td class="px-4 py-3 cursor-pointer group" data-open-part="${part.id}">
+                    <div class="text-sm font-bold text-gray-900 group-hover:text-indigo-600 transition">${esc(part.name)}</div>
+                    <div class="text-xs text-gray-500">Prévu: ${num(item.qty)}</div>
+                    ${commentHtml}
+                </td>
+                <td class="px-4 py-3 text-right"><input type="number" value="${loadedQty}" data-load-qty="${item.uid}" min="0" class="w-20 text-right border rounded p-1 text-sm font-bold ${num(item.qty) !== loadedQty ? 'text-red-600 border-red-300' : 'text-gray-700'}"></td>
+                <td class="px-4 py-3"><input type="text" value="${esc(item.loadComment || '')}" data-load-comment="${item.uid}" placeholder="..." class="w-full border-b border-gray-300 focus:border-indigo-500 text-sm bg-transparent p-1"></td>
+                <td class="px-4 py-3 text-center"><button data-remove-item="${item.uid}" class="text-red-600 hover:text-red-900 bg-red-50 p-2 rounded-full" title="Retirer"><i class="fa-solid fa-trash"></i></button></td>`;
+        }
+        tbody.appendChild(tr);
+    });
+
+    // Les actions ciblent l'identifiant de l'item, jamais son index :
+    // le filtrage de la liste ne peut donc plus décaler la ligne modifiée.
+    tbody.querySelectorAll('[data-open-part]').forEach(el =>
+        el.onclick = () => openQuickView(num(el.dataset.openPart)));
+    tbody.querySelectorAll('[data-remove-item]').forEach(el =>
+        el.onclick = () => removeItemFromBasket(el.dataset.removeItem));
+    tbody.querySelectorAll('[data-toggle-item]').forEach(el =>
+        el.onchange = () => toggleItemLoad(el.dataset.toggleItem, el.checked));
+    tbody.querySelectorAll('[data-load-qty]').forEach(el =>
+        el.onchange = () => updateLoadQty(el.dataset.loadQty, el.value));
+    tbody.querySelectorAll('[data-load-comment]').forEach(el =>
+        el.onchange = () => updateLoadComment(el.dataset.loadComment, el.value));
+}
+
+function currentBasket() { return baskets.find(b => b.id === currentBasketId); }
+
+function saveBasket(basket) { return write('baskets/b' + basket.id, basket); }
+
+function toggleItemLoad(uid, checked) {
+    const b = currentBasket(); if (!b) return;
+    const item = b.items.find(i => i.uid === uid); if (!item) return;
+    item.loaded = checked;
+    updateHeaderPie(b); renderBasketItems(b); renderBaskets(); updateStats();
+    saveBasket(b);
+}
+
+function updateLoadQty(uid, val) {
+    const b = currentBasket(); if (!b) return;
+    const item = b.items.find(i => i.uid === uid); if (!item) return;
+    item.loadedQty = Math.max(0, num(val));      // NaN ne peut plus atteindre Firebase
+    renderBasketItems(b);
+    saveBasket(b);
+}
+
+function updateLoadComment(uid, val) {
+    const b = currentBasket(); if (!b) return;
+    const item = b.items.find(i => i.uid === uid); if (!item) return;
+    item.loadComment = val;
+    saveBasket(b);
+}
+
+function renameBasket() {
+    const b = currentBasket(); if (!b) return;
+    const name = prompt("Nom du chantier :", b.name);
+    if (!name || !name.trim()) return;
+    b.name = name.trim();
+    document.getElementById('basket-detail-title').textContent = b.name;
+    saveBasket(b);
+}
+
+function searchPartForBasket() {
+    const query = document.getElementById('basket-search-input').value.trim().toLowerCase();
+    const resultsDiv = document.getElementById('basket-search-results');
+    if (!query) { resultsDiv.classList.add('hidden'); return; }
+
+    const matched = parts.filter(p =>
+        String(p.name || '').toLowerCase().includes(query) ||
+        String(p.location || '').toLowerCase().includes(query)   // ne plante plus si zone absente
+    ).slice(0, 30);
+
+    resultsDiv.innerHTML = '';
+    if (!matched.length) {
+        resultsDiv.innerHTML = '<div class="p-3 text-sm text-gray-500 text-center">Aucun résultat</div>';
+    } else {
+        matched.forEach(p => {
+            const thumb = thumbs['p' + p.id];
+            const div = document.createElement('div');
+            div.className = "search-result-item flex justify-between items-center p-3 border-b cursor-pointer transition";
+            div.onclick = () => openConfirmAddModal(p.id);
+            div.innerHTML = `<div class="flex items-center gap-3 min-w-0">
+                    <div class="h-8 w-8 bg-gray-100 rounded flex items-center justify-center overflow-hidden flex-none">
+                        ${thumb ? `<img src="${thumb}" class="h-full w-full object-cover" alt="">` : '<i class="fa-solid fa-box text-gray-400"></i>'}
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-sm font-bold text-gray-800 truncate">${esc(p.name)}</p>
+                        <p class="text-xs text-gray-500 truncate">${esc(p.location || 'Zone non définie')} • Stock: ${num(p.qty)}</p>
+                    </div>
+                </div>
+                <i class="fa-solid fa-cart-plus text-indigo-500 text-xl flex-none"></i>`;
+            resultsDiv.appendChild(div);
+        });
+    }
+    resultsDiv.classList.remove('hidden');
+}
+
+function openConfirmAddModal(partId) {
+    const part = parts.find(p => p.id === partId);
+    if (!part) return;
+    document.getElementById('confirm-add-part-id').value = partId;
+    document.getElementById('confirm-add-title').textContent = "Ajouter : " + part.name;
+    document.getElementById('confirm-add-qty').value = 1;
+    document.getElementById('confirm-add-comment').value = "";
+    document.getElementById('confirm-add-stock-info').textContent = "Stock disponible : " + num(part.qty);
+    document.getElementById('confirm-add-deduct').checked = true;
+    document.getElementById('modal-confirm-add-basket').classList.remove('hidden');
+    document.getElementById('basket-search-results').classList.add('hidden');
+}
+
+function finalizeAddToBasket() {
+    const partId = num(document.getElementById('confirm-add-part-id').value);
+    const qty = num(document.getElementById('confirm-add-qty').value);
+    const deduct = document.getElementById('confirm-add-deduct').checked;
+    const comment = document.getElementById('confirm-add-comment').value;
+    if (qty <= 0) { toast("Quantité invalide", 'err'); return; }
+
+    const basket = currentBasket();
+    if (!basket) return;
+    const part = parts.find(p => p.id === partId);
+    if (!part) { toast("Pièce introuvable", 'err'); return; }
+
+    // Sur un chantier déjà validé, l'ajout impacte le stock immédiatement.
+    if (basket.status === 'active' && deduct) {
+        if (num(part.qty) < qty && !confirm(`Stock insuffisant pour « ${part.name} » (${num(part.qty)} disponible).\n\nContinuer ?`)) return;
+        adjustQty(partId, -qty);
+        logHistory(`-${qty} « ${part.name} » (chantier ${basket.name})`);
+    }
+
+    const existing = basket.items.find(i => i.partId === partId && i.deduct === deduct && (i.comment || '') === comment);
+    if (existing) existing.qty = num(existing.qty) + qty;
+    else basket.items.push({ uid: 'i' + Date.now() + Math.random().toString(36).slice(2, 7), partId, qty, deduct, comment });
+
+    closeModal('modal-confirm-add-basket');
+    document.getElementById('basket-search-input').value = "";
+    renderBasketItems(basket); renderBaskets(); updateStats();
+    if (basket.status === 'active') updateHeaderPie(basket);
+    saveBasket(basket);
+}
+
+function removeItemFromBasket(uid) {
+    const basket = currentBasket(); if (!basket) return;
+    const item = basket.items.find(i => i.uid === uid); if (!item) return;
+    const part = parts.find(p => p.id === item.partId);
+
+    if (basket.status === 'active' && item.deduct) {
+        if (!confirm(`Retirer cet élément va recréditer le stock (+${num(item.qty)}).\n\nContinuer ?`)) return;
+        adjustQty(item.partId, num(item.qty));
+        logHistory(`+${num(item.qty)} « ${part ? part.name : item.partId} » (retiré de ${basket.name})`);
+    }
+
+    basket.items = basket.items.filter(i => i.uid !== uid);
+    renderBasketItems(basket); renderBaskets(); updateStats();
+    if (basket.status === 'active') updateHeaderPie(basket);
+    saveBasket(basket);
+}
+
+function validateBasketDraft() {
+    const basket = currentBasket();
+    if (!basket) return;
+    if (!basket.items.length) { toast("Ce chantier est vide", 'warn'); return; }
+
+    const short = basket.items.filter(i => {
+        if (!i.deduct) return false;
+        const p = parts.find(x => x.id === i.partId);
+        return p && num(p.qty) < num(i.qty);
+    }).map(i => {
+        const p = parts.find(x => x.id === i.partId);
+        return `- ${p.name} (demandé ${num(i.qty)}, dispo ${num(p.qty)})`;
+    });
+
+    if (short.length && !confirm("STOCK INSUFFISANT :\n" + short.join("\n") + "\n\nContinuer quand même ?")) return;
+
+    basket.items.forEach(item => { if (item.deduct) adjustQty(item.partId, -num(item.qty)); });
+    basket.status = 'active';
+    saveBasket(basket);
+    logHistory(`Chantier « ${basket.name} » validé (${basket.items.length} références)`);
+    toast("Chantier validé — passage au chargement", 'ok');
+    openBasketDetail(currentBasketId);
+    updateStats();
+}
+
+function archiveBasket() {
+    const basket = currentBasket(); if (!basket) return;
+    const pct = calculateProgress(basket);
+    if (pct < 100 && !confirm(`Le chargement n'est terminé qu'à ${pct} %.\n\nClôturer ce chantier ?`)) return;
+    if (!confirm(`Clôturer « ${basket.name} » ?\nIl sera retiré de la liste des chantiers.`)) return;
+    write('baskets/b' + basket.id, null);
+    logHistory(`Chantier « ${basket.name} » clôturé`);
+    closeModal('modal-basket-detail');
+    toast("Chantier clôturé", 'ok');
+}
+
+function deleteBasket() {
+    const basket = currentBasket(); if (!basket) return;
+    const toRestore = basket.status === 'active'
+        ? basket.items.filter(i => i.deduct) : [];
+    let msg = `Supprimer définitivement « ${basket.name} » ?`;
+    if (toRestore.length) msg += `\n\nLe stock de ${toRestore.length} référence(s) sera recrédité.`;
+    if (!confirm(msg)) return;
+
+    toRestore.forEach(i => adjustQty(i.partId, num(i.qty)));
+    write('baskets/b' + basket.id, null);
+    logHistory(`Chantier « ${basket.name} » supprimé`);
+    closeModal('modal-basket-detail');
+    toast("Chantier supprimé", 'ok');
+}
+
+/* ============================================================================
+   TABLEAU DE BORD
+   ========================================================================== */
+function updateDashboardActiveBaskets() {
+    // "Chantiers en cours" = validés et en chargement (les brouillons ne comptent pas).
+    const active = baskets.filter(b => b.status === 'active');
+    document.getElementById('stat-total-active-baskets').textContent = active.length;
+
+    const container = document.getElementById('active-baskets-dashboard-container');
+    const list = document.getElementById('active-baskets-dashboard-list');
+    container.classList.toggle('hidden', baskets.length === 0);
+    list.innerHTML = '';
+
+    baskets.slice().sort((a, b) => num(b.createdAt || b.id) - num(a.createdAt || a.id)).forEach(b => {
+        const p = calculateProgress(b);
+        const isDraft = b.status === 'draft';
+        const div = document.createElement('div');
+        div.className = "bg-white p-4 rounded shadow border border-gray-100 cursor-pointer flex justify-between items-center hover:bg-gray-50 gap-3";
+        div.onclick = () => { showPage('paniers'); openBasketDetail(b.id); };
+        div.innerHTML = `<div class="min-w-0">
+                <h4 class="font-bold text-gray-800 truncate">${esc(b.name)}</h4>
+                <p class="text-xs text-gray-500">${toArray(b.items).length} référence(s) • ${isDraft ? 'Brouillon' : p + ' % chargé'}</p>
+            </div>
+            ${isDraft ? '<i class="fa-solid fa-pen-to-square text-gray-300 text-xl flex-none"></i>'
+                      : `<div class="pie-chart flex-none" style="width:40px;height:40px;background:conic-gradient(#16a34a ${p}%, #E5E7EB 0);">
+                           <div class="pie-chart-inner" style="width:28px;height:28px;">${p}%</div></div>`}`;
+        list.appendChild(div);
+    });
+}
+
+function updateStats() {
+    document.getElementById('stat-total-parts').textContent = parts.length;
+    document.getElementById('stat-total-qty').textContent = parts.reduce((s, p) => s + num(p.qty), 0);
+    document.getElementById('stat-total-locations').textContent = markers.length;
+    updateDashboardActiveBaskets();
+
+    const lowStock = parts.filter(p => num(p.qty) <= num(p.alertQty))
+        .sort((a, b) => (num(a.qty) - num(a.alertQty)) - (num(b.qty) - num(b.alertQty)));
+    const alertContainer = document.getElementById('stock-alerts-container');
+    const list = document.getElementById('stock-alerts-list');
+    alertContainer.classList.toggle('hidden', lowStock.length === 0);
+    document.getElementById('alert-count-badge').textContent = lowStock.length;
+    list.innerHTML = '';
+    lowStock.forEach(p => {
+        const div = document.createElement('div');
+        div.className = "flex justify-between items-center bg-white p-3 rounded shadow-sm border border-red-100 cursor-pointer hover:bg-red-50 gap-2";
+        div.onclick = () => { showPage('pieces'); openQuickView(p.id); };
+        div.innerHTML = `<div class="min-w-0">
+                <p class="font-bold text-gray-800 truncate">${esc(p.name)}</p>
+                <p class="text-xs text-red-500 font-semibold">Stock: ${num(p.qty)} / Seuil: ${num(p.alertQty)}</p>
+            </div>
+            <span class="text-indigo-600 text-sm font-medium flex-none">Voir</span>`;
+        list.appendChild(div);
+    });
+
+    renderDashboardFamilies();
+}
+
+function renderDashboardFamilies() {
+    const wrap = document.getElementById('dashboard-families');
+    const list = document.getElementById('dashboard-families-list');
+    const rows = families.map(f => ({
+        f, count: parts.filter(p => p.familyId == f.id).length
+    })).filter(r => r.count > 0).sort((a, b) => b.count - a.count);
+
+    wrap.classList.toggle('hidden', rows.length === 0);
+    const max = rows.length ? rows[0].count : 1;
+    list.innerHTML = '';
+    rows.forEach(({ f, count }) => {
+        const s = colorMap[f.color] || colorMap.gray;
+        const row = document.createElement('div');
+        row.className = "flex items-center gap-3 px-4 py-2 cursor-pointer hover:bg-gray-50";
+        row.onclick = () => { showPage('familles'); openFamilyDetails(f.id); };
+        row.innerHTML = `<span class="w-3 h-3 rounded-full flex-none" style="background:${s.hex}"></span>
+            <span class="text-sm font-medium text-gray-700 w-40 truncate">${esc(f.name)}</span>
+            <div class="flex-grow bg-gray-100 rounded-full h-2 overflow-hidden">
+                <div class="h-2 rounded-full" style="width:${Math.round(count / max * 100)}%;background:${s.hex}"></div>
+            </div>
+            <span class="text-sm font-bold text-gray-600 w-10 text-right">${count}</span>`;
+        list.appendChild(row);
+    });
+}
+
+function openHistory() {
+    const list = document.getElementById('history-list');
+    list.innerHTML = '<p class="text-gray-400 py-4 text-center">Chargement...</p>';
+    document.getElementById('modal-history').classList.remove('hidden');
+    if (!db) { list.innerHTML = '<p class="text-gray-400 py-4 text-center">Hors ligne</p>'; return; }
+
+    teamRef('history').limitToLast(HISTORY_KEEP).once('value').then(snap => {
+        // Attention : DataSnapshot.forEach interrompt l'énumération dès que le
+        // callback renvoie une valeur vraie — le corps doit donc ne rien retourner.
+        const entries = [];
+        snap.forEach(c => { entries.push(c.val()); });
+        entries.reverse();
+        if (!entries.length) { list.innerHTML = '<p class="text-gray-400 py-4 text-center">Aucun mouvement enregistré</p>'; return; }
+        list.innerHTML = entries.map(e => {
+            const d = new Date(e.ts || 0);
+            const when = d.toLocaleDateString('fr-FR') + ' ' + d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+            return `<div class="py-2 flex justify-between gap-3">
+                <div class="min-w-0"><p class="text-gray-800">${esc(e.text)}</p>
+                <p class="text-xs text-gray-400">${esc(e.user || 'Anonyme')}</p></div>
+                <span class="text-xs text-gray-400 flex-none">${when}</span></div>`;
+        }).join('');
+    }).catch(() => { list.innerHTML = '<p class="text-gray-400 py-4 text-center">Historique indisponible</p>'; });
+}
+
+/* ============================================================================
+   EXPORTS
+   ========================================================================== */
+function downloadExcel() {
+    if (!parts.length) { toast("Aucune pièce à exporter", 'warn'); return; }
+    const rows = parts.slice().sort((a, b) => String(a.name).localeCompare(String(b.name), 'fr')).map(p => {
+        const family = families.find(f => f.id == p.familyId);
+        return {
+            "Nom de la pièce": p.name,
+            "Quantité": num(p.qty),
+            "Seuil d'alerte": num(p.alertQty),
+            "Stock bas": num(p.qty) <= num(p.alertQty) ? "OUI" : "",
+            "Famille": family ? family.name : "Sans famille",
+            "Lieu de stockage": p.location || "Non défini",
+            "Description": p.desc || ""
+        };
+    });
+    const ws = XLSX.utils.json_to_sheet(rows);
+    ws['!cols'] = [{ wch: 38 }, { wch: 10 }, { wch: 12 }, { wch: 10 }, { wch: 22 }, { wch: 22 }, { wch: 40 }];
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Inventaire");
+    XLSX.writeFile(wb, `Inventaire_${teamKey.replace(/\s+/g, '_')}_${new Date().toISOString().slice(0, 10)}.xlsx`);
+    toast("Export Excel généré", 'ok');
+}
+
+function downloadAllQRCodes() {
+    if (!parts.length) { toast("Aucune pièce à exporter", 'warn'); return; }
+    const tempContainer = document.createElement('div');
+    tempContainer.style.display = 'none';
+    document.body.appendChild(tempContainer);
+
+    const labels = parts.slice().sort((a, b) => String(a.name).localeCompare(String(b.name), 'fr')).map(p => {
+        const qrDiv = document.createElement('div');
+        tempContainer.appendChild(qrDiv);
+        new QRCode(qrDiv, { text: "PART:" + p.id, width: 128, height: 128 });
+        const canvas = qrDiv.querySelector('canvas');
+        const dataURL = canvas ? canvas.toDataURL("image/png") : "";
+        return dataURL ? `<div class="label"><div class="name">${esc(p.name)}</div><img src="${dataURL}" alt=""><div class="loc">${esc(p.location || '')}</div></div>` : '';
+    }).join('');
+    document.body.removeChild(tempContainer);
+
+    const html = `<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>QR Codes — ${esc(teamKey)}</title><style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; text-align: center; color: #333; background: #f8f9fa; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; padding: 20px; margin: 0 auto; }
+        .label { border: 1px dashed #aaa; padding: 15px; display: flex; flex-direction: column; align-items: center; background: #fff; border-radius: 8px; page-break-inside: avoid; }
+        .name { margin-bottom: 12px; font-weight: bold; font-size: 14px; word-wrap: break-word; color: #111; }
+        .loc { margin-top: 8px; font-size: 11px; color: #666; }
+        img { max-width: 100%; height: auto; }
+        .btn-print { background: #4F46E5; color: white; border: none; padding: 12px 24px; font-size: 16px; border-radius: 6px; cursor: pointer; margin-top: 20px; font-weight: bold; }
+        @media print { body { background: #fff; } .no-print { display: none !important; } .label { border: 1px solid #000; break-inside: avoid; width: 140px; } .grid { display: flex; flex-wrap: wrap; gap: 10px; padding: 0; } }
+        </style></head><body>
+        <div class="no-print"><h2 style="margin-top:20px;">Étiquettes QR — ${esc(teamKey)}</h2>
+        <button class="btn-print" onclick="window.print()">Imprimer / Sauvegarder en PDF</button></div>
+        <div class="grid">${labels}</div></body></html>`;
+
+    const win = window.open('', '_blank');
+    if (win) { win.document.write(html); win.document.close(); }
+    else toast("Fenêtres pop-up bloquées par le navigateur", 'err');
+}
+
+/* ============================================================================
+   SCANNER QR
+   ========================================================================== */
+function startScanner() {
+    if (html5QrcodeScanner || scannerStarting) return;
+    scannerStarting = true;
+    setTimeout(() => {
+        // La page a pu changer pendant l'attente : on n'allume pas la caméra pour rien.
+        if (!scannerStarting || document.getElementById('page-scanner').classList.contains('hidden')) {
+            scannerStarting = false; return;
+        }
+        try {
+            html5QrcodeScanner = new Html5QrcodeScanner("reader",
+                { fps: 10, qrbox: { width: 220, height: 220 }, aspectRatio: 1.0 }, false);
+            html5QrcodeScanner.render(onScanSuccess, () => {});
+        } catch (e) { console.error('Scanner', e); toast("Caméra indisponible", 'err'); }
+        scannerStarting = false;
+    }, 300);
+}
+
+function stopScanner() {
+    scannerStarting = false;                 // annule un démarrage encore en attente
+    if (!html5QrcodeScanner) return;
+    const scanner = html5QrcodeScanner;
+    html5QrcodeScanner = null;
+    scanner.clear().catch(() => {});
+}
+
+function onScanSuccess(text) {
+    if (!String(text).startsWith("PART:")) { toast("QR code non reconnu", 'warn'); return; }
+    const id = num(String(text).split(":")[1]);
+    const part = parts.find(p => p.id === id);
+    if (!part) { toast("Cette pièce n'existe pas dans l'équipe " + teamKey, 'warn'); return; }
+    stopScanner();
+    showPage('pieces');
+    openQuickView(id);
+}
+
+/* ============================================================================
+   DÉMARRAGE
+   ========================================================================== */
+function boot() {
+    renderTeamLabel();
+    loadCache();          // affichage immédiat, même sans réseau
+    renderAll();
+
+    try {
+        firebase.initializeApp(firebaseConfig);
+        db = firebase.database();
+        setSyncState('wait');
+    } catch (e) {
+        console.error('Firebase', e);
+        setSyncState('offline');
+        toast("Mode hors ligne : consultation seule", 'warn');
+        return;
+    }
+
+    // Connexion anonyme : si l'authentification est activée dans la console
+    // Firebase, elle permet de restreindre l'accès via les règles de sécurité.
+    // Si elle ne l'est pas, l'application continue de fonctionner normalement ;
+    // on note l'échec pour ne pas réessayer à chaque chargement (une tentative
+    // par jour suffit à reprendre l'authentification dès qu'elle est activée).
+    const authSkipUntil = num(localStorage.getItem('inventrte.authOff'), 0);
+    if (Date.now() > authSkipUntil) {
+        firebase.auth().signInAnonymously()
+            .then(() => localStorage.removeItem('inventrte.authOff'))
+            .catch(err => {
+                console.warn("Auth anonyme indisponible :", err.code);
+                if (err.code === 'auth/configuration-not-found' || err.code === 'auth/operation-not-allowed') {
+                    localStorage.setItem('inventrte.authOff', String(Date.now() + 86400000));
+                }
+            });
+    }
+
+    db.ref('.info/connected').on('value', s => {
+        isOnline = !!s.val();
+        setSyncState(isOnline ? 'online' : 'offline');
+    });
+
+    db.ref('teams').on('value', snap => {
+        teams = snap.val() || {};
+        if (!teams[teamKey]) {
+            // L'équipe mémorisée n'existe plus : on bascule proprement au lieu de planter.
+            const first = Object.keys(teams)[0];
+            if (first) { teamKey = first; localStorage.setItem('inventrte.team', first); renderTeamLabel(); }
+        }
+    }, err => console.error('Équipes', err));
+
+    attachListeners();
+}
+
+window.addEventListener('beforeunload', () => { detachListeners(); stopScanner(); });
+
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+}
+
+boot();
+</script>
 </body>
 </html>

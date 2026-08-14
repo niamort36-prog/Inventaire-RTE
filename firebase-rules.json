@@ -1,0 +1,125 @@
+{
+  "_commentaire": [
+    "REGLES DE SECURITE A COLLER DANS LA CONSOLE FIREBASE.",
+    "Console Firebase > Realtime Database > onglet 'Regles' > coller > Publier.",
+    "",
+    "AVANT DE PUBLIER : activer la connexion anonyme.",
+    "Console Firebase > Authentication > Sign-in method > Anonyme > Activer.",
+    "L'application se connecte deja toute seule en anonyme, les utilisateurs",
+    "n'ont RIEN a saisir : aucun compte, aucun mot de passe.",
+    "",
+    "Sans ces regles, la base est ouverte a tout Internet : n'importe qui",
+    "peut lire l'inventaire complet ou l'effacer en une seule requete.",
+    "",
+    "Les cles _commentaire sont ignorees par Firebase, elles servent de notice."
+  ],
+
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    "teams": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+      "$team": {
+        ".validate": "newData.hasChildren(['name'])",
+        "name":      { ".validate": "newData.isString() && newData.val().length <= 60" },
+        "createdAt": { ".validate": "newData.isNumber()" },
+        "$autre":    { ".validate": false }
+      }
+    },
+
+    "profiles": {
+      ".read": "auth != null",
+
+      "$team": {
+        ".write": "auth != null",
+
+        "meta": {
+          "name":      { ".validate": "newData.isString() && newData.val().length <= 60" },
+          "createdAt": { ".validate": "newData.isNumber()" }
+        },
+
+        "parts": {
+          "$part": {
+            ".validate": "!newData.exists() || newData.hasChildren(['id', 'name', 'qty'])",
+            "id":       { ".validate": "newData.isNumber()" },
+            "name":     { ".validate": "newData.isString() && newData.val().length <= 200" },
+            "qty":      { ".validate": "newData.isNumber() && newData.val() >= 0" },
+            "alertQty": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+            "familyId": { ".validate": "newData.isNumber() || newData.val() == null" },
+            "location": { ".validate": "newData.isString() && newData.val().length <= 120" },
+            "desc":     { ".validate": "newData.isString() && newData.val().length <= 2000" },
+            "hasImage": { ".validate": "newData.isBoolean()" },
+            "hasDoc":   { ".validate": "newData.isBoolean()" },
+            "$autre":   { ".validate": false }
+          }
+        },
+
+        "families": {
+          "$family": {
+            "id":     { ".validate": "newData.isNumber()" },
+            "name":   { ".validate": "newData.isString() && newData.val().length <= 100" },
+            "desc":   { ".validate": "newData.isString() && newData.val().length <= 1000" },
+            "color":  { ".validate": "newData.isString() && newData.val().length <= 20" },
+            "$autre": { ".validate": false }
+          }
+        },
+
+        "map": {
+          "_commentaire": "Le plan est compresse cote application (~300 Ko). La limite bloque un envoi accidentel d'image brute.",
+          "image": { ".validate": "newData.isString() && newData.val().length <= 3000000" },
+          "markers": {
+            "$marker": {
+              "id":     { ".validate": "newData.isNumber()" },
+              "x":      { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100" },
+              "y":      { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100" },
+              "name":   { ".validate": "newData.isString() && newData.val().length <= 120" },
+              "desc":   { ".validate": "newData.isString() && newData.val().length <= 1000" },
+              "$autre": { ".validate": false }
+            }
+          }
+        },
+
+        "thumbs": {
+          "$part": { ".validate": "newData.isString() && newData.val().length <= 60000" }
+        },
+
+        "media": {
+          "$part": {
+            "image":  { ".validate": "newData.isString() && newData.val().length <= 3000000" },
+            "doc":    { ".validate": "newData.isString() && newData.val().length <= 8000000" },
+            "$autre": { ".validate": false }
+          }
+        },
+
+        "baskets": {
+          "$basket": {
+            "id":        { ".validate": "newData.isNumber()" },
+            "name":      { ".validate": "newData.isString() && newData.val().length <= 150" },
+            "status":    { ".validate": "newData.val() == 'draft' || newData.val() == 'active'" },
+            "createdAt": { ".validate": "newData.isNumber()" },
+            "items":     { ".validate": "newData.hasChildren() || !newData.exists()" }
+          }
+        },
+
+        "history": {
+          "_commentaire": "L'historique est en ajout seul : une entree ecrite ne peut plus etre modifiee ni effacee.",
+          "$entry": {
+            ".validate": "!data.exists() && newData.hasChildren(['ts', 'text'])",
+            "ts":     { ".validate": "newData.isNumber()" },
+            "user":   { ".validate": "newData.isString() && newData.val().length <= 60" },
+            "text":   { ".validate": "newData.isString() && newData.val().length <= 300" },
+            "$autre": { ".validate": false }
+          }
+        }
+      }
+    },
+
+    "profilesData": {
+      "_commentaire": "Ancienne structure d'avant la migration. Conservee en lecture seule comme filet de securite : plus aucune ecriture n'est autorisee.",
+      ".read": "auth != null",
+      ".write": false
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "name": "Invent'RTE — Atelier & Chantiers",
+  "short_name": "Invent'RTE",
+  "description": "Inventaire d'atelier multi-équipes : pièces, familles, plan, paniers de chantier et scan QR.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#F8F9FA",
+  "theme_color": "#4F46E5",
+  "lang": "fr",
+  "icons": [
+    {
+      "src": "LogoAcceuil.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "LogoAcceuil.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
