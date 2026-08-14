@@ -278,7 +278,7 @@
                 <h3 class="text-lg font-bold mb-4" id="confirm-add-title">Ajouter au panier</h3>
                 <input type="hidden" id="confirm-add-part-id">
                 <div class="mb-4">
-                    <label class="block text-sm font-semibold mb-1">Quantité Prévue</label>
+                    <label class="block text-sm font-semibold mb-1">Quantité à charger</label>
                     <input type="number" id="confirm-add-qty" value="1" min="1" class="w-full border p-2 rounded focus:ring-indigo-500">
                     <p class="text-xs text-gray-500 mt-1" id="confirm-add-stock-info">Stock disponible: 0</p>
                 </div>
@@ -1706,7 +1706,7 @@ function openBasketDetail(id) {
         headerPie.classList.add('hidden');
         headerTable.innerHTML = `
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Pièce</th>
-            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Qté</th>
+            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Qté à charger</th>
             <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Déduire</th>
             <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Action</th>`;
         footerActions.innerHTML = `
@@ -1717,10 +1717,12 @@ function openBasketDetail(id) {
         badge.className = "text-xs font-bold px-2 py-0.5 rounded bg-green-100 text-green-800";
         headerPie.classList.remove('hidden');
         updateHeaderPie(basket);
+        // "Chargé" et non "Vu" : cocher atteste que le matériel est effectivement
+        // chargé, dans la quantité indiquée à côté.
         headerTable.innerHTML = `
-            <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Vu</th>
+            <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Chargé</th>
             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Pièce</th>
-            <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Qté chargée</th>
+            <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase">Qté à charger</th>
             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Note</th>
             <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Action</th>`;
         footerActions.innerHTML = `
@@ -1828,16 +1830,18 @@ function renderBasketItems(basket) {
                 <td class="px-6 py-3 text-right"><button data-remove-item="${item.uid}" class="text-red-600 hover:text-red-900 bg-red-50 p-2 rounded-full"><i class="fa-solid fa-trash"></i></button></td>`;
         } else {
             const loadedQty = item.loadedQty === undefined ? num(item.qty) : num(item.loadedQty);
+            // Écart entre ce qui était demandé et ce qu'on emporte réellement.
+            const ecart = num(item.qty) !== loadedQty;
             tr.className = item.loaded ? 'bg-green-50' : '';
             tr.innerHTML = `
                 <td class="px-4 py-3 text-center"><input type="checkbox" data-toggle-item="${item.uid}" ${item.loaded ? 'checked' : ''} class="w-6 h-6 text-green-600 rounded cursor-pointer"></td>
                 <td class="px-4 py-3 cursor-pointer group" data-open-part="${part.id}">
                     <div class="text-sm font-bold text-gray-900 group-hover:text-indigo-600 transition">${esc(part.name)}</div>
                     ${situ}
-                    <div class="text-xs text-gray-500">Prévu: ${num(item.qty)}</div>
+                    ${ecart ? `<div class="text-xs text-red-600 font-semibold">Demandé au départ : ${num(item.qty)}</div>` : ''}
                     ${commentHtml}
                 </td>
-                <td class="px-4 py-3 text-right"><input type="number" value="${loadedQty}" data-load-qty="${item.uid}" min="0" class="w-20 text-right border rounded p-1 text-sm font-bold ${num(item.qty) !== loadedQty ? 'text-red-600 border-red-300' : 'text-gray-700'}"></td>
+                <td class="px-4 py-3 text-right"><input type="number" value="${loadedQty}" data-load-qty="${item.uid}" min="0" title="Corrigez si vous ne chargez pas cette quantité" class="w-20 text-right border rounded p-1 text-sm font-bold ${ecart ? 'text-red-600 border-red-300' : 'text-gray-700'}"></td>
                 <td class="px-4 py-3"><input type="text" value="${esc(item.loadComment || '')}" data-load-comment="${item.uid}" placeholder="..." class="w-full border-b border-gray-300 focus:border-indigo-500 text-sm bg-transparent p-1"></td>
                 <td class="px-4 py-3 text-center"><button data-remove-item="${item.uid}" class="text-red-600 hover:text-red-900 bg-red-50 p-2 rounded-full" title="Retirer"><i class="fa-solid fa-trash"></i></button></td>`;
         }
@@ -1883,8 +1887,8 @@ function printBasket() {
     // Colonnes : en chargement on imprime le prévu et le chargé ; en brouillon
     // une case vide sert de pointage papier.
     const head = isDraft
-        ? `<th class="c">Fait</th><th>Pièce</th><th>Famille</th><th>Zone</th><th class="r">Qté</th><th>Observations</th>`
-        : `<th class="c">Chargé</th><th>Pièce</th><th>Famille</th><th>Zone</th><th class="r">Prévu</th><th class="r">Chargé</th><th>Observations</th>`;
+        ? `<th class="c">Chargé</th><th>Pièce</th><th>Famille</th><th>Zone</th><th class="r">Qté à charger</th><th>Observations</th>`
+        : `<th class="c">Chargé</th><th>Pièce</th><th>Famille</th><th>Zone</th><th class="r">Demandé</th><th class="r">À charger</th><th>Observations</th>`;
 
     let body = '', currentGroup = null;
     const cols = isDraft ? 6 : 7;
