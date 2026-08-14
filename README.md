@@ -7,24 +7,27 @@ temps réel via Firebase Realtime Database.
 L'application tient dans `index.html` : il suffit de l'ouvrir, il n'y a rien à
 installer ni à compiler.
 
-## À FAIRE — sécuriser la base de données
+## Sécurité
 
-La connexion anonyme est activée : l'application s'authentifie toute seule et
-attend d'être connectée avant de lire quoi que ce soit. Les utilisateurs n'ont
-ni compte ni mot de passe à saisir.
+La base est fermée. Deux protections sont en place :
 
-**Il reste une étape.** Tant qu'elle n'est pas faite, la base est ouverte à tout
-Internet : n'importe qui connaissant l'adresse peut lire l'inventaire complet ou
-l'effacer en une seule requête.
+- **Connexion anonyme** : l'application s'authentifie toute seule et attend
+  d'être connectée avant de lire quoi que ce soit. Les utilisateurs n'ont ni
+  compte ni mot de passe à saisir.
+- **Règles de sécurité** ([`firebase-rules.json`](firebase-rules.json), publiées
+  le 14/08/2026) : sans authentification, toute lecture et toute écriture sont
+  refusées, sur l'ensemble de la base.
 
-Console Firebase → *Realtime Database* → onglet **Règles** → coller le contenu de
-[`firebase-rules.json`](firebase-rules.json) → *Publier*.
+Les règles ont été validées sur l'émulateur Firebase (46 cas) puis vérifiées en
+conditions réelles : visiteur anonyme bloqué partout, application conservant
+exactement les accès dont elle a besoin, données incohérentes rejetées (stock
+négatif, photo replacée au milieu des données, statut de chantier inconnu),
+aucune collection effaçable d'un bloc, journal en ajout seul.
 
-Ces règles ont été validées sur l'émulateur Firebase (48 cas) : un visiteur non
-authentifié est bloqué sur toute la base, l'application conserve exactement les
-accès dont elle a besoin, les données incohérentes (stock négatif, photo replacée
-au milieu des données, statut de chantier inconnu) sont rejetées, aucune
-collection ne peut être effacée d'un bloc, et le journal est en ajout seul.
+Si vous modifiez `firebase-rules.json`, republiez-le depuis la console Firebase :
+*Realtime Database* → onglet **Règles** → coller → *Publier*. Le fichier contient
+des commentaires `//`, que le moteur de règles accepte — mais **pas** de clés
+supplémentaires en dehors de `rules`, que Firebase rejetterait.
 
 ## Organisation des données
 
@@ -73,12 +76,11 @@ L'application est installable sur le téléphone (« Ajouter à l'écran d'accue
 
 ## Sauvegarde
 
-Pour récupérer une copie complète de la base à un instant donné :
+Console Firebase → *Realtime Database* → menu ⋮ → **Exporter le JSON**.
 
-```bash
-curl -s "https://inventaire-rte-default-rtdb.europe-west1.firebasedatabase.app/.json" -o sauvegarde.json
-```
+C'est désormais le seul moyen : les règles de sécurité empêchent de récupérer la
+base par une simple URL, ce qui est précisément leur but.
 
-Une fois les règles de sécurité publiées, cette commande ne fonctionnera plus
-telle quelle (c'est le but) : passez alors par la console Firebase,
-*Realtime Database* → menu ⋮ → *Exporter le JSON*.
+Une sauvegarde d'avant la migration est conservée hors dépôt dans `_backups/`,
+avec `restore.py` qui reconstruit l'intégralité de la base à partir d'elle
+(structure d'origine, structure migrée, vignettes, plan et index des équipes).
