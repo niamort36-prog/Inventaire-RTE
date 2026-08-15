@@ -282,6 +282,10 @@
                     <input type="number" id="confirm-add-qty" value="1" min="1" class="w-full border p-2 rounded focus:ring-indigo-500">
                     <p class="text-xs text-gray-500 mt-1" id="confirm-add-stock-info">Stock disponible: 0</p>
                 </div>
+                <div class="mb-4 hidden" id="confirm-add-group-wrap">
+                    <label class="block text-sm font-semibold mb-1">Rattacher à</label>
+                    <select id="confirm-add-group" class="w-full border p-2 rounded bg-white text-sm"></select>
+                </div>
                 <div class="mb-4">
                     <label class="block text-sm font-semibold mb-1">Commentaire</label>
                     <textarea id="confirm-add-comment" rows="2" class="w-full border p-2 rounded focus:ring-indigo-500 text-sm" placeholder="Ex: Pour chantier SDB..."></textarea>
@@ -294,6 +298,66 @@
                     <button onclick="closeModal('modal-confirm-add-basket')" class="bg-white border px-4 py-2 rounded hover:bg-gray-50">Annuler</button>
                     <button onclick="finalizeAddToBasket()" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">Valider</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ouvrage : pylône ou portée d'un chantier -->
+    <div id="modal-group" class="hidden fixed z-60 inset-0 overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="fixed inset-0 bg-gray-600 bg-opacity-75" onclick="closeModal('modal-group')"></div>
+            <div class="bg-white rounded-lg w-full max-w-sm p-6 relative z-10 shadow-xl">
+                <form id="form-group" onsubmit="handleGroupSubmit(event)">
+                    <h3 class="text-lg font-bold mb-4" id="modal-group-title">Nouvel ouvrage</h3>
+                    <input type="hidden" id="group-edit-id">
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-semibold mb-1">Type</label>
+                        <div class="grid grid-cols-2 gap-2" id="group-kind-picker">
+                            <button type="button" data-kind="pylone" class="border rounded py-2 text-sm font-medium">
+                                <i class="fa-solid fa-tower-observation mr-1"></i>Pylône</button>
+                            <button type="button" data-kind="portee" class="border rounded py-2 text-sm font-medium">
+                                <i class="fa-solid fa-grip-lines mr-1"></i>Portée</button>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-semibold mb-1" id="group-name-label">Numéro du pylône</label>
+                        <input type="text" id="input-group-name" required class="w-full border p-2 rounded" placeholder="Ex : 1">
+                    </div>
+
+                    <div class="mb-4 hidden" id="group-pylone-fields">
+                        <label class="block text-sm font-semibold mb-1">Fonction</label>
+                        <div class="grid grid-cols-2 gap-2 mb-3" id="group-fonction-picker">
+                            <button type="button" data-fonction="ancrage" class="border rounded py-2 text-sm">Ancrage</button>
+                            <button type="button" data-fonction="alignement" class="border rounded py-2 text-sm">Alignement</button>
+                        </div>
+                        <label class="block text-sm font-semibold mb-1">Chaîne</label>
+                        <div class="grid grid-cols-3 gap-2" id="group-chaine-picker">
+                            <button type="button" data-chaine="simple" class="border rounded py-2 text-sm">Simple</button>
+                            <button type="button" data-chaine="double" class="border rounded py-2 text-sm">Double</button>
+                            <button type="button" data-chaine="triple" class="border rounded py-2 text-sm">Triple</button>
+                        </div>
+                    </div>
+
+                    <div class="mb-5">
+                        <label class="block text-sm font-semibold mb-1">Faisceau</label>
+                        <div class="grid grid-cols-2 gap-2" id="group-faisceau-picker">
+                            <button type="button" data-faisceau="simple" class="border rounded py-2 text-sm">Simple</button>
+                            <button type="button" data-faisceau="double" class="border rounded py-2 text-sm">Double</button>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center gap-2">
+                        <button type="button" id="btn-delete-group" class="hidden text-red-600 hover:text-red-800 text-sm font-medium" onclick="deleteGroup()">
+                            <i class="fa-solid fa-trash mr-1"></i>Supprimer
+                        </button>
+                        <div class="flex gap-2 ml-auto">
+                            <button type="button" class="border px-4 py-2 rounded" onclick="closeModal('modal-group')">Annuler</button>
+                            <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded">Valider</button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -321,11 +385,15 @@
                     <select id="filter-basket-zone" onchange="rerenderCurrentBasket()" class="border border-gray-300 rounded px-2 py-1 text-sm bg-white focus:outline-none max-w-[120px]"><option value="">Toutes Zones</option></select>
                     <select id="filter-basket-family" onchange="rerenderCurrentBasket()" class="border border-gray-300 rounded px-2 py-1 text-sm bg-white focus:outline-none max-w-[120px]"><option value="">Toutes Familles</option></select>
                     <select id="sort-basket" onchange="rerenderCurrentBasket()" class="border border-gray-300 rounded px-2 py-1 text-sm bg-white focus:outline-none" title="Ordre d'affichage et d'impression">
+                        <option value="group">Trier par pylône / portée</option>
                         <option value="zone">Trier par zone</option>
                         <option value="name">Trier par nom</option>
                         <option value="family">Trier par famille</option>
                         <option value="added">Ordre d'ajout</option>
                     </select>
+                    <button onclick="openGroupModal()" class="border border-gray-300 rounded px-3 py-1 text-sm bg-white hover:bg-gray-50 whitespace-nowrap" title="Ajouter un pylône ou une portée">
+                        <i class="fa-solid fa-tower-observation mr-1 text-gray-500"></i>Pylône / Portée
+                    </button>
                     <button onclick="printBasket()" class="border border-gray-300 rounded px-3 py-1 text-sm bg-white hover:bg-gray-50 whitespace-nowrap" title="Imprimer ou enregistrer en PDF">
                         <i class="fa-solid fa-print mr-1 text-gray-500"></i>Imprimer
                     </button>
@@ -1636,6 +1704,171 @@ function newItemUid() {
     return 'i' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
 }
 
+/* ============================================================================
+   OUVRAGES — pylônes et portées d'un chantier
+   ----------------------------------------------------------------------------
+   Regrouper le matériel par ouvrage est facultatif : sans ouvrage déclaré, le
+   chantier se comporte exactement comme avant. Les articles non rattachés
+   restent affichés à part, jamais perdus.
+   ========================================================================== */
+const FONCTIONS  = { ancrage: 'Ancrage', alignement: 'Alignement' };
+const CHAINES    = { simple: 'Chaîne simple', double: 'Chaîne double', triple: 'Chaîne triple' };
+const FAISCEAUX  = { simple: 'Faisceau simple', double: 'Faisceau double' };
+
+let activeGroupId = null;      // ouvrage auquel les ajouts se rattachent
+
+function groupsOf(basket) {
+    const raw = basket && basket.groups;
+    if (!raw) return [];
+    return Object.keys(raw).filter(k => raw[k])
+        .map(k => ({ ...raw[k], gid: raw[k].gid || k }))
+        .sort((a, b) => num(a.createdAt) - num(b.createdAt));
+}
+
+function findGroup(basket, gid) { return groupsOf(basket).find(g => g.gid === gid); }
+
+/** Libellé complet : « Pylône 1 — Ancrage · Chaîne double · Faisceau simple ». */
+function groupLabel(g) {
+    if (!g) return 'Non affecté';
+    const tete = (g.kind === 'portee' ? 'Portée ' : 'Pylône ') + (g.name || '');
+    const carac = g.kind === 'portee'
+        ? [FAISCEAUX[g.faisceau]]
+        : [FONCTIONS[g.fonction], CHAINES[g.chaine], FAISCEAUX[g.faisceau]];
+    const suite = carac.filter(Boolean).join(' · ');
+    return suite ? `${tete.trim()} — ${suite}` : tete.trim();
+}
+
+function groupShortLabel(g) {
+    if (!g) return 'Non affecté';
+    return (g.kind === 'portee' ? 'Portée ' : 'Pylône ') + (g.name || '');
+}
+
+function openGroupModal(gid) {
+    const basket = currentBasket();
+    if (!basket) return;
+    document.getElementById('modal-group').classList.remove('hidden');
+    const g = gid ? findGroup(basket, gid) : null;
+
+    document.getElementById('modal-group-title').textContent = g ? "Modifier l'ouvrage" : "Nouvel ouvrage";
+    document.getElementById('group-edit-id').value = g ? g.gid : '';
+    document.getElementById('input-group-name').value = g ? (g.name || '') : '';
+    document.getElementById('btn-delete-group').classList.toggle('hidden', !g);
+
+    selectGroupKind(g ? g.kind : 'pylone');
+    pickOption('group-fonction-picker', 'fonction', g ? g.fonction : 'alignement');
+    pickOption('group-chaine-picker', 'chaine', g ? g.chaine : 'simple');
+    pickOption('group-faisceau-picker', 'faisceau', g ? g.faisceau : 'simple');
+    if (!g) setTimeout(() => document.getElementById('input-group-name').focus(), 50);
+}
+
+/** Boutons-choix : un seul actif à la fois, mémorisé sur le conteneur. */
+function pickOption(containerId, key, value) {
+    const ct = document.getElementById(containerId);
+    ct.dataset.value = value;
+    ct.querySelectorAll('button').forEach(b => {
+        const on = b.dataset[key] === value;
+        b.className = 'border rounded py-2 text-sm ' + (on
+            ? 'bg-indigo-600 text-white border-indigo-600 font-semibold'
+            : 'bg-white text-gray-700 hover:bg-gray-50');
+    });
+}
+
+function selectGroupKind(kind) {
+    const ct = document.getElementById('group-kind-picker');
+    ct.dataset.value = kind;
+    ct.querySelectorAll('button').forEach(b => {
+        const on = b.dataset.kind === kind;
+        b.className = 'border rounded py-2 text-sm font-medium ' + (on
+            ? 'bg-indigo-600 text-white border-indigo-600'
+            : 'bg-white text-gray-700 hover:bg-gray-50');
+    });
+    // Une portée n'a ni fonction ni type de chaîne : seulement un faisceau.
+    document.getElementById('group-pylone-fields').classList.toggle('hidden', kind !== 'pylone');
+    document.getElementById('group-name-label').textContent =
+        kind === 'portee' ? 'Numéro de la portée' : 'Numéro du pylône';
+    document.getElementById('input-group-name').placeholder = kind === 'portee' ? 'Ex : 1-2' : 'Ex : 1';
+}
+
+function handleGroupSubmit(e) {
+    e.preventDefault();
+    const basket = currentBasket();
+    if (!basket) return;
+    const name = document.getElementById('input-group-name').value.trim();
+    if (!name) { toast("Indiquez un numéro", 'err'); return; }
+
+    const gidRaw = document.getElementById('group-edit-id').value;
+    const gid = gidRaw || ('g' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6));
+    const kind = document.getElementById('group-kind-picker').dataset.value || 'pylone';
+    const existing = gidRaw ? findGroup(basket, gidRaw) : null;
+
+    const data = {
+        gid, kind, name,
+        faisceau: document.getElementById('group-faisceau-picker').dataset.value || 'simple',
+        createdAt: existing ? num(existing.createdAt, Date.now()) : Date.now()
+    };
+    if (kind === 'pylone') {
+        data.fonction = document.getElementById('group-fonction-picker').dataset.value || 'alignement';
+        data.chaine = document.getElementById('group-chaine-picker').dataset.value || 'simple';
+    }
+
+    write('baskets/b' + basket.id + '/groups/' + gid, data);
+    // Un ouvrage qu'on vient de créer devient celui auquel les ajouts se rattachent.
+    activeGroupId = gid;
+    closeModal('modal-group');
+    document.getElementById('sort-basket').value = 'group';
+    toast(existing ? "Ouvrage modifié" : groupShortLabel(data) + " créé", 'ok');
+    setTimeout(() => rerenderCurrentBasket(), 300);
+}
+
+function deleteGroup() {
+    const basket = currentBasket();
+    const gid = document.getElementById('group-edit-id').value;
+    if (!basket || !gid) return;
+    const g = findGroup(basket, gid);
+    const rattaches = itemsOf(basket).filter(i => i.groupId === gid);
+
+    const msg = rattaches.length
+        ? `${rattaches.length} article(s) sont rattachés à ${groupShortLabel(g)}.\nIls resteront dans le chantier, sans ouvrage.\n\nSupprimer ${groupShortLabel(g)} ?`
+        : `Supprimer ${groupShortLabel(g)} ?`;
+    if (!confirm(msg)) return;
+
+    // Les articles sont détachés, jamais supprimés.
+    rattaches.forEach(i => updateNode(itemRef(basket.id, i.uid), { groupId: null }));
+    write('baskets/b' + basket.id + '/groups/' + gid, null);
+    if (activeGroupId === gid) activeGroupId = null;
+    closeModal('modal-group');
+    toast("Ouvrage supprimé", 'ok');
+}
+
+function setActiveGroup(gid) {
+    activeGroupId = (activeGroupId === gid) ? null : gid;
+    rerenderCurrentBasket();
+}
+
+function moveItemToGroup(uid, gid) {
+    const basket = currentBasket();
+    if (!basket) return;
+    updateNode(itemRef(basket.id, uid), { groupId: gid || null });
+    const b = basket.items && !Array.isArray(basket.items) && basket.items[uid];
+    if (b) b.groupId = gid || null;
+    setTimeout(() => rerenderCurrentBasket(), 200);
+}
+
+/** Boutons-choix de la fenêtre d'ouvrage (délégation : le contenu est reconstruit). */
+function wireGroupPickers() {
+    document.getElementById('group-kind-picker').addEventListener('click', e => {
+        const b = e.target.closest('button[data-kind]');
+        if (b) selectGroupKind(b.dataset.kind);
+    });
+    [['group-fonction-picker', 'fonction'], ['group-chaine-picker', 'chaine'],
+     ['group-faisceau-picker', 'faisceau']].forEach(([id, key]) => {
+        document.getElementById(id).addEventListener('click', e => {
+            const b = e.target.closest(`button[data-${key}]`);
+            if (b) pickOption(id, key, b.dataset[key]);
+        });
+    });
+}
+
 function calculateProgress(basket) {
     const items = itemsOf(basket);
     if (!items.length) return 0;
@@ -1685,8 +1918,12 @@ function renderBaskets() {
 
 function openBasketDetail(id) {
     currentBasketId = id;
+    activeGroupId = null;          // l'ouvrage visé ne suit pas d'un chantier à l'autre
     const basket = baskets.find(b => b.id === id);
     if (!basket) { toast("Chantier introuvable", 'err'); return; }
+
+    // Un chantier organisé par ouvrages s'ouvre dans cet ordre.
+    document.getElementById('sort-basket').value = groupsOf(basket).length ? 'group' : 'zone';
 
     document.getElementById('basket-detail-title').textContent = basket.name;
     document.getElementById('basket-search-results').classList.add('hidden');
@@ -1785,6 +2022,12 @@ function visibleBasketItems(basket) {
     if (sortMode === 'name') rows.sort(byName);
     else if (sortMode === 'family') rows.sort((a, b) => cmp(famName(a), famName(b)) || byName(a, b));
     else if (sortMode === 'zone') rows.sort((a, b) => cmp(zoneName(a), zoneName(b)) || byName(a, b));
+    else if (sortMode === 'group') {
+        // Ordre de création des ouvrages ; les articles non rattachés en dernier.
+        const rang = {};
+        groupsOf(basket).forEach((g, i) => { rang[g.gid] = i; });
+        rows.sort((a, b) => (rang[a.item.groupId] ?? 9e9) - (rang[b.item.groupId] ?? 9e9) || byName(a, b));
+    }
     // 'added' : on garde l'ordre d'ajout
 
     return rows;
@@ -1799,10 +2042,66 @@ function renderBasketItems(basket) {
     const isDraft = basket.status === 'draft';
     const rows = visibleBasketItems(basket);
     const visible = rows.map(r => r.item);
+    const groups = groupsOf(basket);
+    const grouping = document.getElementById('sort-basket').value === 'group' && groups.length > 0;
+    const nbCols = isDraft ? 4 : 5;
+    let currentGid;
 
     emptyMsg.classList.toggle('hidden', visible.length > 0);
 
-    visible.forEach(item => {
+    // Ouvrages restés vides : ils doivent apparaître, sinon on croirait les
+    // avoir perdus après les avoir créés.
+    if (grouping) {
+        const utilises = new Set(visible.map(i => i.groupId));
+        groups.filter(g => !utilises.has(g.gid)).forEach(g => {
+            if (!visible.some(i => i.groupId === g.gid)) rows.push({ emptyGroup: g });
+        });
+        const rang = {};
+        groups.forEach((g, i) => { rang[g.gid] = i; });
+        rows.sort((a, b) => {
+            const ga = a.emptyGroup ? a.emptyGroup.gid : a.item.groupId;
+            const gb = b.emptyGroup ? b.emptyGroup.gid : b.item.groupId;
+            return (rang[ga] ?? 9e9) - (rang[gb] ?? 9e9);
+        });
+        if (rows.length) emptyMsg.classList.add('hidden');
+    }
+
+    rows.forEach(row => {
+        // --- Intertitre d'ouvrage -------------------------------------------
+        if (grouping) {
+            const gid = row.emptyGroup ? row.emptyGroup.gid : (row.item.groupId || null);
+            if (gid !== currentGid) {
+                currentGid = gid;
+                const g = gid ? groups.find(x => x.gid === gid) : null;
+                const actif = g && activeGroupId === g.gid;
+                const nb = visible.filter(i => (i.groupId || null) === gid).length;
+                const htr = document.createElement('tr');
+                htr.className = actif ? 'bg-indigo-100' : 'bg-indigo-50';
+                htr.innerHTML = `<td colspan="${nbCols}" class="px-4 py-2">
+                    <div class="flex items-center justify-between gap-2 flex-wrap">
+                        <div class="min-w-0">
+                            <span class="font-bold text-indigo-900 text-sm">${esc(g ? groupLabel(g) : 'Non affecté')}</span>
+                            <span class="text-xs text-indigo-700 ml-2">${nb} article(s)</span>
+                            ${actif ? '<span class="ml-2 text-[10px] uppercase font-bold bg-indigo-600 text-white px-2 py-0.5 rounded-full">ajouts ici</span>' : ''}
+                        </div>
+                        ${g ? `<div class="flex gap-1 flex-none">
+                            <button data-activate-group="${g.gid}" class="text-xs border border-indigo-300 text-indigo-700 bg-white px-2 py-1 rounded hover:bg-indigo-50" title="Y rattacher les prochains ajouts">
+                                ${actif ? 'Ne plus viser' : 'Ajouter ici'}</button>
+                            <button data-edit-group="${g.gid}" class="text-xs border border-indigo-300 text-indigo-700 bg-white px-2 py-1 rounded hover:bg-indigo-50" title="Modifier l'ouvrage">
+                                <i class="fa-solid fa-pen"></i></button>
+                        </div>` : ''}
+                    </div></td>`;
+                tbody.appendChild(htr);
+            }
+            if (row.emptyGroup) {
+                const vide = document.createElement('tr');
+                vide.innerHTML = `<td colspan="${nbCols}" class="px-6 py-2 text-xs text-gray-400 italic">Aucun matériel pour l'instant</td>`;
+                tbody.appendChild(vide);
+                return;
+            }
+        }
+
+        const item = row.item;
         const part = parts.find(p => p.id === item.partId);
         const tr = document.createElement('tr');
         const commentHtml = item.comment
@@ -1812,6 +2111,14 @@ function renderBasketItems(basket) {
         const situ = `<div class="text-xs text-gray-400 truncate">
                 <i class="fa-solid fa-location-dot"></i> ${esc(part.location || 'Sans zone')}
                 &nbsp;·&nbsp; ${esc(fam ? fam.name : 'Sans famille')}</div>`;
+
+        // Rattachement modifiable tant qu'il existe des ouvrages.
+        const affect = groups.length ? `
+            <select data-move-item="${item.uid}" onclick="event.stopPropagation()"
+                    class="mt-1 text-xs border border-gray-200 rounded px-1 py-0.5 bg-white text-gray-600 max-w-[190px]">
+                <option value="">— Non affecté —</option>
+                ${groups.map(g => `<option value="${g.gid}"${(item.groupId || '') === g.gid ? ' selected' : ''}>${esc(groupShortLabel(g))}</option>`).join('')}
+            </select>` : '';
 
         if (isDraft) {
             const deductStatus = item.deduct
@@ -1824,6 +2131,7 @@ function renderBasketItems(basket) {
                     ${situ}
                     ${commentHtml}
                     <div class="text-xs ${short ? 'text-red-600 font-bold' : 'text-gray-500'}">Stock: ${num(part.qty)}${short ? ' — insuffisant' : ''}</div>
+                    ${affect}
                 </td>
                 <td class="px-6 py-3 text-right text-sm font-bold">${num(item.qty)}</td>
                 <td class="px-6 py-3 text-center">${deductStatus}</td>
@@ -1860,6 +2168,12 @@ function renderBasketItems(basket) {
         el.onchange = () => updateLoadQty(el.dataset.loadQty, el.value));
     tbody.querySelectorAll('[data-load-comment]').forEach(el =>
         el.onchange = () => updateLoadComment(el.dataset.loadComment, el.value));
+    tbody.querySelectorAll('[data-move-item]').forEach(el =>
+        el.onchange = () => moveItemToGroup(el.dataset.moveItem, el.value));
+    tbody.querySelectorAll('[data-activate-group]').forEach(el =>
+        el.onclick = ev => { ev.stopPropagation(); setActiveGroup(el.dataset.activateGroup); });
+    tbody.querySelectorAll('[data-edit-group]').forEach(el =>
+        el.onclick = ev => { ev.stopPropagation(); openGroupModal(el.dataset.editGroup); });
 }
 
 /* ------------------------------------------------------ Impression / PDF */
@@ -1875,11 +2189,15 @@ function printBasket() {
 
     const sortMode = document.getElementById('sort-basket').value;
     const isDraft = basket.status === 'draft';
+    const groupes = groupsOf(basket);
     const groupBy = sortMode === 'zone' ? r => r.part.location || 'Sans zone'
                   : sortMode === 'family' ? r => {
                         const f = families.find(x => x.id == r.part.familyId);
                         return f ? f.name : 'Sans famille';
-                    } : null;
+                    }
+                  : (sortMode === 'group' && groupes.length)
+                    ? r => groupLabel(groupes.find(g => g.gid === r.item.groupId))
+                    : null;
 
     const total = rows.reduce((s, r) => s + num(r.item.qty), 0);
     const charges = rows.filter(r => r.item.loaded).length;
@@ -1974,7 +2292,8 @@ function printBasket() {
 <div class="resume">
   <b>${rows.length}</b> référence(s) &nbsp;·&nbsp; <b>${total}</b> article(s) au total
   ${isDraft ? '' : ` &nbsp;·&nbsp; <b>${charges}/${rows.length}</b> chargé(s) (${calculateProgress(basket)} %)`}
-  ${groupBy ? ` &nbsp;·&nbsp; regroupé par ${sortMode === 'zone' ? 'zone de rangement' : 'famille'}` : ''}
+  ${groupBy ? ` &nbsp;·&nbsp; regroupé par ${sortMode === 'zone' ? 'zone de rangement'
+      : sortMode === 'family' ? 'famille' : 'pylône / portée'}` : ''}
 </div>
 <table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table>
 <footer>
@@ -2083,6 +2402,20 @@ function openConfirmAddModal(partId) {
     document.getElementById('confirm-add-comment').value = "";
     document.getElementById('confirm-add-stock-info').textContent = "Stock disponible : " + num(part.qty);
     document.getElementById('confirm-add-deduct').checked = true;
+
+    // Rattachement à un pylône / une portée : proposé seulement s'il en existe,
+    // et pré-réglé sur l'ouvrage en cours pour enchaîner les ajouts.
+    const basket = currentBasket();
+    const groups = basket ? groupsOf(basket) : [];
+    const wrap = document.getElementById('confirm-add-group-wrap');
+    const sel = document.getElementById('confirm-add-group');
+    wrap.classList.toggle('hidden', groups.length === 0);
+    if (groups.length) {
+        sel.innerHTML = '<option value="">— Non affecté —</option>' +
+            groups.map(g => `<option value="${g.gid}">${esc(groupLabel(g))}</option>`).join('');
+        sel.value = activeGroupId && groups.some(g => g.gid === activeGroupId) ? activeGroupId : '';
+    }
+
     document.getElementById('modal-confirm-add-basket').classList.remove('hidden');
     document.getElementById('basket-search-results').classList.add('hidden');
 }
@@ -2106,15 +2439,22 @@ function finalizeAddToBasket() {
         logHistory(`-${qty} « ${part.name} » (chantier ${basket.name})`);
     }
 
+    // Pylône / portée choisi dans la fenêtre, vide si le chantier n'en a pas.
+    const groupId = document.getElementById('confirm-add-group').value || null;
+
     // Regroupement avec une ligne identique deja presente, sinon nouvelle ligne.
+    // Deux lignes sur des ouvrages differents restent distinctes.
     const existing = itemsOf(basket).find(i =>
-        i.partId === partId && !!i.deduct === deduct && (i.comment || '') === comment);
+        i.partId === partId && !!i.deduct === deduct && (i.comment || '') === comment
+        && (i.groupId || null) === groupId);
 
     if (existing) {
         updateNode(itemRef(basket.id, existing.uid), { qty: num(existing.qty) + qty });
     } else {
         const uid = newItemUid();
-        write(itemRef(basket.id, uid), { uid, partId, qty, deduct, comment });
+        const item = { uid, partId, qty, deduct, comment };
+        if (groupId) item.groupId = groupId;
+        write(itemRef(basket.id, uid), item);
     }
 
     closeModal('modal-confirm-add-basket');
@@ -2399,6 +2739,7 @@ function onScanSuccess(text) {
    ========================================================================== */
 function boot() {
     renderTeamLabel();
+    wireGroupPickers();
     loadCache();          // affichage immédiat, même sans réseau
     renderAll();
 

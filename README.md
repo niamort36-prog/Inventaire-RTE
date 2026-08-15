@@ -44,6 +44,7 @@ profiles/<équipe>/
     map/image                   plan de l'atelier, à la demande
     map/markers/m<id>           zones positionnées sur le plan
     baskets/b<id>               chantiers
+    baskets/b<id>/groups/<gid>  pylônes et portées (facultatif)
     baskets/b<id>/items/<uid>   articles, un nœud par article
     history/<id>                journal des mouvements
 ```
@@ -63,6 +64,26 @@ que les articles sont indexés par identifiant plutôt que rangés dans une list
 `profilesData` est l'ancienne structure, conservée intacte en lecture seule comme
 filet de sécurité. Elle n'est plus utilisée par l'application et peut être
 supprimée une fois que tout aura été validé en conditions réelles.
+
+## Organiser un chantier par pylône et par portée
+
+Dans un chantier, le bouton **Pylône / Portée** permet de déclarer les ouvrages
+puis d'y rattacher le matériel.
+
+- **Pylône** : numéro, fonction (ancrage ou alignement), chaîne (simple, double
+  ou triple) et faisceau (simple ou double).
+- **Portée** : numéro et faisceau (simple ou double) — une portée n'a ni
+  fonction ni type de chaîne, ces champs disparaissent.
+
+L'ouvrage qui vient d'être créé devient celui auquel les ajouts se rattachent :
+on déclare le pylône 1, on ajoute son outillage, puis on passe au suivant. Le
+bouton **Ajouter ici** d'un intertitre permet de revenir sur un ouvrage précédent,
+et le menu sous chaque article de le déplacer.
+
+**C'est facultatif.** Sans ouvrage déclaré, le chantier fonctionne exactement
+comme avant. Le matériel non rattaché reste regroupé sous « Non affecté », jamais
+perdu — y compris après la suppression d'un ouvrage, qui détache ses articles
+sans les supprimer.
 
 ## Bon de chantier imprimable
 
