@@ -7,6 +7,16 @@ temps réel via Firebase Realtime Database.
 L'application tient dans `index.html` : il suffit de l'ouvrir, il n'y a rien à
 installer ni à compiler.
 
+## Guide d'utilisation
+
+**[Guide-Invent-RTE.pdf](Guide-Invent-RTE.pdf)** — 25 pages illustrées, destinées à
+quelqu'un qui découvre l'application : chaque écran, chaque bouton, et les
+situations courantes en fin de document.
+
+Ses sources sont dans [`doc/`](doc/), avec la marche à suivre pour le régénérer.
+Les captures sont prises sur un jeu de données fictif, jamais sur un inventaire
+réel : ce dépôt est public.
+
 ## Sécurité
 
 La base est fermée. Deux protections sont en place :

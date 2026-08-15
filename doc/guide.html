@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Invent'RTE — Guide d'utilisation</title>
+<style>
+  @page { size: A4; margin: 16mm 14mm 18mm; }
+
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #1F2937; font-size: 10.5pt; line-height: 1.55; margin: 0;
+  }
+
+  h1 { font-size: 19pt; color: #312E81; margin: 0 0 4px; }
+  h2 {
+    font-size: 14pt; color: #4F46E5; margin: 0 0 10px;
+    padding-bottom: 5px; border-bottom: 2px solid #E0E7FF;
+    break-after: avoid;
+  }
+  h3 { font-size: 11.5pt; color: #1E1B4B; margin: 16px 0 6px; break-after: avoid; }
+  p { margin: 0 0 9px; }
+  ul, ol { margin: 0 0 9px; padding-left: 20px; }
+  li { margin-bottom: 4px; }
+  strong { color: #111827; }
+
+  /* --- Couverture --- */
+  .cover { height: 247mm; display: flex; flex-direction: column; justify-content: center; text-align: center; }
+  .cover .logo { font-size: 40pt; font-weight: bold; color: #4F46E5; letter-spacing: -1px; }
+  .cover .sub { font-size: 15pt; color: #4B5563; margin-top: 6px; }
+  .cover .desc { font-size: 11pt; color: #6B7280; margin-top: 26px; line-height: 1.8; }
+  .cover .band { height: 5px; background: #4F46E5; width: 90px; margin: 22px auto; border-radius: 3px; }
+  .cover .foot { margin-top: 46px; font-size: 9.5pt; color: #9CA3AF; }
+
+  /* --- Sommaire --- */
+  .toc { margin-top: 6px; }
+  .toc-item { display: flex; align-items: baseline; margin-bottom: 7px; font-size: 10.5pt; }
+  .toc-num {
+    width: 24px; height: 24px; flex: none; background: #4F46E5; color: #fff;
+    border-radius: 50%; text-align: center; line-height: 24px; font-size: 9pt;
+    font-weight: bold; margin-right: 10px;
+  }
+  .toc-txt { flex: 1; }
+  .toc-txt b { display: block; }
+  .toc-txt span { color: #6B7280; font-size: 9.5pt; }
+
+  /* --- Sections --- */
+  section { break-before: page; }
+  .step { display: flex; gap: 10px; margin-bottom: 9px; align-items: flex-start; }
+  .step-n {
+    width: 21px; height: 21px; flex: none; background: #4F46E5; color: #fff;
+    border-radius: 50%; text-align: center; line-height: 21px; font-size: 8.5pt; font-weight: bold;
+  }
+
+  figure { margin: 12px 0 14px; break-inside: avoid; }
+  figure img {
+    width: 100%; border: 1px solid #D1D5DB; border-radius: 6px; display: block;
+  }
+  figure img.phone { width: 62mm; margin: 0 auto; }
+  figcaption { font-size: 8.5pt; color: #6B7280; margin-top: 5px; text-align: center; font-style: italic; }
+
+  .note, .warn, .tip {
+    padding: 9px 12px; border-radius: 5px; margin: 11px 0; font-size: 9.8pt; break-inside: avoid;
+  }
+  .note { background: #EEF2FF; border-left: 3px solid #4F46E5; }
+  .warn { background: #FEF2F2; border-left: 3px solid #DC2626; }
+  .tip  { background: #ECFDF5; border-left: 3px solid #059669; }
+  .note b, .warn b, .tip b { display: block; margin-bottom: 2px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 9.8pt; margin: 10px 0; break-inside: avoid; }
+  th { background: #4F46E5; color: #fff; text-align: left; padding: 6px 8px; font-size: 9pt; }
+  td { padding: 6px 8px; border-bottom: 1px solid #E5E7EB; vertical-align: top; }
+  tr:nth-child(even) td { background: #F9FAFB; }
+  td.k { font-weight: 600; color: #312E81; width: 34%; }
+
+  .faq { margin-bottom: 12px; break-inside: avoid; }
+  .faq .q { font-weight: 600; color: #312E81; margin-bottom: 3px; }
+</style>
+</head>
+<body>
+
+<!-- ============================ COUVERTURE ============================ -->
+<div class="cover">
+  <div class="logo">Invent'RTE</div>
+  <div class="sub">Guide d'utilisation</div>
+  <div class="band"></div>
+  <div class="desc">
+    Gérer l'inventaire de l'atelier,<br>
+    préparer et charger le matériel de chantier.
+  </div>
+  <div class="foot">
+    Version du 15 août 2026 · Ce guide décrit toutes les fonctions de l'application.<br>
+    Aucune connaissance préalable n'est nécessaire.
+  </div>
+</div>
+
+<!-- ============================ SOMMAIRE ============================ -->
+<section>
+<h2>Ce que vous trouverez dans ce guide</h2>
+
+<div class="toc">
+  <div class="toc-item"><div class="toc-num">1</div><div class="toc-txt"><b>Découvrir l'application</b><span>À quoi elle sert, comment l'ouvrir, choisir son équipe</span></div></div>
+  <div class="toc-item"><div class="toc-num">2</div><div class="toc-txt"><b>L'accueil</b><span>Voir l'essentiel d'un coup d'œil</span></div></div>
+  <div class="toc-item"><div class="toc-num">3</div><div class="toc-txt"><b>Les pièces</b><span>Chercher, consulter, ajuster un stock</span></div></div>
+  <div class="toc-item"><div class="toc-num">4</div><div class="toc-txt"><b>Ajouter ou modifier une pièce</b><span>Photo, notice, seuil d'alerte</span></div></div>
+  <div class="toc-item"><div class="toc-num">5</div><div class="toc-txt"><b>Les familles</b><span>Classer le matériel par type</span></div></div>
+  <div class="toc-item"><div class="toc-num">6</div><div class="toc-txt"><b>Le plan de l'atelier</b><span>Placer les zones de rangement</span></div></div>
+  <div class="toc-item"><div class="toc-num">7</div><div class="toc-txt"><b>Préparer un chantier</b><span>Constituer la liste du matériel à emporter</span></div></div>
+  <div class="toc-item"><div class="toc-num">8</div><div class="toc-txt"><b>Organiser par pylône et par portée</b><span>Regrouper le matériel ouvrage par ouvrage</span></div></div>
+  <div class="toc-item"><div class="toc-num">9</div><div class="toc-txt"><b>Charger le matériel</b><span>Pointer ce qui part réellement</span></div></div>
+  <div class="toc-item"><div class="toc-num">10</div><div class="toc-txt"><b>Imprimer le bon de chargement</b><span>Sur papier ou en PDF</span></div></div>
+  <div class="toc-item"><div class="toc-num">11</div><div class="toc-txt"><b>Scanner un QR code</b><span>Retrouver une pièce instantanément</span></div></div>
+  <div class="toc-item"><div class="toc-num">12</div><div class="toc-txt"><b>Sur le téléphone</b><span>Installer l'application, travailler sans réseau</span></div></div>
+  <div class="toc-item"><div class="toc-num">13</div><div class="toc-txt"><b>Questions fréquentes</b><span>Les situations courantes</span></div></div>
+</div>
+
+<h3>Trois choses à savoir avant de commencer</h3>
+<div class="note">
+  <b>Tout est partagé, en direct</b>
+  Ce que vous modifiez apparaît immédiatement sur les téléphones et ordinateurs de vos collègues.
+  Il n'y a rien à enregistrer ni à envoyer : c'est automatique.
+</div>
+<div class="note">
+  <b>Chaque équipe a son propre stock</b>
+  EL Feytiat et EL Aurillac ne partagent rien : ni pièces, ni familles, ni plan, ni chantiers.
+  Vérifiez toujours le nom affiché en haut à droite avant de travailler.
+</div>
+<div class="note">
+  <b>Rien n'est jamais perdu</b>
+  Les suppressions demandent toujours une confirmation, et le stock retiré pour un chantier
+  est automatiquement remis si le chantier est supprimé.
+</div>
+</section>
+
+<!-- ============================ 1. DÉCOUVRIR ============================ -->
+<section>
+<h2>1. Découvrir l'application</h2>
+
+<p>Invent'RTE sert à deux choses : <strong>savoir ce que contient l'atelier</strong> et
+<strong>préparer le matériel qui part en chantier</strong>.</p>
+
+<h3>Ouvrir l'application</h3>
+<p>Il n'y a rien à installer. Ouvrez simplement cette adresse dans votre navigateur :</p>
+<div class="note" style="text-align:center;font-size:11pt;">
+  <b style="margin:0;">niamort36-prog.github.io/Inventaire-RTE</b>
+</div>
+<p>Elle fonctionne sur ordinateur, sur tablette et sur téléphone. Aucun mot de passe
+n'est demandé : l'application vous connecte toute seule.</p>
+
+<h3>Les six onglets</h3>
+<table>
+  <tr><td class="k">Accueil</td><td>Les chiffres clés, les chantiers en cours et les alertes de stock bas.</td></tr>
+  <tr><td class="k">Pièces</td><td>Tout le matériel de l'atelier. C'est ici qu'on ajoute et qu'on modifie.</td></tr>
+  <tr><td class="k">Familles</td><td>Les catégories qui servent à classer le matériel.</td></tr>
+  <tr><td class="k">Plan</td><td>Le plan de l'atelier avec les zones de rangement.</td></tr>
+  <tr><td class="k">Paniers</td><td>Les chantiers : le matériel à emporter.</td></tr>
+  <tr><td class="k">Scan</td><td>Le lecteur de QR codes.</td></tr>
+</table>
+
+<h3>Choisir son équipe</h3>
+<p>Le bouton en haut à droite indique l'équipe sur laquelle vous travaillez. Cliquez dessus
+pour en changer ou pour saisir votre nom.</p>
+
+<figure>
+  <img src="captures/07-equipes.png" alt="Fenêtre de choix de l'équipe">
+  <figcaption>Le choix de l'équipe, et le nom qui apparaîtra dans l'historique</figcaption>
+</figure>
+
+<div class="tip">
+  <b>Saisissez votre nom</b>
+  Il n'est demandé qu'une fois et sert à l'historique : on sait ainsi qui a sorti quel matériel.
+  Ce n'est pas un compte, il n'y a pas de mot de passe.
+</div>
+
+<div class="note">
+  <b>Le point de couleur à gauche du nom d'équipe</b>
+  Vert : tout est synchronisé. Rouge : vous êtes hors réseau — vous pouvez continuer à consulter,
+  mais les modifications ne partiront qu'au retour de la connexion.
+</div>
+</section>
+
+<!-- ============================ 2. ACCUEIL ============================ -->
+<section>
+<h2>2. L'accueil</h2>
+
+<p>C'est la page qui s'ouvre en premier. Elle répond à trois questions :
+qu'est-ce qu'on a, qu'est-ce qui part en chantier, et qu'est-ce qui manque.</p>
+
+<figure>
+  <img src="captures/01-accueil.png" alt="Tableau de bord">
+  <figcaption>Le tableau de bord : compteurs, chantiers en cours et alertes</figcaption>
+</figure>
+
+<table>
+  <tr><td class="k">Total Pièces</td><td>Le nombre de références différentes.</td></tr>
+  <tr><td class="k">Quantité totale</td><td>Le nombre d'articles en tout, toutes références confondues.</td></tr>
+  <tr><td class="k">Chantiers en cours</td><td>Les chantiers validés, en cours de chargement.</td></tr>
+  <tr><td class="k">Zones Définies</td><td>Le nombre d'emplacements de rangement sur le plan.</td></tr>
+</table>
+
+<h3>Les alertes de stock bas</h3>
+<p>Le cadre rouge liste les pièces dont la quantité est descendue au niveau du seuil
+que vous avez fixé, ou en dessous. Cliquez sur une ligne pour ouvrir directement la fiche
+de la pièce concernée.</p>
+
+<div class="tip">
+  <b>Le bouton Historique</b>
+  En haut à droite, il retrace les derniers mouvements : ajouts, retraits, modifications de stock,
+  avec la date et le nom de la personne. Utile pour comprendre pourquoi une quantité a changé.
+</div>
+</section>
+
+<!-- ============================ 3. LES PIÈCES ============================ -->
+<section>
+<h2>3. Les pièces</h2>
+
+<p>L'onglet <strong>Pièces</strong> affiche tout le matériel sous forme de fiches.</p>
+
+<figure>
+  <img src="captures/02-pieces.png" alt="Liste des pièces">
+  <figcaption>La liste des pièces, avec la recherche, les filtres et le tri</figcaption>
+</figure>
+
+<h3>Retrouver une pièce</h3>
+<ul>
+  <li><strong>La recherche</strong> cherche dans le nom, la zone et la description.</li>
+  <li><strong>Les filtres</strong> limitent l'affichage à une famille ou à une zone.</li>
+  <li><strong>Le tri</strong> propose notamment « Stock bas d'abord », pratique pour préparer une commande.</li>
+</ul>
+<p>Une pièce dont le stock est au niveau du seuil s'affiche en rouge avec la mention
+<strong>Stock bas</strong>.</p>
+
+<h3>La fiche d'une pièce</h3>
+<p>Cliquez sur une fiche pour l'ouvrir.</p>
+
+<figure>
+  <img src="captures/03-fiche-piece.png" alt="Fiche d'une pièce" style="width:78mm;margin:0 auto;">
+  <figcaption>La fiche : photo, zone, famille et réglage rapide du stock</figcaption>
+</figure>
+
+<div class="step"><div class="step-n">1</div><div>Les boutons <strong>–</strong> et <strong>+</strong> ajustent le stock immédiatement. C'est le geste à faire quand on prend ou rend du matériel hors chantier.</div></div>
+<div class="step"><div class="step-n">2</div><div>Le bouton <strong>Zone</strong> ouvre le plan et fait clignoter l'emplacement de rangement.</div></div>
+<div class="step"><div class="step-n">3</div><div>L'icône <strong>QR code</strong> affiche le code à imprimer et à coller sur le bac.</div></div>
+<div class="step"><div class="step-n">4</div><div><strong>Modifier</strong> ouvre la fiche complète ; <strong>Notice</strong> apparaît si un PDF a été joint.</div></div>
+
+<div class="note">
+  <b>Deux personnes peuvent modifier en même temps</b>
+  Si un collègue ajuste le stock de la même pièce au même moment, les deux corrections
+  s'additionnent : aucune ne remplace l'autre.
+</div>
+</section>
+
+<!-- ============================ 4. AJOUTER UNE PIÈCE ============================ -->
+<section>
+<h2>4. Ajouter ou modifier une pièce</h2>
+
+<p>Depuis l'onglet <strong>Pièces</strong>, bouton <strong>Ajouter une pièce</strong>.
+Pour modifier une pièce existante, ouvrez sa fiche puis <strong>Modifier</strong>.</p>
+
+<figure>
+  <img src="captures/04-ajouter-piece.png" alt="Formulaire d'une pièce" style="width:120mm;margin:0 auto;">
+  <figcaption>Le formulaire d'une pièce</figcaption>
+</figure>
+
+<table>
+  <tr><td class="k">Nom</td><td>Obligatoire. C'est ce qui apparaît partout et sur quoi porte la recherche.</td></tr>
+  <tr><td class="k">Qté</td><td>La quantité réellement présente à l'atelier.</td></tr>
+  <tr><td class="k">Seuil d'alerte</td><td>En dessous ou à ce niveau, la pièce remonte dans les alertes de l'accueil. Laissez 0 si vous ne voulez pas d'alerte.</td></tr>
+  <tr><td class="k">Famille</td><td>Facultatif, mais très utile pour trier ensuite.</td></tr>
+  <tr><td class="k">Lieu</td><td>La zone de rangement, choisie parmi celles du plan.</td></tr>
+  <tr><td class="k">Notice PDF</td><td>Facultatif, 5 Mo maximum. Consultable depuis la fiche.</td></tr>
+  <tr><td class="k">Photo</td><td>Facultatif. L'icône appareil photo permet de la prendre directement avec le téléphone.</td></tr>
+</table>
+
+<div class="tip">
+  <b>Les photos sont compressées automatiquement</b>
+  Inutile de les réduire avant : l'application s'en charge, pour que l'application reste rapide
+  même en 4G sur un chantier.
+</div>
+
+<div class="warn">
+  <b>Supprimer une pièce</b>
+  Le bouton rouge <strong>Supprimer</strong> la retire définitivement, avec sa photo et sa notice.
+  Elle est aussi retirée des chantiers où elle figurait. Cette action ne peut pas être annulée.
+</div>
+</section>
+
+<!-- ============================ 5. FAMILLES ============================ -->
+<section>
+<h2>5. Les familles</h2>
+
+<p>Une famille regroupe le matériel de même nature : câbles, isolateurs, outillage de levage…
+Elles servent à filtrer les listes et à structurer le bon de chargement.</p>
+
+<figure>
+  <img src="captures/05-familles.png" alt="Les familles">
+  <figcaption>Chaque famille a une couleur et affiche le nombre de pièces qu'elle contient</figcaption>
+</figure>
+
+<div class="step"><div class="step-n">1</div><div>Bouton <strong>Ajouter une famille</strong> : un nom, une description facultative, une couleur.</div></div>
+<div class="step"><div class="step-n">2</div><div>Cliquez sur une famille pour voir la liste des pièces qu'elle contient.</div></div>
+<div class="step"><div class="step-n">3</div><div>Le crayon en haut à droite de la carte permet de la modifier.</div></div>
+
+<div class="note">
+  <b>Supprimer une famille ne supprime pas les pièces</b>
+  Elles restent dans l'inventaire, simplement sans famille. Vous pourrez les reclasser ensuite.
+</div>
+</section>
+
+<!-- ============================ 6. PLAN ============================ -->
+<section>
+<h2>6. Le plan de l'atelier</h2>
+
+<p>Le plan sert à savoir <strong>où</strong> se range chaque pièce. On y place des zones,
+et chaque pièce est rattachée à une zone.</p>
+
+<figure>
+  <img src="captures/06-plan.png" alt="Le plan de l'atelier">
+  <figcaption>Les zones posées sur le plan, et leur liste à droite avec le nombre de pièces</figcaption>
+</figure>
+
+<div class="step"><div class="step-n">1</div><div><strong>Changer plan</strong> (en haut à droite) charge une photo ou un schéma de l'atelier.</div></div>
+<div class="step"><div class="step-n">2</div><div><strong>Cliquez sur le plan</strong> à l'endroit voulu pour créer une zone : donnez-lui un nom et une description.</div></div>
+<div class="step"><div class="step-n">3</div><div><strong>Faites glisser un repère</strong> pour le déplacer. Un appui bref l'ouvre au lieu de le déplacer.</div></div>
+<div class="step"><div class="step-n">4</div><div><strong>Cliquez sur une zone</strong> (sur le plan ou dans la liste) pour voir tout ce qu'elle contient, classé par famille.</div></div>
+
+<div class="tip">
+  <b>Renommer une zone met tout à jour</b>
+  Si vous changez le nom d'une zone, toutes les pièces qui s'y trouvent suivent automatiquement.
+</div>
+
+<div class="note">
+  <b>Supprimer une zone ne supprime pas les pièces</b>
+  Elles restent dans l'inventaire, sans zone, et vous pourrez leur en attribuer une autre.
+</div>
+</section>
+
+<!-- ============================ 7. PRÉPARER UN CHANTIER ============================ -->
+<section>
+<h2>7. Préparer un chantier</h2>
+
+<p>Un chantier (ou « panier ») est la liste du matériel à emporter. Il se déroule en deux temps :
+d'abord la <strong>préparation</strong>, ensuite le <strong>chargement</strong>.</p>
+
+<figure>
+  <img src="captures/13-chantiers.png" alt="Liste des chantiers">
+  <figcaption>La liste des chantiers. Le camembert indique l'avancement du chargement</figcaption>
+</figure>
+
+<h3>Créer le chantier</h3>
+<div class="step"><div class="step-n">1</div><div>Onglet <strong>Paniers</strong>, puis <strong>Nouveau Chantier</strong>.</div></div>
+<div class="step"><div class="step-n">2</div><div>Donnez-lui un nom parlant : ligne, travée, semaine… Vous pourrez le renommer en cliquant sur son titre.</div></div>
+
+<h3>Ajouter du matériel</h3>
+<p>Utilisez la barre de recherche en haut de la fenêtre du chantier.</p>
+
+<figure>
+  <img src="captures/10-ajouter-materiel.png" alt="Ajouter du matériel" style="width:88mm;margin:0 auto;">
+  <figcaption>La fenêtre d'ajout de matériel</figcaption>
+</figure>
+
+<table>
+  <tr><td class="k">Quantité à charger</td><td>Le nombre d'articles à emporter.</td></tr>
+  <tr><td class="k">Rattacher à</td><td>Le pylône ou la portée concerné — voir le chapitre suivant. N'apparaît que si vous en avez créé.</td></tr>
+  <tr><td class="k">Commentaire</td><td>Une précision libre, qui apparaîtra sur le bon imprimé.</td></tr>
+  <tr><td class="k">Déduire du stock</td><td>Coché, la quantité sera retirée de l'inventaire à la validation. Décochez pour du matériel qui revient toujours.</td></tr>
+</table>
+
+<div class="note">
+  <b>Tant que le chantier est en « Brouillon », le stock n'est pas touché</b>
+  Vous pouvez préparer, corriger, retirer des lignes sans conséquence sur l'inventaire.
+</div>
+</section>
+
+<!-- ============================ 8. PYLÔNES ============================ -->
+<section>
+<h2>8. Organiser par pylône et par portée</h2>
+
+<p>Sur un chantier de ligne, on peut regrouper le matériel <strong>ouvrage par ouvrage</strong> :
+un pylône, une portée. C'est <strong>facultatif</strong> — sans cela, le chantier reste une simple liste.</p>
+
+<h3>Déclarer un ouvrage</h3>
+<p>Dans le chantier, bouton <strong>Pylône / Portée</strong>.</p>
+
+<figure>
+  <img src="captures/08-creer-pylone.png" alt="Créer un pylône" style="width:88mm;margin:0 auto;">
+  <figcaption>La création d'un pylône</figcaption>
+</figure>
+
+<table>
+  <tr><td class="k">Pylône</td><td>Numéro, fonction (<strong>ancrage</strong> ou <strong>alignement</strong>), chaîne (<strong>simple</strong>, <strong>double</strong> ou <strong>triple</strong>) et faisceau (<strong>simple</strong> ou <strong>double</strong>).</td></tr>
+  <tr><td class="k">Portée</td><td>Numéro et faisceau seulement. Les champs fonction et chaîne disparaissent, ils n'ont pas lieu d'être.</td></tr>
+</table>
+
+<h3>Y rattacher le matériel</h3>
+<p>L'ouvrage que vous venez de créer devient celui auquel les ajouts se rattachent : déclarez le
+pylône 1, ajoutez son outillage, puis passez au suivant. Rien à resélectionner à chaque fois.</p>
+
+<figure>
+  <img src="captures/09-chantier-prepare.png" alt="Chantier organisé par ouvrages">
+  <figcaption>Le matériel regroupé sous chaque ouvrage, avec ses caractéristiques rappelées</figcaption>
+</figure>
+
+<div class="step"><div class="step-n">1</div><div><strong>Ajouter ici</strong> sur un bandeau : revenir sur un ouvrage précédent pour compléter.</div></div>
+<div class="step"><div class="step-n">2</div><div><strong>Le crayon</strong> : corriger les caractéristiques de l'ouvrage.</div></div>
+<div class="step"><div class="step-n">3</div><div><strong>Le menu sous chaque article</strong> : le déplacer vers un autre ouvrage.</div></div>
+
+<div class="tip">
+  <b>Le matériel commun reste sous « Non affecté »</b>
+  Tout ce qui ne dépend pas d'un ouvrage précis y figure : il n'est jamais masqué ni oublié.
+</div>
+
+<div class="note">
+  <b>Supprimer un ouvrage ne supprime pas son matériel</b>
+  Les articles rattachés basculent simplement en « Non affecté ».
+</div>
+</section>
+
+<!-- ============================ 9. CHARGEMENT ============================ -->
+<section>
+<h2>9. Charger le matériel</h2>
+
+<p>Quand la liste est prête, bouton <strong>Valider &amp; Charger</strong>. Le chantier passe en
+<strong>Chargement</strong> et les quantités marquées « Déduire » sont retirées de l'inventaire.</p>
+
+<div class="warn">
+  <b>Un contrôle avant validation</b>
+  Si une quantité demandée dépasse le stock disponible, l'application affiche la liste des pièces
+  concernées et demande confirmation. Vous pouvez continuer malgré tout — le stock passera alors en négatif,
+  ce qui reste visible dans les alertes.
+</div>
+
+<figure>
+  <img src="captures/11-chantier-chargement.png" alt="Chantier en chargement">
+  <figcaption>Le mode chargement : on coche au fur et à mesure</figcaption>
+</figure>
+
+<table>
+  <tr><td class="k">Chargé</td><td>Cochez quand le matériel est effectivement chargé, dans la quantité indiquée.</td></tr>
+  <tr><td class="k">Qté à charger</td><td>Ce qu'il faut prendre. Corrigez ce nombre si vous ne pouvez pas tout emporter.</td></tr>
+  <tr><td class="k">Note</td><td>Une observation libre : manquant, remplacé, à compléter…</td></tr>
+</table>
+
+<p>Si vous modifiez la quantité, elle passe en rouge et la mention <strong>Demandé au départ</strong>
+rappelle ce qui était prévu : l'écart reste visible, à l'écran comme sur le papier.</p>
+
+<p>Le pourcentage en haut de la fenêtre et sur la carte du chantier suit l'avancement.
+Quand tout est chargé, le bouton <strong>Chantier terminé</strong> le clôture et le retire de la liste.</p>
+
+<div class="warn">
+  <b>Terminé ou supprimé, ce n'est pas la même chose</b>
+  <strong>Chantier terminé</strong> clôture le chantier : le matériel est parti, le stock reste déduit.
+  <strong>Supprimer le chantier</strong> annule l'opération et <strong>remet le stock</strong> comme avant.
+</div>
+</section>
+
+<!-- ============================ 10. IMPRESSION ============================ -->
+<section>
+<h2>10. Imprimer le bon de chargement</h2>
+
+<p>Dans un chantier, bouton <strong>Imprimer</strong>. Le document reprend exactement
+ce que vous avez à l'écran : le <strong>tri</strong> choisi et les <strong>filtres</strong> actifs.</p>
+
+<h3>Choisir l'ordre avant d'imprimer</h3>
+<table>
+  <tr><td class="k">Par pylône / portée</td><td>Ouvrage par ouvrage. L'ordre naturel sur le terrain.</td></tr>
+  <tr><td class="k">Par zone</td><td>On suit l'atelier zone par zone, sans allers-retours. Idéal pour le chargement.</td></tr>
+  <tr><td class="k">Par nom</td><td>Pour pointer une référence précise.</td></tr>
+  <tr><td class="k">Par famille</td><td>Câbles ensemble, isolateurs ensemble…</td></tr>
+</table>
+
+<figure>
+  <img src="captures/12-bon-imprime.png" alt="Bon de chargement imprimé">
+  <figcaption>Le bon de chargement, ici regroupé par ouvrage</figcaption>
+</figure>
+
+<p>Le bon comprend une case à cocher par ligne, les quantités demandées et à charger,
+les observations et un emplacement pour le visa. Les en-têtes de colonnes se répètent à chaque page.</p>
+
+<div class="tip">
+  <b>Pour obtenir un PDF</b>
+  Cliquez sur <strong>Imprimer / Enregistrer en PDF</strong>, puis choisissez
+  <strong>« Enregistrer au format PDF »</strong> comme destination au lieu d'une imprimante.
+  Cela fonctionne aussi bien sur ordinateur que sur téléphone.
+</div>
+</section>
+
+<!-- ============================ 11. SCAN ============================ -->
+<section>
+<h2>11. Scanner un QR code</h2>
+
+<p>Chaque pièce possède un QR code. Collé sur le bac ou l'étagère, il permet d'ouvrir
+sa fiche instantanément, sans la chercher dans la liste.</p>
+
+<figure>
+  <img src="captures/14-scan.png" alt="Le scanner">
+  <figcaption>L'onglet Scan. Autorisez l'accès à la caméra à la première utilisation</figcaption>
+</figure>
+
+<h3>Imprimer les étiquettes</h3>
+<p>Onglet <strong>Pièces</strong> → bouton <strong>QR Codes</strong>. Une planche d'étiquettes
+s'ouvre avec, pour chaque pièce, son nom, son code et sa zone. Il ne reste qu'à imprimer et découper.</p>
+
+<div class="note">
+  <b>Les QR codes sont propres à chaque équipe</b>
+  Scanner l'étiquette d'une pièce de Feytiat alors qu'on est sur Aurillac affiche un message
+  d'avertissement : c'est normal, il faut d'abord changer d'équipe.
+</div>
+
+<h3>Exporter l'inventaire vers Excel</h3>
+<p>Toujours dans l'onglet <strong>Pièces</strong>, le bouton <strong>Excel</strong> produit un tableau
+complet : nom, quantité, seuil, indicateur de stock bas, famille, zone et description.
+Pratique pour un inventaire annuel ou une commande.</p>
+</section>
+
+<!-- ============================ 12. TÉLÉPHONE ============================ -->
+<section>
+<h2>12. Sur le téléphone</h2>
+
+<p>L'application est prévue pour être utilisée en atelier et en chantier, directement sur le téléphone.</p>
+
+<figure>
+  <img src="captures/15-mobile.png" class="phone" alt="L'application sur téléphone">
+  <figcaption>L'affichage s'adapte automatiquement à l'écran</figcaption>
+</figure>
+
+<h3>L'installer sur l'écran d'accueil</h3>
+<ul>
+  <li><strong>iPhone (Safari)</strong> : bouton Partager, puis « Sur l'écran d'accueil ».</li>
+  <li><strong>Android (Chrome)</strong> : menu ⋮, puis « Ajouter à l'écran d'accueil ».</li>
+</ul>
+<p>Elle s'ouvre alors comme une application, sans barre d'adresse.</p>
+
+<div class="tip">
+  <b>Elle fonctionne sans réseau</b>
+  Les dernières données consultées restent disponibles hors connexion : vous pouvez vérifier
+  une référence ou une quantité au fond d'un local sans couverture.
+  En revanche, <strong>les modifications nécessitent une connexion</strong> — le point rouge à côté
+  du nom de l'équipe vous prévient.
+</div>
+
+<div class="warn">
+  <b>Après une mise à jour de l'application</b>
+  Fermez complètement l'application et rouvrez-la une fois. Sans cela, l'appareil peut continuer
+  à utiliser l'ancienne version pendant un moment.
+</div>
+</section>
+
+<!-- ============================ 13. FAQ ============================ -->
+<section>
+<h2>13. Questions fréquentes</h2>
+
+<div class="faq">
+  <div class="q">Je ne retrouve pas une pièce que je viens d'ajouter.</div>
+  Vérifiez l'équipe affichée en haut à droite : la pièce a peut-être été créée sur l'autre équipe.
+  Vérifiez aussi qu'aucun filtre (famille ou zone) n'est actif dans l'onglet Pièces.
+</div>
+
+<div class="faq">
+  <div class="q">Le stock affiché ne correspond pas à ce que j'ai sous les yeux.</div>
+  Regardez si une partie du matériel est engagée dans un chantier en cours : les quantités
+  marquées « Déduire » sont retirées dès la validation. L'Historique, depuis l'accueil,
+  retrace tous les mouvements avec leur auteur.
+</div>
+
+<div class="faq">
+  <div class="q">Une quantité est devenue négative.</div>
+  C'est possible quand un chantier a été validé alors que le stock était insuffisant.
+  Corrigez la quantité réelle depuis la fiche de la pièce.
+</div>
+
+<div class="faq">
+  <div class="q">Le point à côté du nom de l'équipe est rouge.</div>
+  Vous n'avez plus de réseau. La consultation reste possible ; les modifications devront attendre
+  le retour de la connexion. Aucune donnée n'est perdue entre-temps.
+</div>
+
+<div class="faq">
+  <div class="q">J'ai supprimé un chantier par erreur.</div>
+  Le stock a été remis automatiquement. En revanche la liste du matériel est perdue :
+  il faut la reconstituer.
+</div>
+
+<div class="faq">
+  <div class="q">La caméra ne s'active pas pour scanner.</div>
+  Le navigateur demande l'autorisation d'accès à la caméra la première fois. Si vous avez refusé,
+  il faut la réautoriser dans les réglages du navigateur pour ce site.
+</div>
+
+<div class="faq">
+  <div class="q">Puis-je ajouter une troisième équipe ?</div>
+  Oui : bouton de l'équipe en haut à droite, puis <strong>Nouvelle équipe</strong>.
+  Elle démarre vide, avec son propre stock, son propre plan et ses propres chantiers.
+</div>
+
+<div class="faq">
+  <div class="q">Est-ce que quelqu'un d'extérieur peut voir notre inventaire ?</div>
+  Non. La base est fermée : seule l'application y accède, et uniquement depuis l'adresse officielle.
+</div>
+
+<h3>Un doute, un problème ?</h3>
+<p>L'application enregistre tous les mouvements. Avant de corriger une quantité qui vous semble fausse,
+consultez l'<strong>Historique</strong> depuis l'accueil : il indique qui a fait quoi, et quand.</p>
+</section>
+
+</body>
+</html>
