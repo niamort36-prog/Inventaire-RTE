@@ -302,6 +302,38 @@
         </div>
     </div>
 
+    <!-- Création d'un chantier : nom et domaine de tension -->
+    <div id="modal-new-basket" class="hidden fixed z-60 inset-0 overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="fixed inset-0 bg-gray-600 bg-opacity-75" onclick="closeModal('modal-new-basket')"></div>
+            <div class="bg-white rounded-lg w-full max-w-sm p-6 relative z-10 shadow-xl">
+                <form id="form-new-basket" onsubmit="handleNewBasket(event)">
+                    <h3 class="text-lg font-bold mb-4">Nouveau chantier</h3>
+                    <div class="mb-4">
+                        <label class="block text-sm font-semibold mb-1">Nom du chantier</label>
+                        <input type="text" id="input-basket-name" required class="w-full border p-2 rounded" placeholder="Ex : Ligne 225 kV — Travée 12">
+                    </div>
+                    <div class="mb-5">
+                        <label class="block text-sm font-semibold mb-1">Domaine de tension</label>
+                        <div class="grid grid-cols-3 gap-2" id="basket-tension-picker">
+                            <button type="button" data-tension="63" class="border rounded py-2 text-sm">63 kV</button>
+                            <button type="button" data-tension="90" class="border rounded py-2 text-sm">90 kV</button>
+                            <button type="button" data-tension="150" class="border rounded py-2 text-sm">150 kV</button>
+                            <button type="button" data-tension="225" class="border rounded py-2 text-sm">225 kV</button>
+                            <button type="button" data-tension="400" class="border rounded py-2 text-sm">400 kV</button>
+                            <button type="button" data-tension="" class="border rounded py-2 text-sm">Non précisé</button>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-2">Sert à ne proposer que les chaînes isolantes du domaine concerné.</p>
+                    </div>
+                    <div class="flex justify-end gap-2">
+                        <button type="button" class="border px-4 py-2 rounded" onclick="closeModal('modal-new-basket')">Annuler</button>
+                        <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded">Créer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- Ouvrage : pylône ou portée d'un chantier -->
     <div id="modal-group" class="hidden fixed z-60 inset-0 overflow-y-auto">
         <div class="flex items-center justify-center min-h-screen px-4">
@@ -346,6 +378,23 @@
                             <button type="button" data-faisceau="simple" class="border rounded py-2 text-sm">Simple</button>
                             <button type="button" data-faisceau="double" class="border rounded py-2 text-sm">Double</button>
                         </div>
+                    </div>
+
+                    <!-- Chaînes isolantes du catalogue RTE, filtrées sur les
+                         caractéristiques saisies ci-dessus. Entièrement facultatif. -->
+                    <div class="mb-5 border-t pt-4" id="group-chain-block">
+                        <label class="block text-sm font-semibold mb-1">
+                            Chaîne isolante <span class="font-normal text-gray-400">(facultatif)</span>
+                        </label>
+                        <p class="text-xs text-gray-500 mb-2" id="chain-context"></p>
+                        <select id="input-chain" class="w-full border p-2 rounded bg-white text-sm mb-2">
+                            <option value="">— Aucune —</option>
+                        </select>
+                        <div class="flex items-center gap-2 hidden" id="chain-qty-wrap">
+                            <label class="text-sm font-semibold whitespace-nowrap">Nombre de chaînes</label>
+                            <input type="number" id="input-chain-qty" value="1" min="1" class="w-20 border p-2 rounded text-sm">
+                        </div>
+                        <div id="chain-preview" class="hidden mt-2 text-xs bg-gray-50 border rounded p-2 max-h-36 overflow-y-auto"></div>
                     </div>
 
                     <div class="flex justify-between items-center gap-2">
@@ -1758,6 +1807,14 @@ function openGroupModal(gid) {
     pickOption('group-fonction-picker', 'fonction', g ? g.fonction : 'alignement');
     pickOption('group-chaine-picker', 'chaine', g ? g.chaine : 'simple');
     pickOption('group-faisceau-picker', 'faisceau', g ? g.faisceau : 'simple');
+
+    // Le matériel de chaîne ne s'ajoute qu'à la création : sur une modification,
+    // il aurait déjà été ajouté et serait ajouté une seconde fois.
+    document.getElementById('input-chain').value = '';
+    document.getElementById('input-chain-qty').value = '1';
+    document.getElementById('group-chain-block').classList.toggle('hidden', !!g);
+    if (!g) chargerCatalogue().then(() => remplirChoixChaines());
+
     if (!g) setTimeout(() => document.getElementById('input-group-name').focus(), 50);
 }
 
@@ -1816,7 +1873,26 @@ function handleGroupSubmit(e) {
     activeGroupId = gid;
     closeModal('modal-group');
     document.getElementById('sort-basket').value = 'group';
-    toast(existing ? "Ouvrage modifié" : groupShortLabel(data) + " créé", 'ok');
+
+    const designation = existing ? '' : document.getElementById('input-chain').value;
+    if (designation && catalogue) {
+        const nb = Math.max(1, num(document.getElementById('input-chain-qty').value, 1));
+        toast("Ajout du matériel de la chaîne…");
+        ajouterChaineAuChantier(basket, gid, designation, nb).then(({ ajoutes, crees }) => {
+            logHistory(`${groupShortLabel(data)} : chaîne ${designation}${nb > 1 ? ' ×' + nb : ''} (${ajoutes} références)`);
+            let msg = `${groupShortLabel(data)} créé — ${ajoutes} référence(s) ajoutée(s)`;
+            if (crees.length) msg += `, dont ${crees.length} nouvelle(s) à quantité 0`;
+            toast(msg, 'ok');
+            if (crees.length) {
+                alert("Ces références n'existaient pas dans l'inventaire.\n" +
+                      "Elles ont été créées avec une quantité de 0, à corriger depuis l'onglet Pièces :\n\n• " +
+                      crees.join('\n• '));
+            }
+            rerenderCurrentBasket();
+        });
+    } else {
+        toast(existing ? "Ouvrage modifié" : groupShortLabel(data) + " créé", 'ok');
+    }
     setTimeout(() => rerenderCurrentBasket(), 300);
 }
 
@@ -1854,19 +1930,161 @@ function moveItemToGroup(uid, gid) {
     setTimeout(() => rerenderCurrentBasket(), 200);
 }
 
+/* ============================================================================
+   CHAÎNES ISOLANTES — catalogue RTE
+   ----------------------------------------------------------------------------
+   Le catalogue (231 chaînes en verre, extraites du document
+   NT-ING-CNER-DL-ML-11-00021) est chargé à la demande : il ne pèse sur le
+   démarrage d'aucun appareil qui ne s'en sert pas.
+
+   Le choix proposé découle des caractéristiques déjà saisies : domaine de
+   tension du chantier, ancrage ou suspension, nombre de files, faisceau.
+   ========================================================================== */
+let catalogue = null, catalogueEnCours = null;
+
+function chargerCatalogue() {
+    if (catalogue) return Promise.resolve(catalogue);
+    if (catalogueEnCours) return catalogueEnCours;
+    catalogueEnCours = fetch('catalogue-chaines.json')
+        .then(r => r.json())
+        .then(c => { catalogue = c; return c; })
+        .catch(e => { console.error('Catalogue', e); return null; })
+        .finally(() => { catalogueEnCours = null; });
+    return catalogueEnCours;
+}
+
+/** Un pylône d'alignement porte des chaînes de suspension, un pylône
+ *  d'ancrage des chaînes d'ancrage. */
+function critereChaines(basket) {
+    const tension = num(basket && basket.tension, 0);
+    const kind = document.getElementById('group-kind-picker').dataset.value;
+    const fonction = document.getElementById('group-fonction-picker').dataset.value;
+    const chaine = document.getElementById('group-chaine-picker').dataset.value;
+    const faisceau = document.getElementById('group-faisceau-picker').dataset.value;
+    return {
+        tension,
+        type: kind === 'portee' ? null : (fonction === 'ancrage' ? 'ancrage' : 'suspension'),
+        chaine, faisceau,
+    };
+}
+
+function remplirChoixChaines() {
+    const sel = document.getElementById('input-chain');
+    const ctx = document.getElementById('chain-context');
+    const basket = currentBasket();
+    const c = critereChaines(basket);
+
+    document.getElementById('chain-qty-wrap').classList.add('hidden');
+    document.getElementById('chain-preview').classList.add('hidden');
+
+    if (!c.tension) {
+        sel.innerHTML = '<option value="">— Aucune —</option>';
+        ctx.textContent = "Renseignez le domaine de tension du chantier pour voir les chaînes disponibles.";
+        return;
+    }
+    if (!catalogue) { ctx.textContent = 'Chargement du catalogue…'; return; }
+
+    const dispo = catalogue.chaines.filter(x =>
+        x.t.includes(c.tension) &&
+        (!c.type || x.ty === c.type) &&
+        x.ch === c.chaine &&
+        x.fa === c.faisceau);
+
+    ctx.textContent = `${c.tension} kV · ${c.type || 'portée'} · chaîne ${c.chaine} · faisceau ${c.faisceau}`;
+    if (!dispo.length) {
+        sel.innerHTML = '<option value="">— Aucune —</option>';
+        ctx.textContent += ' — aucune chaîne du catalogue ne correspond';
+        return;
+    }
+    sel.innerHTML = '<option value="">— Aucune —</option>' + dispo.map(x =>
+        `<option value="${esc(x.d)}">${esc(x.d)} — ${esc(x.fo)}, pollution ${esc(x.po)}, ${x.kn} kN</option>`
+    ).join('');
+}
+
+function apercuChaine() {
+    const d = document.getElementById('input-chain').value;
+    const wrap = document.getElementById('chain-qty-wrap');
+    const prev = document.getElementById('chain-preview');
+    if (!d || !catalogue) { wrap.classList.add('hidden'); prev.classList.add('hidden'); return; }
+
+    const ch = catalogue.chaines.find(x => x.d === d);
+    if (!ch) return;
+    const nb = Math.max(1, num(document.getElementById('input-chain-qty').value, 1));
+    wrap.classList.remove('hidden');
+    prev.classList.remove('hidden');
+    prev.innerHTML = '<b>Matériel qui sera ajouté :</b><br>' + ch.c.map(([ref, q]) => {
+        const p = piecePourReference(ref);
+        const etat = p ? '' : ' <span class="text-orange-600">(à créer)</span>';
+        return `${q * nb} × ${esc(p ? p.name : ref)}${etat}`;
+    }).join('<br>');
+}
+
+/** Retrouve la pièce correspondant à une référence du catalogue.
+ *  Les libellés diffèrent (« BS 100 » au catalogue, « BS100 » à l'atelier) :
+ *  on compare sans espaces ni séparateurs, et quelques équivalences que cette
+ *  règle ne couvre pas sont fournies par le catalogue lui-même. */
+function normRef(s) { return String(s || '').toUpperCase().replace(/[^A-Z0-9]/g, ''); }
+
+function piecePourReference(ref) {
+    const eq = catalogue && catalogue.composants.find(c => c.ref === ref);
+    if (eq && eq.equivalent) {
+        const p = parts.find(x => normRef(x.name) === normRef(eq.equivalent));
+        if (p) return p;
+    }
+    return parts.find(x => normRef(x.name) === normRef(ref)) || null;
+}
+
+/** Ajoute le matériel d'une chaîne au chantier, en créant au besoin les
+ *  pièces absentes de l'inventaire (quantité 0, à corriger ensuite). */
+async function ajouterChaineAuChantier(basket, gid, designation, nb) {
+    const ch = catalogue.chaines.find(x => x.d === designation);
+    if (!ch) return { ajoutes: 0, crees: [] };
+
+    const crees = [];
+    for (const [ref, q] of ch.c) {
+        let piece = piecePourReference(ref);
+        if (!piece) {
+            const id = Date.now() + Math.floor(Math.random() * 100000);
+            piece = {
+                id, name: ref, qty: 0, alertQty: 0, familyId: null, location: '',
+                desc: 'Créée automatiquement depuis le catalogue RTE — quantité à renseigner',
+                hasImage: false, hasDoc: false,
+            };
+            await write('parts/p' + id, piece);
+            parts.push(piece);            // disponible immédiatement pour les lignes suivantes
+            crees.push(ref);
+        }
+        const uid = newItemUid();
+        const item = {
+            uid, partId: piece.id, qty: q * nb, deduct: true,
+            comment: `Chaîne ${designation}${nb > 1 ? ' ×' + nb : ''}`,
+        };
+        if (gid) item.groupId = gid;
+        await write(itemRef(basket.id, uid), item);
+    }
+    return { ajoutes: ch.c.length, crees };
+}
+
 /** Boutons-choix de la fenêtre d'ouvrage (délégation : le contenu est reconstruit). */
 function wireGroupPickers() {
     document.getElementById('group-kind-picker').addEventListener('click', e => {
         const b = e.target.closest('button[data-kind]');
-        if (b) selectGroupKind(b.dataset.kind);
+        if (b) { selectGroupKind(b.dataset.kind); remplirChoixChaines(); }
     });
+    // Chaque critère modifié restreint différemment la liste des chaînes.
     [['group-fonction-picker', 'fonction'], ['group-chaine-picker', 'chaine'],
      ['group-faisceau-picker', 'faisceau']].forEach(([id, key]) => {
         document.getElementById(id).addEventListener('click', e => {
             const b = e.target.closest(`button[data-${key}]`);
-            if (b) pickOption(id, key, b.dataset[key]);
+            if (b) { pickOption(id, key, b.dataset[key]); remplirChoixChaines(); }
         });
     });
+    document.getElementById('basket-tension-picker').addEventListener('click', e => {
+        const b = e.target.closest('button[data-tension]');
+        if (b) pickOption('basket-tension-picker', 'tension', b.dataset.tension);
+    });
+    document.getElementById('input-chain').addEventListener('change', apercuChaine);
+    document.getElementById('input-chain-qty').addEventListener('input', apercuChaine);
 }
 
 function calculateProgress(basket) {
@@ -1875,12 +2093,26 @@ function calculateProgress(basket) {
     return Math.round((items.filter(i => i.loaded).length / items.length) * 100);
 }
 
-async function createBasket() {
-    const name = prompt("Nom du nouveau chantier :", "Chantier " + (baskets.length + 1));
-    if (!name || !name.trim()) return;
+function createBasket() {
+    document.getElementById('form-new-basket').reset();
+    document.getElementById('input-basket-name').value = "Chantier " + (baskets.length + 1);
+    pickOption('basket-tension-picker', 'tension', '');
+    document.getElementById('modal-new-basket').classList.remove('hidden');
+    setTimeout(() => document.getElementById('input-basket-name').select(), 60);
+}
+
+async function handleNewBasket(e) {
+    e.preventDefault();
+    const name = document.getElementById('input-basket-name').value.trim();
+    if (!name) { toast("Indiquez un nom", 'err'); return; }
+    const tension = num(document.getElementById('basket-tension-picker').dataset.value, 0);
+
     const id = Date.now();
-    await write('baskets/b' + id, { id, name: name.trim(), status: 'draft', createdAt: id });
-    logHistory(`Chantier « ${name.trim()} » créé`);
+    const basket = { id, name, status: 'draft', createdAt: id };
+    if (tension) basket.tension = tension;
+    await write('baskets/b' + id, basket);
+    closeModal('modal-new-basket');
+    logHistory(`Chantier « ${name} » créé${tension ? ' (' + tension + ' kV)' : ''}`);
     openBasketDetail(id);
 }
 

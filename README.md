@@ -95,6 +95,35 @@ comme avant. Le matériel non rattaché reste regroupé sous « Non affecté »,
 perdu — y compris après la suppression d'un ouvrage, qui détache ses articles
 sans les supprimer.
 
+### Chaînes isolantes
+
+Un chantier porte un **domaine de tension** (63, 90, 150, 225 ou 400 kV), choisi
+à sa création. En déclarant un pylône, on peut alors retenir une **chaîne
+isolante** dans une liste restreinte à ce qui correspond réellement : la tension
+du chantier, l'ancrage ou la suspension, le nombre de files et le faisceau.
+
+Une fois la chaîne et le nombre d'exemplaires indiqués, tout le matériel qui la
+compose est ajouté au chantier, rattaché à l'ouvrage, quantités multipliées.
+
+Le catalogue [`catalogue-chaines.json`](catalogue-chaines.json) contient
+**231 chaînes en verre** et **63 références**, extraites du *Catalogue des
+matériels d'équipement de lignes aériennes* (NT-ING-CNER-DL-ML-11-00021 indice 3,
+pages 30 à 99). Il est chargé à la demande, jamais au démarrage.
+
+Les libellés du catalogue et ceux de l'atelier diffèrent (« BS 100 » contre
+« BS100 », « PM 30 400 » contre « PM 30/400 ») : la correspondance se fait sans
+tenir compte des espaces ni des séparateurs. Quatre équivalences que cette règle
+ne couvre pas sont inscrites dans le catalogue (`F 100` → `F100 DC`,
+`F 160` → `F160 DC`, `CC 15 A` → `CC15`, `CD 15 A` → `CD15`).
+
+Une référence sans correspondance est **créée avec une quantité de 0**, signalée
+à l'écran, et à compléter depuis l'onglet Pièces.
+
+**Deux limites :** le catalogue ne contient aucune chaîne en **150 kV** — ce
+domaine reste sélectionnable mais ne propose rien. Les chaînes à **isolateurs
+composites** (pages 100 à 110) ne sont pas reprises, seules les chaînes en verre
+le sont.
+
 ## Bon de chantier imprimable
 
 Dans un chantier, la liste peut être triée par zone de rangement, par nom, par
