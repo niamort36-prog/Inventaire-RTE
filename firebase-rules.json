@@ -51,6 +51,7 @@
             "desc":     { ".validate": "newData.isString() && newData.val().length <= 2000" },
             "hasImage": { ".validate": "newData.isBoolean()" },
             "hasDoc":   { ".validate": "newData.isBoolean()" },
+            "cable":    { ".validate": "newData.isBoolean()" },
             "$autre":   { ".validate": false }
           }
         },

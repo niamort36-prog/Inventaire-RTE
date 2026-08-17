@@ -108,7 +108,7 @@
                 </div>
                 <div class="bg-white shadow rounded-lg p-5 border-l-4 border-blue-500">
                     <dt class="text-sm font-medium text-gray-500">Quantité totale</dt>
-                    <dd class="mt-1 text-3xl font-semibold text-gray-900" id="stat-total-qty">0</dd>
+                    <dd class="mt-1 text-3xl font-semibold text-gray-900" id="stat-total-qty">0</dd><dd class="text-xs text-blue-700 font-medium hidden" id="stat-total-cable"></dd>
                 </div>
                 <div class="bg-white shadow rounded-lg p-5 border-l-4 border-purple-500">
                     <dt class="text-sm font-medium text-gray-500">Chantiers en cours</dt>
@@ -516,6 +516,7 @@
                         <button onclick="locateZoneOnMap()" class="flex-grow flex items-center text-sm text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded transition justify-center"><i class="fa-solid fa-location-dot mr-2"></i><span id="quick-view-zone-label">Zone</span></button>
                         <button onclick="showQRCode()" class="flex-none bg-gray-100 text-gray-600 px-3 py-1.5 rounded hover:bg-gray-200"><i class="fa-solid fa-qrcode"></i></button>
                     </div>
+                    <div id="quick-view-engagement" class="hidden mb-4"></div>
                     <div class="bg-gray-50 p-3 rounded-md mb-4 border border-gray-100"><p id="quick-view-desc" class="text-sm text-gray-700 italic">Desc</p></div>
                     <div class="flex items-center justify-center gap-6 mb-6 bg-gray-50 rounded-xl p-4 border border-gray-100">
                         <button onclick="updateQuickQty(-1)" class="w-12 h-12 rounded-full bg-white border border-gray-300 text-gray-600 hover:bg-red-50"><i class="fa-solid fa-minus"></i></button>
@@ -628,7 +629,7 @@
 
     <div id="modal-qr-display" class="hidden fixed z-70 inset-0 overflow-y-auto"><div class="flex items-center justify-center min-h-screen px-4"><div class="fixed inset-0 bg-gray-600 bg-opacity-75" onclick="closeModal('modal-qr-display')"></div><div class="relative bg-white rounded-lg p-8 max-w-sm w-full text-center shadow-xl"><h3 class="text-lg font-bold mb-1">QR Code Pièce</h3><p class="text-sm text-gray-500 mb-4" id="qr-part-name"></p><div id="qrcode-container" class="flex justify-center mb-4"></div><button onclick="closeModal('modal-qr-display')" class="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 w-full">Fermer</button></div></div></div>
 
-    <div id="modal-part" class="hidden fixed z-50 inset-0 overflow-y-auto"><div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 sm:items-center"><div class="fixed inset-0 bg-gray-600 bg-opacity-75" onclick="closeModal('modal-part')"></div><div class="bg-white rounded-lg w-full max-w-lg p-6 relative z-10"><form id="form-part" onsubmit="handlePartSubmit(event)"><h3 class="text-xl font-bold mb-4" id="modal-part-title">Pièce</h3><input type="hidden" id="part-edit-id"><div class="space-y-4 max-h-[70vh] overflow-y-auto pr-2"><div><label class="block text-sm font-semibold">Nom</label><input type="text" id="input-part-name" required class="w-full border p-2 rounded"></div><div class="grid grid-cols-2 gap-4"><div><label class="block text-sm font-semibold">Qté</label><input type="number" id="input-part-qty" required min="0" class="w-full border p-2 rounded"></div><div><label class="block text-sm font-semibold">Seuil d'alerte</label><input type="number" id="input-part-alert" min="0" class="w-full border p-2 rounded"></div></div><div class="grid grid-cols-2 gap-4"><div><label class="block text-sm font-semibold">Famille</label><select id="input-part-family" class="w-full border p-2 rounded bg-white"></select></div><div><label class="block text-sm font-semibold">Lieu</label><select id="input-part-location" class="w-full border p-2 rounded bg-white"></select></div></div><div><label class="block text-sm font-semibold">Description</label><textarea id="input-part-desc" class="w-full border p-2 rounded"></textarea></div><div><label class="block text-sm font-semibold">Notice PDF</label><input type="file" id="input-part-doc" accept=".pdf" onchange="previewDoc(event)" class="w-full text-sm"><p class="text-xs text-gray-500 mt-1" id="doc-status"></p></div><div><label class="block text-sm font-semibold">Photo</label><div class="flex gap-2 items-center"><input type="file" id="input-part-photo" accept="image/*" class="w-full border p-1.5 rounded text-sm bg-white" onchange="previewImage(event)"><label class="bg-indigo-50 border border-indigo-200 text-indigo-700 p-1.5 px-3 rounded cursor-pointer hover:bg-indigo-100 flex-none flex items-center shadow-sm" title="Prendre une photo"><i class="fa-solid fa-camera"></i><input type="file" accept="image/*" capture="environment" class="hidden" onchange="previewImage(event)"></label></div><div class="mt-2 flex items-center gap-3"><img id="part-photo-preview" class="hidden h-20 w-20 object-cover rounded border" alt=""><button type="button" id="btn-remove-photo" class="hidden text-xs text-red-600 hover:underline" onclick="removePhoto()">Retirer la photo</button></div></div></div><div class="flex justify-between items-center gap-2 mt-4"><button type="button" id="btn-delete-part" class="hidden text-red-600 hover:text-red-800 text-sm font-medium px-2 py-2" onclick="deletePart()"><i class="fa-solid fa-trash mr-1"></i> Supprimer</button><div class="flex gap-2 ml-auto"><button type="button" class="border px-4 py-2 rounded" onclick="closeModal('modal-part')">Annuler</button><button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded">Sauvegarder</button></div></div></form></div></div></div>
+    <div id="modal-part" class="hidden fixed z-50 inset-0 overflow-y-auto"><div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 sm:items-center"><div class="fixed inset-0 bg-gray-600 bg-opacity-75" onclick="closeModal('modal-part')"></div><div class="bg-white rounded-lg w-full max-w-lg p-6 relative z-10"><form id="form-part" onsubmit="handlePartSubmit(event)"><h3 class="text-xl font-bold mb-4" id="modal-part-title">Pièce</h3><input type="hidden" id="part-edit-id"><div class="space-y-4 max-h-[70vh] overflow-y-auto pr-2"><div><label class="block text-sm font-semibold">Nom</label><input type="text" id="input-part-name" required class="w-full border p-2 rounded"></div><div class="flex items-center bg-gray-50 border rounded p-2"><input type="checkbox" id="input-part-cable" class="h-4 w-4 text-indigo-600 border-gray-300 rounded" onchange="majUnitePiece()"><label for="input-part-cable" class="ml-2 block text-sm text-gray-900">C'est un <b>câble</b> — la quantité se compte en <b>mètres</b></label></div><div class="grid grid-cols-2 gap-4"><div><label class="block text-sm font-semibold"><span id="label-part-qty">Qté</span></label><input type="number" id="input-part-qty" required min="0" step="any" class="w-full border p-2 rounded"></div><div><label class="block text-sm font-semibold">Seuil d'alerte</label><input type="number" id="input-part-alert" min="0" step="any" class="w-full border p-2 rounded"></div></div><div class="grid grid-cols-2 gap-4"><div><label class="block text-sm font-semibold">Famille</label><select id="input-part-family" class="w-full border p-2 rounded bg-white"></select></div><div><label class="block text-sm font-semibold">Lieu</label><select id="input-part-location" class="w-full border p-2 rounded bg-white"></select></div></div><div><label class="block text-sm font-semibold">Description</label><textarea id="input-part-desc" class="w-full border p-2 rounded"></textarea></div><div><label class="block text-sm font-semibold">Notice PDF</label><input type="file" id="input-part-doc" accept=".pdf" onchange="previewDoc(event)" class="w-full text-sm"><p class="text-xs text-gray-500 mt-1" id="doc-status"></p></div><div><label class="block text-sm font-semibold">Photo</label><div class="flex gap-2 items-center"><input type="file" id="input-part-photo" accept="image/*" class="w-full border p-1.5 rounded text-sm bg-white" onchange="previewImage(event)"><label class="bg-indigo-50 border border-indigo-200 text-indigo-700 p-1.5 px-3 rounded cursor-pointer hover:bg-indigo-100 flex-none flex items-center shadow-sm" title="Prendre une photo"><i class="fa-solid fa-camera"></i><input type="file" accept="image/*" capture="environment" class="hidden" onchange="previewImage(event)"></label></div><div class="mt-2 flex items-center gap-3"><img id="part-photo-preview" class="hidden h-20 w-20 object-cover rounded border" alt=""><button type="button" id="btn-remove-photo" class="hidden text-xs text-red-600 hover:underline" onclick="removePhoto()">Retirer la photo</button></div></div></div><div class="flex justify-between items-center gap-2 mt-4"><button type="button" id="btn-delete-part" class="hidden text-red-600 hover:text-red-800 text-sm font-medium px-2 py-2" onclick="deletePart()"><i class="fa-solid fa-trash mr-1"></i> Supprimer</button><div class="flex gap-2 ml-auto"><button type="button" class="border px-4 py-2 rounded" onclick="closeModal('modal-part')">Annuler</button><button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded">Sauvegarder</button></div></div></form></div></div></div>
 
 <script>
 /* ============================================================================
@@ -707,6 +708,17 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g,
     c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
 const num = (v, def = 0) => { const n = parseInt(v, 10); return Number.isFinite(n) ? n : def; };
+
+/** Les câbles se comptent en mètres, le reste à l'unité. Une longueur peut
+ *  comporter des décimales, contrairement à un nombre de pièces. */
+const estCable = p => !!(p && p.cable);
+const numQty = (v, p) => {
+    if (!estCable(p)) return num(v);
+    const n = parseFloat(String(v).replace(',', '.'));
+    return Number.isFinite(n) ? Math.round(n * 100) / 100 : 0;
+};
+/** Quantité présentée à l'écran : « 250 m » pour un câble, « 250 » sinon. */
+const qtyTxt = (v, p) => estCable(p) ? `${numQty(v, p)} m` : String(num(v));
 
 /** Firebase renvoie tantôt un objet {clé: valeur}, tantôt un tableau à trous. */
 function toArray(v) {
@@ -886,7 +898,8 @@ function attachListeners() {
         // items est conserve tel quel (indexe par identifiant) : le convertir en
         // tableau ici obligerait a le reecrire en entier a chaque modification.
         baskets = toArray(v);
-        renderBaskets(); updateStats(); rerenderCurrentBasket();
+        reconstruireEngagements();
+        renderBaskets(); renderPartsGrid(); updateStats(); rerenderCurrentBasket();
     });
 
     // Vignettes : une seule lecture par session (elles changent rarement).
@@ -1058,6 +1071,13 @@ function renderPartsGrid() {
                 ? `<div class="w-full h-40 img-skeleton rounded-t-lg" data-lazy-part="${p.id}"></div>`
                 : `<div class="w-full h-40 bg-gray-100 rounded-t-lg flex items-center justify-center text-gray-300"><i class="fa-solid fa-image fa-3x"></i></div>`);
 
+        // Engagement sur un chantier : la pièce est comptée en stock mais déjà promise.
+        const eng = engagementDe(p.id);
+        const engHtml = eng ? `<div class="mt-2 text-xs bg-amber-50 border border-amber-200 text-amber-900 rounded px-2 py-1 truncate"
+                title="${esc(eng.detail.map(d => `${d.qty} ${d.etat} pour ${d.nom}`).join(' · '))}">
+                <i class="fa-solid fa-truck-ramp-box mr-1"></i>${eng.total} ${esc(eng.detail[0].etat)} pour ${esc(eng.detail[0].nom)}${
+                    eng.nb > 1 ? ` +${eng.nb - 1}` : ''}</div>` : '';
+
         const d = document.createElement('div');
         d.className = "card-hover bg-white rounded-lg shadow border border-gray-200 cursor-pointer overflow-hidden";
         d.onclick = () => openQuickView(p.id);
@@ -1067,9 +1087,10 @@ function renderPartsGrid() {
             </div>
             <div class="p-4">
                 <h3 class="font-bold truncate" title="${esc(p.name)}">${esc(p.name)}</h3>
-                <p class="text-xs text-gray-500 mb-3 truncate"><i class="fa-solid fa-location-dot"></i> ${esc(p.location || 'Zone non définie')}</p>
-                <div class="flex justify-between items-center border-t pt-2 mt-2">
-                    <span class="text-2xl font-bold ${low ? 'text-red-600' : ''}">${num(p.qty)}</span>
+                <p class="text-xs text-gray-500 truncate"><i class="fa-solid fa-location-dot"></i> ${esc(p.location || 'Zone non définie')}</p>
+                ${engHtml}
+                <div class="flex justify-between items-center border-t pt-2 mt-3">
+                    <span class="text-2xl font-bold ${low ? 'text-red-600' : ''}">${qtyTxt(p.qty, p)}</span>
                     ${low ? '<span class="badge bg-red-100 text-red-800"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Stock bas</span>' : ''}
                 </div>
             </div>`;
@@ -1141,8 +1162,10 @@ function openPartModal(id) {
         if (!p) return;
         document.getElementById('part-edit-id').value = p.id;
         document.getElementById('input-part-name').value = p.name || '';
-        document.getElementById('input-part-qty').value = num(p.qty);
-        document.getElementById('input-part-alert').value = num(p.alertQty);
+        document.getElementById('input-part-cable').checked = estCable(p);
+        majUnitePiece();
+        document.getElementById('input-part-qty').value = numQty(p.qty, p);
+        document.getElementById('input-part-alert').value = numQty(p.alertQty, p);
         document.getElementById('input-part-family').value = p.familyId ?? '';
 
         // Une zone supprimée du plan reste sélectionnable pour ne pas la perdre.
@@ -1166,10 +1189,19 @@ function openPartModal(id) {
     } else {
         document.getElementById('form-part').reset();
         document.getElementById('part-edit-id').value = "";
+        document.getElementById('input-part-cable').checked = false;
+        majUnitePiece();
         document.getElementById('input-part-qty').value = 0;
         document.getElementById('input-part-alert').value = 0;
         btnDel.classList.add('hidden');
     }
+}
+
+/** Reflète l'unité choisie dans le formulaire d'une pièce. */
+function majUnitePiece() {
+    const cable = document.getElementById('input-part-cable').checked;
+    document.getElementById('label-part-qty').textContent = cable ? 'Longueur (m)' : 'Qté';
+    document.getElementById('input-part-qty').placeholder = cable ? 'en mètres' : '';
 }
 
 function removePhoto() {
@@ -1188,11 +1220,14 @@ async function handlePartSubmit(e) {
     const id = existing ? existing.id : Date.now();
 
     const famVal = document.getElementById('input-part-family').value;
+    const cable = document.getElementById('input-part-cable').checked;
+    const q = v => Math.max(0, cable ? numQty(v, { cable: true }) : num(v));
     const part = {
         id,
         name: document.getElementById('input-part-name').value.trim(),
-        qty: Math.max(0, num(document.getElementById('input-part-qty').value)),
-        alertQty: Math.max(0, num(document.getElementById('input-part-alert').value)),
+        cable,
+        qty: q(document.getElementById('input-part-qty').value),
+        alertQty: q(document.getElementById('input-part-alert').value),
         familyId: famVal === '' ? null : num(famVal, null),
         location: document.getElementById('input-part-location').value,
         desc: document.getElementById('input-part-desc').value,
@@ -1327,7 +1362,7 @@ async function openQuickView(id) {
 
     document.getElementById('quick-view-id').value = p.id;
     document.getElementById('quick-view-name').textContent = p.name || '';
-    document.getElementById('quick-view-qty').textContent = num(p.qty);
+    document.getElementById('quick-view-qty').textContent = qtyTxt(p.qty, p);
     document.getElementById('quick-view-desc').textContent = p.desc || "Aucune description";
     document.getElementById('quick-view-zone-label').textContent = p.location || "Zone non définie";
 
@@ -1342,6 +1377,27 @@ async function openQuickView(id) {
     const thumb = thumbs['p' + p.id];
     if (thumb) { imgEl.src = thumb; imgEl.style.display = 'block'; noImg.style.display = 'none'; }
     else { imgEl.style.display = 'none'; noImg.style.display = 'flex'; }
+
+    // Engagements : informatif seulement, la pièce reste utilisable ailleurs.
+    const eng = engagementDe(p.id);
+    const bloc = document.getElementById('quick-view-engagement');
+    bloc.classList.toggle('hidden', !eng);
+    if (eng) {
+        bloc.innerHTML = `<div class="bg-amber-50 border border-amber-200 rounded-md p-3">
+            <p class="text-sm font-bold text-amber-900 mb-1">
+                <i class="fa-solid fa-truck-ramp-box mr-1"></i>Déjà prévu sur ${eng.nb > 1 ? eng.nb + ' chantiers' : 'un chantier'}
+            </p>
+            ${eng.detail.map(d => `<button data-open-basket="${d.id}"
+                class="block w-full text-left text-sm text-amber-900 hover:underline">
+                • <b>${d.qty}</b> ${esc(d.etat)} pour « ${esc(d.nom)} »</button>`).join('')}
+            <p class="text-xs text-amber-700 mt-2">Vous pouvez malgré tout l'utiliser ailleurs : cette mention n'est qu'un rappel.</p>
+        </div>`;
+        bloc.querySelectorAll('[data-open-basket]').forEach(el => el.onclick = () => {
+            closeModal('modal-quick-view');
+            showPage('paniers');
+            openBasketDetail(num(el.dataset.openBasket));
+        });
+    }
 
     document.getElementById('quick-view-doc-btn').classList.toggle('hidden', !p.hasDoc);
     document.getElementById('modal-quick-view').classList.remove('hidden');
@@ -1363,7 +1419,7 @@ function updateQuickQty(delta) {
     if (delta < 0 && num(p.qty) === 0) return;
 
     adjustQty(id, delta);
-    document.getElementById('quick-view-qty').textContent = num(p.qty);
+    document.getElementById('quick-view-qty').textContent = qtyTxt(p.qty, p);
     renderPartsGrid(); updateStats();
     logHistory(`Stock ${delta > 0 ? '+' : ''}${delta} sur « ${p.name} » (→ ${num(p.qty)})`);
 }
@@ -1466,7 +1522,7 @@ function openFamilyDetails(id) {
             d.className = "flex justify-between items-center p-3 border-b cursor-pointer hover:bg-gray-50 transition";
             d.onclick = () => { closeModal('modal-family-details'); openQuickView(p.id); };
             d.innerHTML = `<span class="font-medium text-gray-800">${esc(p.name)}</span>
-                <span class="text-sm text-gray-500 font-bold bg-gray-100 px-2 py-1 rounded">Stock: ${num(p.qty)}</span>`;
+                <span class="text-sm text-gray-500 font-bold bg-gray-100 px-2 py-1 rounded">Stock: ${qtyTxt(p.qty, p)}</span>`;
             l.appendChild(d);
         });
     }
@@ -1685,7 +1741,7 @@ function openZoneDetails(id) {
                 d.className = "flex justify-between items-center p-2 border-b cursor-pointer hover:bg-gray-50 ml-2";
                 d.onclick = () => { closeModal('modal-zone-details'); openQuickView(p.id); };
                 d.innerHTML = `<span class="text-sm font-medium text-gray-800">${esc(p.name)}</span>
-                    <b class="text-sm text-gray-600">Stock: ${num(p.qty)}</b>`;
+                    <b class="text-sm text-gray-600">Stock: ${qtyTxt(p.qty, p)}</b>`;
                 l.appendChild(d);
             });
         });
@@ -2421,6 +2477,45 @@ function visibleBasketItems(basket) {
     return rows;
 }
 
+/* ============================================================================
+   MATÉRIEL ENGAGÉ SUR UN CHANTIER
+   ----------------------------------------------------------------------------
+   Le matériel ajouté à un chantier sans déduction du stock reste affiché comme
+   disponible : rien n'indique qu'il est déjà promis ailleurs, et deux personnes
+   peuvent vouloir le charger. On signale donc l'engagement partout où la pièce
+   se présente — sans jamais l'interdire : un même outil peut légitimement être
+   prévu sur deux chantiers.
+   ========================================================================== */
+let engagements = new Map();          // partId -> [{ basket, item }]
+
+function reconstruireEngagements() {
+    engagements = new Map();
+    baskets.forEach(b => {
+        itemsOf(b).forEach(item => {
+            // Une ligne déduite a déjà fait baisser le stock : l'information
+            // est visible dans la quantité, inutile de la répéter.
+            if (item.deduct) return;
+            const liste = engagements.get(item.partId) || [];
+            liste.push({ basket: b, item });
+            engagements.set(item.partId, liste);
+        });
+    });
+}
+
+/** Texte d'engagement d'une pièce, ou null si elle n'est promise nulle part. */
+function engagementDe(partId) {
+    const liste = engagements.get(partId);
+    if (!liste || !liste.length) return null;
+
+    const detail = liste.map(({ basket, item }) => {
+        const etat = basket.status === 'draft' ? 'à préparer'
+                   : item.loaded ? 'chargé' : 'à charger';
+        return { nom: basket.name, etat, qty: num(item.qty), id: basket.id };
+    });
+    const total = detail.reduce((s, d) => s + d.qty, 0);
+    return { detail, total, nb: liste.length };
+}
+
 /** Cumule les lignes par pièce : une même référence demandée sur plusieurs
  *  ouvrages ne se sort qu'une fois du magasin, en une seule quantité. */
 function totauxParPiece(rows) {
@@ -2473,9 +2568,9 @@ function renderBasketTotal(basket, rows) {
                 ? `<span class="text-xs text-indigo-600 ml-2">(${t.lignes} lignes${t.ouvrages.size > 1 ? `, ${t.ouvrages.size} ouvrages` : ''})</span>` : '';
             return `<tr class="border-t border-indigo-100">
                 <td class="py-1">${esc(t.part.name)}${detail}</td>
-                <td class="py-1 text-right font-bold">${t.qty}</td>
+                <td class="py-1 text-right font-bold">${qtyTxt(t.qty, t.part)}</td>
                 ${isDraft ? '' : `<td class="py-1 text-right font-bold${t.charge !== t.qty ? ' text-red-600' : ''}">${t.charge}</td>`}
-                <td class="py-1 text-right ${manque ? 'text-red-600 font-bold' : 'text-gray-500'}">${num(t.part.qty)}${manque ? ' ⚠' : ''}</td>
+                <td class="py-1 text-right ${manque ? 'text-red-600 font-bold' : 'text-gray-500'}">${qtyTxt(t.part.qty, t.part)}${manque ? ' ⚠' : ''}</td>
             </tr>`;
         }).join('') + '</tbody></table>';
 }
@@ -2577,10 +2672,10 @@ function renderBasketItems(basket) {
                     <div class="text-sm font-bold text-gray-900 group-hover:text-indigo-600 transition">${esc(part.name)}</div>
                     ${situ}
                     ${commentHtml}
-                    <div class="text-xs ${short ? 'text-red-600 font-bold' : 'text-gray-500'}">Stock: ${num(part.qty)}${short ? ' — insuffisant' : ''}</div>
+                    <div class="text-xs ${short ? 'text-red-600 font-bold' : 'text-gray-500'}">Stock: ${qtyTxt(part.qty, part)}${short ? ' — insuffisant' : ''}</div>
                     ${affect}
                 </td>
-                <td class="px-6 py-3 text-right text-sm font-bold">${num(item.qty)}</td>
+                <td class="px-6 py-3 text-right text-sm font-bold">${qtyTxt(item.qty, part)}</td>
                 <td class="px-6 py-3 text-center">${deductStatus}</td>
                 <td class="px-6 py-3 text-right"><button data-remove-item="${item.uid}" class="text-red-600 hover:text-red-900 bg-red-50 p-2 rounded-full"><i class="fa-solid fa-trash"></i></button></td>`;
         } else {
@@ -2593,7 +2688,7 @@ function renderBasketItems(basket) {
                 <td class="px-4 py-3 cursor-pointer group" data-open-part="${part.id}">
                     <div class="text-sm font-bold text-gray-900 group-hover:text-indigo-600 transition">${esc(part.name)}</div>
                     ${situ}
-                    ${ecart ? `<div class="text-xs text-red-600 font-semibold">Demandé au départ : ${num(item.qty)}</div>` : ''}
+                    ${ecart ? `<div class="text-xs text-red-600 font-semibold">Demandé au départ : ${qtyTxt(item.qty, part)}</div>` : ''}
                     ${commentHtml}
                 </td>
                 <td class="px-4 py-3 text-right"><input type="number" value="${loadedQty}" data-load-qty="${item.uid}" min="0" title="Corrigez si vous ne chargez pas cette quantité" class="w-20 text-right border rounded p-1 text-sm font-bold ${ecart ? 'text-red-600 border-red-300' : 'text-gray-700'}"></td>
@@ -2678,8 +2773,8 @@ function printBasket() {
             <td class="nom">${esc(part.name)}</td>
             <td class="sec">${esc(fam ? fam.name : '—')}</td>
             <td class="sec">${esc(part.location || '—')}</td>
-            <td class="r">${num(item.qty)}</td>
-            ${isDraft ? '' : `<td class="r${ecart ? ' ecart' : ''}">${loadedQty}</td>`}
+            <td class="r">${qtyTxt(item.qty, part)}</td>
+            ${isDraft ? '' : `<td class="r${ecart ? ' ecart' : ''}">${qtyTxt(loadedQty, part)}</td>`}
             <td class="sec">${notes}</td>
         </tr>`;
     });
@@ -2703,8 +2798,8 @@ function printBasket() {
           <td class="nom">${esc(t.part.name)}${t.lignes > 1
               ? ` <span class="sec">(${t.lignes} lignes${t.ouvrages.size > 1 ? `, ${t.ouvrages.size} ouvrages` : ''})</span>` : ''}</td>
           <td class="sec">${esc(t.part.location || '—')}</td>
-          <td class="r">${t.qty}</td>
-          ${isDraft ? '' : `<td class="r${t.charge !== t.qty ? ' ecart' : ''}">${t.charge}</td>`}
+          <td class="r">${qtyTxt(t.qty, t.part)}</td>
+          ${isDraft ? '' : `<td class="r${t.charge !== t.qty ? ' ecart' : ''}">${qtyTxt(t.charge, t.part)}</td>`}
         </tr>`).join('')}
       </tbody></table>` : '';
 
@@ -2855,13 +2950,16 @@ function searchPartForBasket() {
             const div = document.createElement('div');
             div.className = "search-result-item flex justify-between items-center p-3 border-b cursor-pointer transition";
             div.onclick = () => openConfirmAddModal(p.id);
+            // On prévient au moment le plus utile : juste avant de l'ajouter.
+            const eng = engagementDe(p.id);
             div.innerHTML = `<div class="flex items-center gap-3 min-w-0">
                     <div class="h-8 w-8 bg-gray-100 rounded flex items-center justify-center overflow-hidden flex-none">
                         ${thumb ? `<img src="${thumb}" class="h-full w-full object-cover" alt="">` : '<i class="fa-solid fa-box text-gray-400"></i>'}
                     </div>
                     <div class="min-w-0">
                         <p class="text-sm font-bold text-gray-800 truncate">${esc(p.name)}</p>
-                        <p class="text-xs text-gray-500 truncate">${esc(p.location || 'Zone non définie')} • Stock: ${num(p.qty)}</p>
+                        <p class="text-xs text-gray-500 truncate">${esc(p.location || 'Zone non définie')} • Stock: ${qtyTxt(p.qty, p)}</p>
+                        ${eng ? `<p class="text-xs text-amber-700 truncate"><i class="fa-solid fa-truck-ramp-box mr-1"></i>${eng.total} ${esc(eng.detail[0].etat)} pour « ${esc(eng.detail[0].nom)} »${eng.nb > 1 ? ` +${eng.nb - 1}` : ''}</p>` : ''}
                     </div>
                 </div>
                 <i class="fa-solid fa-cart-plus text-indigo-500 text-xl flex-none"></i>`;
@@ -2878,7 +2976,8 @@ function openConfirmAddModal(partId) {
     document.getElementById('confirm-add-title').textContent = "Ajouter : " + part.name;
     document.getElementById('confirm-add-qty').value = 1;
     document.getElementById('confirm-add-comment').value = "";
-    document.getElementById('confirm-add-stock-info').textContent = "Stock disponible : " + num(part.qty);
+    document.getElementById('confirm-add-stock-info').textContent =
+        "Stock disponible : " + qtyTxt(part.qty, part) + (estCable(part) ? " — quantité en mètres" : "");
     document.getElementById('confirm-add-deduct').checked = true;
 
     // Rattachement à un pylône / une portée : proposé seulement s'il en existe,
@@ -3039,7 +3138,13 @@ function updateDashboardActiveBaskets() {
 
 function updateStats() {
     document.getElementById('stat-total-parts').textContent = parts.length;
-    document.getElementById('stat-total-qty').textContent = parts.reduce((s, p) => s + num(p.qty), 0);
+    // Unités et mètres ne s'additionnent pas : on les présente séparément.
+    const unites = parts.filter(p => !estCable(p)).reduce((s, p) => s + num(p.qty), 0);
+    const metres = parts.filter(estCable).reduce((s, p) => s + numQty(p.qty, p), 0);
+    document.getElementById('stat-total-qty').textContent = unites;
+    const dCable = document.getElementById('stat-total-cable');
+    dCable.textContent = metres ? `+ ${Math.round(metres)} m de câble` : '';
+    dCable.classList.toggle('hidden', !metres);
     document.getElementById('stat-total-locations').textContent = markers.length;
     updateDashboardActiveBaskets();
 
@@ -3056,7 +3161,7 @@ function updateStats() {
         div.onclick = () => { showPage('pieces'); openQuickView(p.id); };
         div.innerHTML = `<div class="min-w-0">
                 <p class="font-bold text-gray-800 truncate">${esc(p.name)}</p>
-                <p class="text-xs text-red-500 font-semibold">Stock: ${num(p.qty)} / Seuil: ${num(p.alertQty)}</p>
+                <p class="text-xs text-red-500 font-semibold">Stock: ${qtyTxt(p.qty, p)} / Seuil: ${qtyTxt(p.alertQty, p)}</p>
             </div>
             <span class="text-indigo-600 text-sm font-medium flex-none">Voir</span>`;
         list.appendChild(div);
@@ -3123,8 +3228,9 @@ function downloadExcel() {
         const family = families.find(f => f.id == p.familyId);
         return {
             "Nom de la pièce": p.name,
-            "Quantité": num(p.qty),
-            "Seuil d'alerte": num(p.alertQty),
+            "Quantité": numQty(p.qty, p),
+            "Unité": estCable(p) ? "m" : "u",
+            "Seuil d'alerte": numQty(p.alertQty, p),
             "Stock bas": num(p.qty) <= num(p.alertQty) ? "OUI" : "",
             "Famille": family ? family.name : "Sans famille",
             "Lieu de stockage": p.location || "Non défini",
@@ -3132,7 +3238,7 @@ function downloadExcel() {
         };
     });
     const ws = XLSX.utils.json_to_sheet(rows);
-    ws['!cols'] = [{ wch: 38 }, { wch: 10 }, { wch: 12 }, { wch: 10 }, { wch: 22 }, { wch: 22 }, { wch: 40 }];
+    ws['!cols'] = [{ wch: 38 }, { wch: 10 }, { wch: 7 }, { wch: 12 }, { wch: 10 }, { wch: 22 }, { wch: 22 }, { wch: 40 }];
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Inventaire");
     XLSX.writeFile(wb, `Inventaire_${teamKey.replace(/\s+/g, '_')}_${new Date().toISOString().slice(0, 10)}.xlsx`);

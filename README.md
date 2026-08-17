@@ -153,6 +153,32 @@ est proposée, à ajuster si besoin.
 existe dans les règles de désignation, mais aucune planche ne l'utilise. Ce
 domaine reste sélectionnable pour nommer les chantiers, sans proposer de chaîne.
 
+## Matériel engagé sur un chantier
+
+Le matériel ajouté à un chantier **sans déduction du stock** reste compté comme
+disponible : rien n'indiquerait qu'il est déjà promis ailleurs, et deux personnes
+pourraient vouloir le charger.
+
+Une mention le signale donc partout où la pièce se présente — carte, fiche,
+recherche d'ajout — avec la quantité, l'état (*à préparer*, *à charger*,
+*chargé*) et le **nom du chantier**, cliquable pour l'ouvrir.
+
+C'est un rappel, jamais une interdiction : un même outil peut légitimement être
+prévu sur deux chantiers, et rien n'empêche de le valider dans les deux.
+
+Les lignes **déduites du stock** n'affichent pas cette mention : la baisse de
+quantité porte déjà l'information.
+
+## Pièces comptées en mètres
+
+Une case à cocher **« C'est un câble »**, dans le formulaire d'une pièce, fait
+passer sa quantité de l'unité au **mètre**. Le champ devient « Longueur (m) »,
+accepte les décimales, et l'unité suit partout : grille, fiche, alertes,
+chantiers, total à charger, bon imprimé et export Excel (colonne *Unité*).
+
+Sur le tableau de bord, unités et mètres sont comptés séparément — les
+additionner n'aurait aucun sens.
+
 ## Bon de chantier imprimable
 
 Dans un chantier, la liste peut être triée par zone de rangement, par nom, par
