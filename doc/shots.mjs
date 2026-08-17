@@ -117,43 +117,86 @@ await page.evaluate(() => closeModal('modal-team'));
 
 // ------------------------------------------------------- Chantier de chargement
 console.log('Chantier de démonstration...');
+
+// Fenêtre de création, avec le domaine de tension
+await page.evaluate(() => { showPage('paniers'); createBasket(); });
+await wait(800);
+await page.evaluate(() => {
+    document.getElementById('input-basket-name').value = 'Ligne 225 kV — Travée 12';
+    pickOption('basket-tension-picker', 'tension', '225');
+});
+await wait(400);
+await shotEl('creer-chantier', '#modal-new-basket .bg-white');
+
 await page.evaluate(async () => {
     const w = ms => new Promise(r => setTimeout(r, ms));
-    const bid = Date.now();
-    await write('baskets/b' + bid, { id: bid, name: 'Ligne 225 kV — Travée 12', status: 'draft', createdAt: bid });
+    await handleNewBasket(new Event('submit'));
     await w(2500);
-    window.__bid = bid;
-    openBasketDetail(bid);
+    window.__bid = baskets.find(b => b.name.startsWith('Ligne 225')).id;
 });
-await wait(1500);
+await wait(2000);
 
-await page.evaluate(() => {
+await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms));
     openGroupModal();
+    await w(2200);                       // laisse le catalogue se charger
     selectGroupKind('pylone');
     document.getElementById('input-group-name').value = '1';
     pickOption('group-fonction-picker', 'fonction', 'ancrage');
     pickOption('group-chaine-picker', 'chaine', 'double');
     pickOption('group-faisceau-picker', 'faisceau', 'simple');
+    remplirChoixChaines();
+    remplirChoixCables();
+    await w(600);
+    document.getElementById('input-cable').value = 'ASTER 570';
+    majChoixCable();
+    document.getElementById('input-chain').value = '6U4H2N10';
+    document.getElementById('input-chain-qty').value = '2';
+    apercuChaine();
 });
-await wait(900);
+await wait(1200);
 await shotEl('creer-pylone', '#modal-group .bg-white');
 
+// Validation du pylône 1 : la chaîne et le câble alimentent le chantier
 await page.evaluate(async () => {
     const w = ms => new Promise(r => setTimeout(r, ms));
-    handleGroupSubmit(new Event('submit')); await w(2200);
+    window.alert = () => {};
+    handleGroupSubmit(new Event('submit'));
+    await w(11000);
+});
+await wait(1500);
+
+// Un second pylône identique : c'est ce qui rend le total utile
+await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms));
+    openGroupModal(); await w(1600);
+    selectGroupKind('pylone');
+    document.getElementById('input-group-name').value = '2';
+    pickOption('group-fonction-picker', 'fonction', 'ancrage');
+    pickOption('group-chaine-picker', 'chaine', 'double');
+    pickOption('group-faisceau-picker', 'faisceau', 'simple');
+    remplirChoixChaines(); remplirChoixCables(); await w(600);
+    document.getElementById('input-cable').value = 'ASTER 570';
+    majChoixCable();
+    document.getElementById('input-chain').value = '6U4H2N10';
+    document.getElementById('input-chain-qty').value = '1';
+    handleGroupSubmit(new Event('submit'));
+    await w(11000);
+});
+await wait(1500);
+
+// Une portée, et de l'outillage non affecté
+await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms));
     const nom = n => parts.find(p => p.name.startsWith(n)).id;
-    for (const [p, q] of [['Poulie', 2], ['Élingue', 4], ['Palan', 1]]) {
-        openConfirmAddModal(nom(p));
-        document.getElementById('confirm-add-qty').value = String(q);
-        finalizeAddToBasket(); await w(900);
-    }
-    await w(1000);
-    openGroupModal();
+    openGroupModal(); await w(1200);
     selectGroupKind('portee');
     document.getElementById('input-group-name').value = '1-2';
     pickOption('group-faisceau-picker', 'faisceau', 'double');
-    handleGroupSubmit(new Event('submit')); await w(2200);
-    for (const [p, q] of [['Manchon', 6], ['Cordage', 2]]) {
+    document.getElementById('input-chain').value = '';
+    document.getElementById('input-cable').value = '';
+    handleGroupSubmit(new Event('submit')); await w(2500);
+    for (const [p, q] of [['Poulie', 2], ['Cordage', 2]]) {
         openConfirmAddModal(nom(p));
         document.getElementById('confirm-add-qty').value = String(q);
         finalizeAddToBasket(); await w(900);
@@ -167,6 +210,14 @@ await page.evaluate(async () => {
 await wait(2500);
 await shotEl('chantier-prepare', '#modal-basket-detail .bg-white');
 
+// Le total à charger, tous ouvrages confondus
+await page.evaluate(() => {
+    document.getElementById('basket-total-body').classList.remove('hidden');
+    document.getElementById('basket-total').scrollIntoView({ block: 'end' });
+});
+await wait(800);
+await shotEl('total-a-charger', '#basket-total');
+
 await page.evaluate(() => openConfirmAddModal(parts.find(p => p.name.startsWith('Harnais')).id));
 await wait(900);
 await shotEl('ajouter-materiel', '#modal-confirm-add-basket .bg-white');
@@ -178,10 +229,11 @@ await page.evaluate(async () => {
     validateBasketDraft(); await w(2500);
     const b = baskets.find(x => x.id === window.__bid);
     const its = itemsOf(b);
-    toggleItemLoad(its[0].uid, true); await w(800);
-    toggleItemLoad(its[1].uid, true); await w(800);
-    updateLoadQty(its[2].uid, '0'); await w(800);
-    updateLoadComment(its[2].uid, 'reste au magasin'); await w(1000);
+    toggleItemLoad(its[0].uid, true); await w(700);
+    toggleItemLoad(its[1].uid, true); await w(700);
+    toggleItemLoad(its[2].uid, true); await w(700);
+    updateLoadQty(its[3].uid, '0'); await w(700);
+    updateLoadComment(its[3].uid, 'reste au magasin'); await w(900);
     openBasketDetail(window.__bid);
 });
 await wait(2500);

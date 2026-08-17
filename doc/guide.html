@@ -89,7 +89,7 @@
     préparer et charger le matériel de chantier.
   </div>
   <div class="foot">
-    Version du 15 août 2026 · Ce guide décrit toutes les fonctions de l'application.<br>
+    Version du 16 août 2026 · Ce guide décrit toutes les fonctions de l'application.<br>
     Aucune connaissance préalable n'est nécessaire.
   </div>
 </div>
@@ -107,11 +107,13 @@
   <div class="toc-item"><div class="toc-num">6</div><div class="toc-txt"><b>Le plan de l'atelier</b><span>Placer les zones de rangement</span></div></div>
   <div class="toc-item"><div class="toc-num">7</div><div class="toc-txt"><b>Préparer un chantier</b><span>Constituer la liste du matériel à emporter</span></div></div>
   <div class="toc-item"><div class="toc-num">8</div><div class="toc-txt"><b>Organiser par pylône et par portée</b><span>Regrouper le matériel ouvrage par ouvrage</span></div></div>
-  <div class="toc-item"><div class="toc-num">9</div><div class="toc-txt"><b>Charger le matériel</b><span>Pointer ce qui part réellement</span></div></div>
-  <div class="toc-item"><div class="toc-num">10</div><div class="toc-txt"><b>Imprimer le bon de chargement</b><span>Sur papier ou en PDF</span></div></div>
-  <div class="toc-item"><div class="toc-num">11</div><div class="toc-txt"><b>Scanner un QR code</b><span>Retrouver une pièce instantanément</span></div></div>
-  <div class="toc-item"><div class="toc-num">12</div><div class="toc-txt"><b>Sur le téléphone</b><span>Installer l'application, travailler sans réseau</span></div></div>
-  <div class="toc-item"><div class="toc-num">13</div><div class="toc-txt"><b>Questions fréquentes</b><span>Les situations courantes</span></div></div>
+  <div class="toc-item"><div class="toc-num">9</div><div class="toc-txt"><b>Chaînes isolantes et câbles</b><span>Laisser l'application composer le matériel</span></div></div>
+  <div class="toc-item"><div class="toc-num">10</div><div class="toc-txt"><b>Le total à charger</b><span>Ce qu'il faut sortir du magasin, tout compris</span></div></div>
+  <div class="toc-item"><div class="toc-num">11</div><div class="toc-txt"><b>Charger le matériel</b><span>Pointer ce qui part réellement</span></div></div>
+  <div class="toc-item"><div class="toc-num">12</div><div class="toc-txt"><b>Imprimer le bon de chargement</b><span>Sur papier ou en PDF</span></div></div>
+  <div class="toc-item"><div class="toc-num">13</div><div class="toc-txt"><b>Scanner un QR code</b><span>Retrouver une pièce instantanément</span></div></div>
+  <div class="toc-item"><div class="toc-num">14</div><div class="toc-txt"><b>Sur le téléphone</b><span>Installer l'application, travailler sans réseau</span></div></div>
+  <div class="toc-item"><div class="toc-num">15</div><div class="toc-txt"><b>Questions fréquentes</b><span>Les situations courantes</span></div></div>
 </div>
 
 <h3>Trois choses à savoir avant de commencer</h3>
@@ -343,19 +345,31 @@ et chaque pièce est rattachée à une zone.</p>
 d'abord la <strong>préparation</strong>, ensuite le <strong>chargement</strong>.</p>
 
 <figure>
-  <img src="captures/13-chantiers.png" alt="Liste des chantiers">
+  <img src="captures/15-chantiers.png" alt="Liste des chantiers">
   <figcaption>La liste des chantiers. Le camembert indique l'avancement du chargement</figcaption>
 </figure>
 
 <h3>Créer le chantier</h3>
 <div class="step"><div class="step-n">1</div><div>Onglet <strong>Paniers</strong>, puis <strong>Nouveau Chantier</strong>.</div></div>
 <div class="step"><div class="step-n">2</div><div>Donnez-lui un nom parlant : ligne, travée, semaine… Vous pourrez le renommer en cliquant sur son titre.</div></div>
+<div class="step"><div class="step-n">3</div><div>Indiquez le <strong>domaine de tension</strong>. Il sert à ne proposer, plus tard, que les chaînes isolantes et les câbles du domaine concerné.</div></div>
+
+<figure>
+  <img src="captures/08-creer-chantier.png" alt="Création d'un chantier" style="width:88mm;margin:0 auto;">
+  <figcaption>Le nom et le domaine de tension du chantier</figcaption>
+</figure>
+
+<div class="note">
+  <b>Si vous ne savez pas encore</b>
+  Choisissez « Non précisé ». Le chantier fonctionne normalement ; seules les
+  propositions de chaînes isolantes ne seront pas disponibles.
+</div>
 
 <h3>Ajouter du matériel</h3>
 <p>Utilisez la barre de recherche en haut de la fenêtre du chantier.</p>
 
 <figure>
-  <img src="captures/10-ajouter-materiel.png" alt="Ajouter du matériel" style="width:88mm;margin:0 auto;">
+  <img src="captures/12-ajouter-materiel.png" alt="Ajouter du matériel" style="width:88mm;margin:0 auto;">
   <figcaption>La fenêtre d'ajout de matériel</figcaption>
 </figure>
 
@@ -382,22 +396,20 @@ un pylône, une portée. C'est <strong>facultatif</strong> — sans cela, le cha
 <h3>Déclarer un ouvrage</h3>
 <p>Dans le chantier, bouton <strong>Pylône / Portée</strong>.</p>
 
-<figure>
-  <img src="captures/08-creer-pylone.png" alt="Créer un pylône" style="width:88mm;margin:0 auto;">
-  <figcaption>La création d'un pylône</figcaption>
-</figure>
-
 <table>
   <tr><td class="k">Pylône</td><td>Numéro, fonction (<strong>ancrage</strong> ou <strong>alignement</strong>), chaîne (<strong>simple</strong>, <strong>double</strong> ou <strong>triple</strong>) et faisceau (<strong>simple</strong> ou <strong>double</strong>).</td></tr>
   <tr><td class="k">Portée</td><td>Numéro et faisceau seulement. Les champs fonction et chaîne disparaissent, ils n'ont pas lieu d'être.</td></tr>
 </table>
+
+<p>Deux champs facultatifs suivent — le <strong>câble</strong> et la <strong>chaîne isolante</strong> —
+qui permettent de laisser l'application composer le matériel. Ils font l'objet du chapitre suivant.</p>
 
 <h3>Y rattacher le matériel</h3>
 <p>L'ouvrage que vous venez de créer devient celui auquel les ajouts se rattachent : déclarez le
 pylône 1, ajoutez son outillage, puis passez au suivant. Rien à resélectionner à chaque fois.</p>
 
 <figure>
-  <img src="captures/09-chantier-prepare.png" alt="Chantier organisé par ouvrages">
+  <img src="captures/10-chantier-prepare.png" alt="Chantier organisé par ouvrages">
   <figcaption>Le matériel regroupé sous chaque ouvrage, avec ses caractéristiques rappelées</figcaption>
 </figure>
 
@@ -416,9 +428,99 @@ pylône 1, ajoutez son outillage, puis passez au suivant. Rien à resélectionne
 </div>
 </section>
 
-<!-- ============================ 9. CHARGEMENT ============================ -->
+<!-- ==================== 9. CHAÎNES ISOLANTES ET CÂBLES ==================== -->
 <section>
-<h2>9. Charger le matériel</h2>
+<h2>9. Chaînes isolantes et câbles</h2>
+
+<p>En déclarant un pylône, l'application peut composer elle-même le matériel à partir du
+<strong>catalogue RTE des matériels d'équipement de lignes aériennes</strong>. C'est facultatif :
+un ouvrage se déclare très bien sans.</p>
+
+<figure>
+  <img src="captures/09-creer-pylone.png" alt="Déclaration d'un pylône avec chaîne et câble" style="width:78mm;margin:0 auto;">
+  <figcaption>Un pylône d'ancrage 225 kV, avec son câble et sa chaîne isolante</figcaption>
+</figure>
+
+<h3>Le câble</h3>
+<p>Choisissez le câble porté par l'ouvrage. Seuls ceux du domaine de tension du chantier sont
+proposés, conducteurs de phase et câbles de garde séparés. L'application en déduit le matériel
+d'accrochage :</p>
+
+<table>
+  <tr><td class="k">Pylône d'ancrage</td><td>le <strong>manchon d'ancrage</strong> du câble.</td></tr>
+  <tr><td class="k">Pylône d'alignement<br>Portée</td><td>les <strong>pinces de suspension</strong> compatibles. S'il en existe plusieurs, choisissez celle que vous utilisez.</td></tr>
+</table>
+
+<p>La quantité proposée suit le faisceau — 2 pour un faisceau double — et reste modifiable.</p>
+
+<h3>La chaîne isolante</h3>
+<p>La liste ne contient que les chaînes qui correspondent réellement à ce que vous venez de saisir :
+la tension du chantier, l'ancrage ou la suspension, le nombre de files et le faisceau. Les chaînes
+en verre et les chaînes à isolateurs composites sont présentées séparément.</p>
+
+<p>Indiquez le <strong>nombre de chaînes</strong> : l'aperçu affiche aussitôt le matériel qui sera
+ajouté, quantités multipliées.</p>
+
+<div class="note">
+  <b>Ce qui est ajouté</b>
+  Tout le matériel composant la chaîne — rotules, cornes, isolateurs, ferrures — rattaché à
+  l'ouvrage, avec la mention de la chaîne d'origine dans la colonne des observations.
+</div>
+
+<div class="warn">
+  <b>Les références absentes sont créées à zéro</b>
+  Si une référence du catalogue n'existe pas encore dans l'inventaire, elle est créée
+  automatiquement avec une <strong>quantité de 0</strong>. La liste s'affiche à l'écran :
+  complétez ces quantités depuis l'onglet Pièces, sinon elles apparaîtront en stock insuffisant.
+</div>
+
+<div class="tip">
+  <b>Les noms sont rapprochés automatiquement</b>
+  Le catalogue écrit « BS 100 », l'atelier « BS100 » ; « PM 30 400 » contre « PM 30/400 ».
+  Les espaces et séparateurs sont ignorés lors du rapprochement, donc votre matériel existant
+  est bien reconnu.
+</div>
+
+<div class="warn">
+  <b>Deux points à vérifier</b>
+  Le manchon est proposé sous sa désignation de base (<strong>MA</strong> suivi du câble) : les
+  variantes allongée, réduite ou étagée dépendent du cas d'emploi. Et le domaine <strong>150 kV</strong>
+  ne propose aucune chaîne — le catalogue n'en contient pas.
+</div>
+</section>
+
+<!-- ======================== 10. TOTAL À CHARGER ======================== -->
+<section>
+<h2>10. Le total à charger</h2>
+
+<p>Un chantier réparti sur plusieurs pylônes répète les mêmes références d'un ouvrage à l'autre.
+La liste détaillée dit <em>où</em> va chaque pièce ; elle ne dit pas <em>combien</em> en sortir
+du magasin. C'est le rôle du bandeau <strong>Total à charger</strong>, en bas du chantier.</p>
+
+<figure>
+  <img src="captures/11-total-a-charger.png" alt="Total à charger">
+  <figcaption>Les lignes cumulées par pièce, avec le stock disponible en regard</figcaption>
+</figure>
+
+<p>Cliquez sur le bandeau pour le déplier. Chaque ligne indique :</p>
+<ul>
+  <li>la quantité <strong>totale</strong> à sortir, tous ouvrages confondus ;</li>
+  <li>le nombre de lignes et d'ouvrages cumulés — <em>« 2 lignes, 2 ouvrages »</em> ;</li>
+  <li>le <strong>stock disponible</strong>, suivi d'un <strong>⚠</strong> s'il ne suffit pas.</li>
+</ul>
+
+<div class="tip">
+  <b>À regarder avant de partir</b>
+  Les ⚠ signalent ce qui va manquer. Mieux vaut le voir au magasin qu'au pied du pylône.
+</div>
+
+<p>Ce récapitulatif figure aussi en fin de bon imprimé, avec une case à cocher par ligne :
+le détail par ouvrage sert sur le chantier, le total sert à préparer le chargement.</p>
+</section>
+
+<!-- ============================ 11. CHARGEMENT ============================ -->
+<section>
+<h2>11. Charger le matériel</h2>
 
 <p>Quand la liste est prête, bouton <strong>Valider &amp; Charger</strong>. Le chantier passe en
 <strong>Chargement</strong> et les quantités marquées « Déduire » sont retirées de l'inventaire.</p>
@@ -431,7 +533,7 @@ pylône 1, ajoutez son outillage, puis passez au suivant. Rien à resélectionne
 </div>
 
 <figure>
-  <img src="captures/11-chantier-chargement.png" alt="Chantier en chargement">
+  <img src="captures/13-chantier-chargement.png" alt="Chantier en chargement">
   <figcaption>Le mode chargement : on coche au fur et à mesure</figcaption>
 </figure>
 
@@ -447,6 +549,9 @@ rappelle ce qui était prévu : l'écart reste visible, à l'écran comme sur le
 <p>Le pourcentage en haut de la fenêtre et sur la carte du chantier suit l'avancement.
 Quand tout est chargé, le bouton <strong>Chantier terminé</strong> le clôture et le retire de la liste.</p>
 
+<p>Pendant le chargement, le bandeau <strong>Total à charger</strong> affiche deux colonnes :
+ce qui était demandé et ce qui part réellement, l'écart en rouge.</p>
+
 <div class="warn">
   <b>Terminé ou supprimé, ce n'est pas la même chose</b>
   <strong>Chantier terminé</strong> clôture le chantier : le matériel est parti, le stock reste déduit.
@@ -456,7 +561,7 @@ Quand tout est chargé, le bouton <strong>Chantier terminé</strong> le clôture
 
 <!-- ============================ 10. IMPRESSION ============================ -->
 <section>
-<h2>10. Imprimer le bon de chargement</h2>
+<h2>12. Imprimer le bon de chargement</h2>
 
 <p>Dans un chantier, bouton <strong>Imprimer</strong>. Le document reprend exactement
 ce que vous avez à l'écran : le <strong>tri</strong> choisi et les <strong>filtres</strong> actifs.</p>
@@ -470,7 +575,7 @@ ce que vous avez à l'écran : le <strong>tri</strong> choisi et les <strong>fil
 </table>
 
 <figure>
-  <img src="captures/12-bon-imprime.png" alt="Bon de chargement imprimé">
+  <img src="captures/14-bon-imprime.png" alt="Bon de chargement imprimé">
   <figcaption>Le bon de chargement, ici regroupé par ouvrage</figcaption>
 </figure>
 
@@ -487,13 +592,13 @@ les observations et un emplacement pour le visa. Les en-têtes de colonnes se r�
 
 <!-- ============================ 11. SCAN ============================ -->
 <section>
-<h2>11. Scanner un QR code</h2>
+<h2>13. Scanner un QR code</h2>
 
 <p>Chaque pièce possède un QR code. Collé sur le bac ou l'étagère, il permet d'ouvrir
 sa fiche instantanément, sans la chercher dans la liste.</p>
 
 <figure>
-  <img src="captures/14-scan.png" alt="Le scanner">
+  <img src="captures/16-scan.png" alt="Le scanner">
   <figcaption>L'onglet Scan. Autorisez l'accès à la caméra à la première utilisation</figcaption>
 </figure>
 
@@ -515,12 +620,12 @@ Pratique pour un inventaire annuel ou une commande.</p>
 
 <!-- ============================ 12. TÉLÉPHONE ============================ -->
 <section>
-<h2>12. Sur le téléphone</h2>
+<h2>14. Sur le téléphone</h2>
 
 <p>L'application est prévue pour être utilisée en atelier et en chantier, directement sur le téléphone.</p>
 
 <figure>
-  <img src="captures/15-mobile.png" class="phone" alt="L'application sur téléphone">
+  <img src="captures/17-mobile.png" class="phone" alt="L'application sur téléphone">
   <figcaption>L'affichage s'adapte automatiquement à l'écran</figcaption>
 </figure>
 
@@ -548,7 +653,7 @@ Pratique pour un inventaire annuel ou une commande.</p>
 
 <!-- ============================ 13. FAQ ============================ -->
 <section>
-<h2>13. Questions fréquentes</h2>
+<h2>15. Questions fréquentes</h2>
 
 <div class="faq">
   <div class="q">Je ne retrouve pas une pièce que je viens d'ajouter.</div>

@@ -9,9 +9,9 @@ installer ni à compiler.
 
 ## Guide d'utilisation
 
-**[Guide-Invent-RTE.pdf](Guide-Invent-RTE.pdf)** — 25 pages illustrées, destinées à
+**[Guide-Invent-RTE.pdf](Guide-Invent-RTE.pdf)** — 29 pages illustrées, destinées à
 quelqu'un qui découvre l'application : chaque écran, chaque bouton, et les
-situations courantes en fin de document.
+situations courantes en fin de document. Mis à jour le 16/08/2026.
 
 Ses sources sont dans [`doc/`](doc/), avec la marche à suivre pour le régénérer.
 Les captures sont prises sur un jeu de données fictif, jamais sur un inventaire

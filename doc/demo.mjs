@@ -24,16 +24,22 @@ export const PIECES = [
     ['Palan à chaîne 1,5 t',      'Outillage de levage', 'Magasin outillage',  6, 2],
     ['Élingue 4 m',               'Outillage de levage', 'Magasin outillage', 18, 6],
     ['Pince à sertir 240',        'Connectique',         'Atelier',            4, 2],
-    ['Manchon de jonction 228',   'Connectique',         'Atelier',           25, 10],
-    ['Raccord bimétal 148',       'Connectique',         'Atelier',            3, 8],
-    ['Chaîne isolante 63 kV',     'Isolateurs',          'Aire de stockage',   9, 3],
-    ['Isolateur capot-tige',      'Isolateurs',          'Aire de stockage',  40, 12],
     ['Perche de terre 63/90 kV',  'Sécurité',            'Local sécurité',     5, 2],
     ['Harnais antichute',         'Sécurité',            'Local sécurité',    11, 4],
     ['Gants isolants classe 2',   'Sécurité',            'Local sécurité',     2, 6],
     ['Cordage 12 mm (50 m)',      'Câbles',              'Aire de stockage',   7, 3],
-    ['Conducteur ASTER 228',      'Câbles',              'Aire de stockage', 320, 100],
-    ['Câble de garde 59,7',       'Câbles',              'Aire de stockage', 150, 50],
+
+    // Références du catalogue RTE : elles permettent de montrer la
+    // correspondance qui s'opère quand une chaîne est ajoutée à un pylône.
+    ['RL 15 900',                 'Connectique',         'Magasin outillage', 14, 4],
+    ['CC 15 A',                   'Connectique',         'Magasin outillage', 30, 8],
+    ['PT 15 400',                 'Connectique',         'Magasin outillage', 26, 8],
+    ['OE 100',                    'Connectique',         'Magasin outillage', 48, 12],
+    ['BS 100',                    'Connectique',         'Magasin outillage', 44, 12],
+    ['C 25 N1',                   'Isolateurs',          'Aire de stockage',  12, 4],
+    ['AP 60 C1',                  'Isolateurs',          'Aire de stockage',   9, 3],
+    ['F 100',                     'Isolateurs',          'Aire de stockage', 240, 60],
+    ['MA ASTER 570',              'Connectique',         'Atelier',            8, 2],
 ];
 
 /** Plan d'atelier schématique, dessiné dans le navigateur (aucun plan réel). */
