@@ -443,7 +443,10 @@
                             <span id="basket-status-badge" class="text-xs font-bold px-2 py-0.5 rounded bg-gray-200 text-gray-600">Brouillon</span>
                          </div>
                     </div>
-                    <button onclick="closeModal('modal-basket-detail')" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-times fa-lg"></i></button>
+                    <div class="flex items-center gap-2">
+                        <button onclick="copierLienPanier()" title="Copier un lien direct vers ce chantier" class="text-gray-400 hover:text-indigo-600 px-2"><i class="fa-solid fa-link fa-lg"></i></button>
+                        <button onclick="closeModal('modal-basket-detail')" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-times fa-lg"></i></button>
+                    </div>
                 </div>
                 <div id="basket-search-container" class="px-6 py-4 bg-white border-b relative">
                     <div class="relative"><input type="text" id="basket-search-input" oninput="searchPartForBasket()" class="w-full border p-3 pl-10 rounded shadow-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="Ajouter une pièce (Recherche)..."><div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i class="fa-solid fa-plus text-gray-400"></i></div></div>
@@ -900,6 +903,7 @@ function attachListeners() {
         baskets = toArray(v);
         reconstruireEngagements();
         renderBaskets(); renderPartsGrid(); updateStats(); rerenderCurrentBasket();
+        ouvrirPanierDemande();
     });
 
     // Vignettes : une seule lecture par session (elles changent rarement).
@@ -976,6 +980,59 @@ function switchTeam(key) {
     renderAll();
     if (db) { setSyncState('wait'); attachListeners(); }
     toast("Équipe : " + key, 'ok');
+}
+
+/* ============================================================================
+   LIEN DIRECT VERS UN CHANTIER
+   ----------------------------------------------------------------------------
+   ?equipe=<cle>&panier=<id> ouvre le chantier voulu au chargement. Sert au
+   suivi de preparation, qui renvoie ici depuis son onglet Chargement.
+   L'ouverture attend que les chantiers soient charges : elle est retentee a
+   chaque mise a jour de la liste, puis abandonnee au bout de quelques secondes.
+   ========================================================================== */
+let panierDemande = null;
+let equipeDemandee = null;
+(function lireLienEntrant() {
+    const q = new URLSearchParams(location.search);
+    panierDemande  = q.get('panier');
+    equipeDemandee = q.get('equipe');
+    // Ce bloc s'execute avant l'initialisation : changer teamKey ici suffit a
+    // ce que le cache, le libelle et les ecoutes partent sur la bonne equipe.
+    // Une equipe inconnue est rattrapee plus bas par l'ecoute de "teams".
+    if (equipeDemandee && equipeDemandee !== teamKey) {
+        teamKey = equipeDemandee;
+        try { localStorage.setItem('inventrte.team', equipeDemandee); } catch (e) {}
+    }
+    if (panierDemande) {
+        // On nettoie l'adresse : un rechargement ne doit pas rouvrir le chantier.
+        try { history.replaceState(null, '', location.pathname); } catch (e) {}
+        setTimeout(() => {
+            if (panierDemande) { toast("Chantier introuvable dans cette equipe", 'warn'); panierDemande = null; }
+        }, 8000);
+    }
+})();
+
+function ouvrirPanierDemande() {
+    if (!panierDemande) return;
+    const b = baskets.find(x => String(x.id) === String(panierDemande));
+    if (!b) return;                      // pas encore charge : on retentera
+    panierDemande = null;
+    showPage('paniers');
+    openBasketDetail(b.id);
+}
+
+function copierLienPanier() {
+    const b = baskets.find(x => x.id === currentBasketId);
+    if (!b) { toast("Chantier introuvable", 'err'); return; }
+    const url = location.origin + location.pathname
+              + '?equipe=' + encodeURIComponent(teamKey)
+              + '&panier=' + encodeURIComponent(b.id);
+    const fini = () => toast("Lien du chantier copie", 'ok');
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(url).then(fini).catch(() => prompt("Copiez ce lien :", url));
+    } else {
+        prompt("Copiez ce lien :", url);
+    }
 }
 
 /* ============================================================================
