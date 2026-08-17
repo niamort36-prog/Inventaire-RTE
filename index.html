@@ -474,6 +474,21 @@
                     </table>
                     <div id="basket-empty-list-msg" class="text-center py-8 text-gray-400 hidden">Aucun élément trouvé.</div>
                 </div>
+
+                <!-- Total à charger, toutes lignes confondues : c'est ce qu'on
+                     sort du magasin, indépendamment de l'ouvrage de destination. -->
+                <div id="basket-total" class="hidden border-t bg-indigo-50 flex-none">
+                    <button type="button" onclick="toggleBasketTotal()" class="w-full px-6 py-2 flex justify-between items-center text-left hover:bg-indigo-100 transition">
+                        <span class="text-sm font-bold text-indigo-900">
+                            <i class="fa-solid fa-list-check mr-2"></i>Total à charger
+                        </span>
+                        <span class="flex items-center gap-2">
+                            <span id="basket-total-summary" class="text-xs text-indigo-700"></span>
+                            <i id="basket-total-caret" class="fa-solid fa-chevron-down text-xs text-indigo-500"></i>
+                        </span>
+                    </button>
+                    <div id="basket-total-body" class="hidden px-6 pb-3 max-h-52 overflow-y-auto"></div>
+                </div>
                 <div class="bg-gray-50 px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4 border-t">
                     <button onclick="deleteBasket()" class="text-red-600 hover:text-red-800 text-sm font-medium">Supprimer le chantier</button>
                     <div class="flex gap-2 w-full sm:w-auto" id="basket-footer-actions"></div>
@@ -2406,6 +2421,65 @@ function visibleBasketItems(basket) {
     return rows;
 }
 
+/** Cumule les lignes par pièce : une même référence demandée sur plusieurs
+ *  ouvrages ne se sort qu'une fois du magasin, en une seule quantité. */
+function totauxParPiece(rows) {
+    const par = new Map();
+    rows.forEach(({ item, part }) => {
+        if (!part) return;
+        const t = par.get(part.id) || { part, qty: 0, charge: 0, lignes: 0, ouvrages: new Set() };
+        t.qty += num(item.qty);
+        t.charge += item.loadedQty === undefined ? num(item.qty) : num(item.loadedQty);
+        t.lignes++;
+        if (item.groupId) t.ouvrages.add(item.groupId);
+        par.set(part.id, t);
+    });
+    return [...par.values()].sort((a, b) =>
+        String(a.part.name).localeCompare(String(b.part.name), 'fr', { sensitivity: 'base' }));
+}
+
+function toggleBasketTotal() {
+    const body = document.getElementById('basket-total-body');
+    const caret = document.getElementById('basket-total-caret');
+    const ouvert = body.classList.toggle('hidden');
+    caret.className = `fa-solid fa-chevron-${ouvert ? 'down' : 'up'} text-xs text-indigo-500`;
+}
+
+function renderBasketTotal(basket, rows) {
+    const bloc = document.getElementById('basket-total');
+    const corps = document.getElementById('basket-total-body');
+    const totaux = totauxParPiece(rows);
+
+    bloc.classList.toggle('hidden', totaux.length === 0);
+    if (!totaux.length) return;
+
+    const isDraft = basket.status === 'draft';
+    const articles = totaux.reduce((s, t) => s + t.qty, 0);
+    const regroupees = totaux.filter(t => t.lignes > 1).length;
+    document.getElementById('basket-total-summary').textContent =
+        `${totaux.length} référence(s) · ${articles} article(s)` +
+        (regroupees ? ` · ${regroupees} cumulée(s)` : '');
+
+    corps.innerHTML = `<table class="min-w-full text-sm">
+        <thead><tr class="text-xs text-indigo-800 uppercase">
+            <th class="text-left py-1">Pièce</th>
+            <th class="text-right py-1 w-24">${isDraft ? 'À charger' : 'Demandé'}</th>
+            ${isDraft ? '' : '<th class="text-right py-1 w-24">À charger</th>'}
+            <th class="text-right py-1 w-28">Stock</th>
+        </tr></thead><tbody>` +
+        totaux.map(t => {
+            const manque = num(t.part.qty) < t.qty;
+            const detail = t.lignes > 1
+                ? `<span class="text-xs text-indigo-600 ml-2">(${t.lignes} lignes${t.ouvrages.size > 1 ? `, ${t.ouvrages.size} ouvrages` : ''})</span>` : '';
+            return `<tr class="border-t border-indigo-100">
+                <td class="py-1">${esc(t.part.name)}${detail}</td>
+                <td class="py-1 text-right font-bold">${t.qty}</td>
+                ${isDraft ? '' : `<td class="py-1 text-right font-bold${t.charge !== t.qty ? ' text-red-600' : ''}">${t.charge}</td>`}
+                <td class="py-1 text-right ${manque ? 'text-red-600 font-bold' : 'text-gray-500'}">${num(t.part.qty)}${manque ? ' ⚠' : ''}</td>
+            </tr>`;
+        }).join('') + '</tbody></table>';
+}
+
 function renderBasketItems(basket) {
     if (!basket) return;
     const tbody = document.getElementById('basket-items-list');
@@ -2547,6 +2621,8 @@ function renderBasketItems(basket) {
         el.onclick = ev => { ev.stopPropagation(); setActiveGroup(el.dataset.activateGroup); });
     tbody.querySelectorAll('[data-edit-group]').forEach(el =>
         el.onclick = ev => { ev.stopPropagation(); openGroupModal(el.dataset.editGroup); });
+
+    renderBasketTotal(basket, rows.filter(r => !r.emptyGroup));
 }
 
 /* ------------------------------------------------------ Impression / PDF */
@@ -2608,6 +2684,30 @@ function printBasket() {
         </tr>`;
     });
 
+    // Récapitulatif : ce qu'il faut sortir du magasin au total. Utile dès qu'une
+    // référence revient sur plusieurs ouvrages — on la charge en une fois.
+    const totaux = totauxParPiece(rows);
+    const cumulees = totaux.filter(t => t.lignes > 1).length;
+    const recap = totaux.length ? `
+      <h2 class="recap-titre">Total à charger
+        <span class="recap-note">${totaux.length} référence(s) · ${totaux.reduce((s, t) => s + t.qty, 0)} article(s)${
+            cumulees ? ` · ${cumulees} cumulée(s) sur plusieurs ouvrages` : ''}</span>
+      </h2>
+      <table class="recap"><thead><tr>
+        <th class="c">Fait</th><th>Pièce</th><th>Zone</th>
+        <th class="r">${isDraft ? 'À charger' : 'Demandé'}</th>
+        ${isDraft ? '' : '<th class="r">À charger</th>'}
+      </tr></thead><tbody>
+      ${totaux.map(t => `<tr>
+          <td class="c"><span class="box"></span></td>
+          <td class="nom">${esc(t.part.name)}${t.lignes > 1
+              ? ` <span class="sec">(${t.lignes} lignes${t.ouvrages.size > 1 ? `, ${t.ouvrages.size} ouvrages` : ''})</span>` : ''}</td>
+          <td class="sec">${esc(t.part.location || '—')}</td>
+          <td class="r">${t.qty}</td>
+          ${isDraft ? '' : `<td class="r${t.charge !== t.qty ? ' ecart' : ''}">${t.charge}</td>`}
+        </tr>`).join('')}
+      </tbody></table>` : '';
+
     const dateStr = new Date().toLocaleDateString('fr-FR', {
         weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
     const titre = `${basket.name} — ${teamKey}`;
@@ -2633,6 +2733,10 @@ function printBasket() {
   .ecart { color: #B91C1C; font-weight: bold; }
   .box { display: inline-block; width: 14px; height: 14px; border: 1.5px solid #666; border-radius: 3px; line-height: 13px; font-size: 11px; }
   .box.on { background: #16A34A; border-color: #16A34A; color: #fff; }
+  .recap-titre { font-size: 14px; margin: 26px 0 8px; padding-bottom: 5px;
+                 border-bottom: 2px solid #4F46E5; color: #312E81; break-after: avoid; }
+  .recap-note { font-weight: normal; font-size: 11px; color: #666; margin-left: 8px; }
+  table.recap { break-before: auto; }
   footer { margin-top: 26px; font-size: 11px; color: #666; display: flex; justify-content: space-between; gap: 20px; }
   .sign { margin-top: 30px; border-top: 1px solid #999; width: 240px; padding-top: 4px; }
   .barre { position: sticky; top: 0; background: #fff; padding-bottom: 14px; }
@@ -2669,6 +2773,7 @@ function printBasket() {
       : sortMode === 'family' ? 'famille' : 'pylône / portée'}` : ''}
 </div>
 <table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table>
+${recap}
 <footer>
   <span>Invent'RTE — ${esc(teamKey)}</span>
   <span class="sign">Visa / observations</span>

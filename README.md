@@ -164,6 +164,15 @@ intertitre : sur le papier, on suit l'atelier zone par zone. Le bon comprend une
 case à cocher par ligne, les quantités prévues et chargées (avec les écarts en
 rouge), les observations et un emplacement pour le visa.
 
+En bas du chantier, un bandeau **Total à charger** cumule les lignes par pièce :
+une même référence demandée sur plusieurs pylônes ne se sort qu'une fois du
+magasin, en une seule quantité. Il indique le nombre de lignes et d'ouvrages
+concernés, et signale d'un ⚠ les pièces dont le stock ne suffit pas.
+
+Ce récapitulatif figure aussi en fin de bon imprimé, avec une case à cocher par
+ligne : c'est la liste de préparation au magasin, quand le détail par ouvrage
+sert sur le chantier.
+
 Pour obtenir un PDF, choisir « Enregistrer au format PDF » comme destination dans
 la fenêtre d'impression. Si le navigateur bloque les fenêtres pop-up — courant
 sur mobile — l'impression est déclenchée directement, sans nouvel onglet.
