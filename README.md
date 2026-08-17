@@ -125,6 +125,30 @@ ne couvre pas sont inscrites dans le catalogue (`F 100` → `F100 DC`,
 Une référence sans correspondance est **créée avec une quantité de 0**, signalée
 à l'écran, et à compléter depuis l'onglet Pièces.
 
+### Câble, manchons et pinces
+
+Un ouvrage peut aussi porter un **câble**, choisi parmi ceux du domaine de
+tension du chantier — conducteurs de phase et câbles de garde présentés
+séparément. Le matériel qui en découle suit la fonction de l'ouvrage :
+
+| Ouvrage | Matériel proposé |
+|---|---|
+| Pylône d'**ancrage** | le **manchon d'ancrage** du câble (`MA <câble>`) |
+| Pylône d'**alignement**, **portée** | les **pinces de suspension** compatibles |
+
+La quantité proposée suit le faisceau (2 pour un faisceau double), et reste
+corrigeable avant validation.
+
+La table câble → pinces a été **relevée à la main** sur les planches L105145
+(pages 151, 153 et 154), et non extraite automatiquement : sur ces tableaux à
+cellules fusionnées, la détection automatique attribuait des pinces au câble
+voisin — `P4HT` prêtée à ASTER 228, `P46G` à ASTER 570. Sur du matériel qui
+tient un conducteur, une correspondance approximative n'est pas acceptable.
+
+Les variantes de manchon (`MAL` allongé, `MAR` réduit, `MAE` étagé, et la charge
+— « MA 15 ASTER 570 ») relèvent du cas d'emploi : seule la désignation de base
+est proposée, à ajuster si besoin.
+
 **Une limite :** le catalogue ne contient aucune chaîne en **150 kV** — le code
 existe dans les règles de désignation, mais aucune planche ne l'utilise. Ce
 domaine reste sélectionnable pour nommer les chantiers, sans proposer de chaîne.

@@ -380,6 +380,26 @@
                         </div>
                     </div>
 
+                    <!-- Câble porté par l'ouvrage : il détermine le manchon
+                         d'ancrage ou la pince de suspension. Facultatif. -->
+                    <div class="mb-5 border-t pt-4">
+                        <label class="block text-sm font-semibold mb-1">
+                            Câble <span class="font-normal text-gray-400">(facultatif)</span>
+                        </label>
+                        <select id="input-cable" class="w-full border p-2 rounded bg-white text-sm mb-2">
+                            <option value="">— Aucun —</option>
+                        </select>
+                        <div id="cable-choice" class="hidden">
+                            <label class="block text-xs font-semibold mb-1 text-gray-600" id="cable-piece-label">Pince de suspension</label>
+                            <select id="input-cable-piece" class="w-full border p-2 rounded bg-white text-sm mb-2"></select>
+                            <div class="flex items-center gap-2">
+                                <label class="text-sm font-semibold whitespace-nowrap">Quantité</label>
+                                <input type="number" id="input-cable-qty" value="1" min="1" class="w-20 border p-2 rounded text-sm">
+                                <span class="text-xs text-gray-500" id="cable-qty-hint"></span>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Chaînes isolantes du catalogue RTE, filtrées sur les
                          caractéristiques saisies ci-dessus. Entièrement facultatif. -->
                     <div class="mb-5 border-t pt-4" id="group-chain-block">
@@ -1783,6 +1803,7 @@ function groupLabel(g) {
     const carac = g.kind === 'portee'
         ? [FAISCEAUX[g.faisceau]]
         : [FONCTIONS[g.fonction], CHAINES[g.chaine], FAISCEAUX[g.faisceau]];
+    if (g.cable) carac.push(g.cable);
     const suite = carac.filter(Boolean).join(' · ');
     return suite ? `${tete.trim()} — ${suite}` : tete.trim();
 }
@@ -1812,8 +1833,11 @@ function openGroupModal(gid) {
     // il aurait déjà été ajouté et serait ajouté une seconde fois.
     document.getElementById('input-chain').value = '';
     document.getElementById('input-chain-qty').value = '1';
+    document.getElementById('input-cable').value = g ? (g.cable || '') : '';
     document.getElementById('group-chain-block').classList.toggle('hidden', !!g);
-    if (!g) chargerCatalogue().then(() => remplirChoixChaines());
+    document.getElementById('cable-choice').classList.add('hidden');
+    if (!g) chargerCatalogue().then(() => { remplirChoixChaines(); remplirChoixCables(); });
+    else chargerCatalogue().then(() => remplirChoixCables());
 
     if (!g) setTimeout(() => document.getElementById('input-group-name').focus(), 50);
 }
@@ -1863,6 +1887,9 @@ function handleGroupSubmit(e) {
         faisceau: document.getElementById('group-faisceau-picker').dataset.value || 'simple',
         createdAt: existing ? num(existing.createdAt, Date.now()) : Date.now()
     };
+    const cableChoisi = document.getElementById('input-cable').value
+        || (existing && existing.cable) || '';
+    if (cableChoisi) data.cable = cableChoisi;
     if (kind === 'pylone') {
         data.fonction = document.getElementById('group-fonction-picker').dataset.value || 'alignement';
         data.chaine = document.getElementById('group-chaine-picker').dataset.value || 'simple';
@@ -1874,12 +1901,31 @@ function handleGroupSubmit(e) {
     closeModal('modal-group');
     document.getElementById('sort-basket').value = 'group';
 
+    // Le matériel n'est ajouté qu'à la création : sur une modification, il
+    // aurait déjà été ajouté et le serait une seconde fois.
     const designation = existing ? '' : document.getElementById('input-chain').value;
-    if (designation && catalogue) {
-        const nb = Math.max(1, num(document.getElementById('input-chain-qty').value, 1));
-        toast("Ajout du matériel de la chaîne…");
-        ajouterChaineAuChantier(basket, gid, designation, nb).then(({ ajoutes, crees }) => {
-            logHistory(`${groupShortLabel(data)} : chaîne ${designation}${nb > 1 ? ' ×' + nb : ''} (${ajoutes} références)`);
+    const cable = existing ? '' : document.getElementById('input-cable').value;
+
+    if ((designation || cable) && catalogue) {
+        toast("Ajout du matériel…");
+        (async () => {
+            let ajoutes = 0;
+            const crees = [];
+            if (designation) {
+                const nb = Math.max(1, num(document.getElementById('input-chain-qty').value, 1));
+                const r = await ajouterChaineAuChantier(basket, gid, designation, nb);
+                ajoutes += r.ajoutes;
+                crees.push(...r.crees);
+                logHistory(`${groupShortLabel(data)} : chaîne ${designation}${nb > 1 ? ' ×' + nb : ''} (${r.ajoutes} références)`);
+            }
+            if (cable) {
+                const ref = document.getElementById('input-cable-piece').value;
+                const nb = Math.max(1, num(document.getElementById('input-cable-qty').value, 1));
+                const r = await ajouterCableAuChantier(basket, gid, cable, ref, nb);
+                ajoutes += 1;
+                crees.push(...r.crees);
+                logHistory(`${groupShortLabel(data)} : câble ${cable} → ${nb} × ${ref}`);
+            }
             let msg = `${groupShortLabel(data)} créé — ${ajoutes} référence(s) ajoutée(s)`;
             if (crees.length) msg += `, dont ${crees.length} nouvelle(s) à quantité 0`;
             toast(msg, 'ok');
@@ -1889,7 +1935,7 @@ function handleGroupSubmit(e) {
                       crees.join('\n• '));
             }
             rerenderCurrentBasket();
-        });
+        })();
     } else {
         toast(existing ? "Ouvrage modifié" : groupShortLabel(data) + " créé", 'ok');
     }
@@ -2033,6 +2079,59 @@ function apercuChaine() {
     }).join('<br>');
 }
 
+/* ------------------------------------------------------------------ Câbles */
+
+/** Câbles proposés : ceux du domaine de tension du chantier. */
+function remplirChoixCables() {
+    const sel = document.getElementById('input-cable');
+    const basket = currentBasket();
+    if (!catalogue || !catalogue.cables) { sel.innerHTML = '<option value="">— Aucun —</option>'; return; }
+
+    const tension = num(basket && basket.tension, 0);
+    const dispo = catalogue.cables.filter(c => !tension || c.tensions.includes(tension));
+    const phase = dispo.filter(c => c.usage === 'phase');
+    const garde = dispo.filter(c => c.usage === 'garde');
+    const ligne = c => `<option value="${esc(c.nom)}">${esc(c.nom)}</option>`;
+
+    const avant = sel.value;
+    sel.innerHTML = '<option value="">— Aucun —</option>'
+        + (phase.length ? `<optgroup label="Conducteurs de phase">${phase.map(ligne).join('')}</optgroup>` : '')
+        + (garde.length ? `<optgroup label="Câbles de garde">${garde.map(ligne).join('')}</optgroup>` : '');
+    sel.value = avant;
+    majChoixCable();
+}
+
+/** Un pylône d'ancrage reçoit un manchon d'ancrage, un pylône d'alignement
+ *  (ou une portée) une pince de suspension. */
+function majChoixCable() {
+    const bloc = document.getElementById('cable-choice');
+    const sel = document.getElementById('input-cable');
+    const cable = catalogue && catalogue.cables &&
+                  catalogue.cables.find(c => c.nom === sel.value);
+    if (!cable) { bloc.classList.add('hidden'); return; }
+
+    const c = critereChaines(currentBasket());
+    const ancrage = c.type === 'ancrage';
+    const piece = document.getElementById('input-cable-piece');
+
+    document.getElementById('cable-piece-label').textContent =
+        ancrage ? "Manchon d'ancrage" : 'Pince de suspension';
+
+    if (ancrage) {
+        piece.innerHTML = `<option value="${esc(cable.manchon)}">${esc(cable.manchon)}</option>`;
+    } else {
+        piece.innerHTML = cable.pinces.map(p => `<option value="${esc(p)}">${esc(p)}</option>`).join('');
+    }
+
+    // Un point d'accrochage par conducteur du faisceau : le nombre proposé
+    // n'est qu'une suggestion, corrigeable.
+    const parFaisceau = { simple: 1, double: 2, triple: 3, quadruple: 4 }[c.faisceau] || 1;
+    document.getElementById('input-cable-qty').value = parFaisceau;
+    document.getElementById('cable-qty-hint').textContent =
+        parFaisceau > 1 ? `${parFaisceau} par faisceau ${c.faisceau}` : '';
+    bloc.classList.remove('hidden');
+}
+
 /** Retrouve la pièce correspondant à une référence du catalogue.
  *  Les libellés diffèrent (« BS 100 » au catalogue, « BS100 » à l'atelier) :
  *  on compare sans espaces ni séparateurs, et quelques équivalences que cette
@@ -2050,6 +2149,33 @@ function piecePourReference(ref) {
 
 /** Ajoute le matériel d'une chaîne au chantier, en créant au besoin les
  *  pièces absentes de l'inventaire (quantité 0, à corriger ensuite). */
+/** Retrouve ou crée la pièce d'une référence, puis l'ajoute au chantier. */
+async function ajouterReference(basket, gid, ref, quantite, commentaire, crees) {
+    let piece = piecePourReference(ref);
+    if (!piece) {
+        const id = Date.now() + Math.floor(Math.random() * 100000);
+        piece = {
+            id, name: ref, qty: 0, alertQty: 0, familyId: null, location: '',
+            desc: 'Créée automatiquement depuis le catalogue RTE — quantité à renseigner',
+            hasImage: false, hasDoc: false,
+        };
+        await write('parts/p' + id, piece);
+        parts.push(piece);
+        crees.push(ref);
+    }
+    const uid = newItemUid();
+    const item = { uid, partId: piece.id, qty: quantite, deduct: true, comment: commentaire };
+    if (gid) item.groupId = gid;
+    await write(itemRef(basket.id, uid), item);
+}
+
+/** Matériel de câble : manchon d'ancrage ou pince de suspension. */
+async function ajouterCableAuChantier(basket, gid, cable, ref, nb) {
+    const crees = [];
+    await ajouterReference(basket, gid, ref, nb, `Câble ${cable}`, crees);
+    return { crees };
+}
+
 async function ajouterChaineAuChantier(basket, gid, designation, nb) {
     const ch = catalogue.chaines.find(x => x.d === designation);
     if (!ch) return { ajoutes: 0, crees: [] };
@@ -2090,9 +2216,10 @@ function wireGroupPickers() {
      ['group-faisceau-picker', 'faisceau']].forEach(([id, key]) => {
         document.getElementById(id).addEventListener('click', e => {
             const b = e.target.closest(`button[data-${key}]`);
-            if (b) { pickOption(id, key, b.dataset[key]); remplirChoixChaines(); }
+            if (b) { pickOption(id, key, b.dataset[key]); remplirChoixChaines(); majChoixCable(); }
         });
     });
+    document.getElementById('input-cable').addEventListener('change', majChoixCable);
     document.getElementById('basket-tension-picker').addEventListener('click', e => {
         const b = e.target.closest('button[data-tension]');
         if (b) pickOption('basket-tension-picker', 'tension', b.dataset.tension);
