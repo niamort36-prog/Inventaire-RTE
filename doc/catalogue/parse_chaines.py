@@ -27,10 +27,13 @@ import sys
 import pdfplumber
 
 PDF = 'C:/Users/Cardiologue/Downloads/catalogue materiel ligne .pdf'
-PAGES = list(range(30, 100))          # perimetre indique : chaines et explications
+# Chaines en verre (30-99) puis chaines a isolateurs composites (100-110).
+PAGES = list(range(30, 111))
 
-RE_DESIGN = re.compile(r'^[34567][UDTQ][0-9][A-Za-z][0-9][NMFE][0-9]{1,2}[A-Z]?$')
-RE_STAR = re.compile(r'^[34567][UDTQ][0-9][A-Za-z][0-9]\*[0-9]{1,2}[A-Z]?$')
+# Une designation composite se termine par deux lettres de geometrie
+# d'assemblage (SS, SB, TT...) ; une designation verre par zero ou une.
+RE_DESIGN = re.compile(r'^[34567][UDTQ][0-9][A-Za-z][0-9][NMFE][0-9]{1,2}[A-Z]{0,2}$')
+RE_STAR = re.compile(r'^[34567][UDTQ][0-9][A-Za-z][0-9]\*[0-9]{1,2}[A-Z]{0,2}$')
 POLLUTIONS = ['N', 'M', 'F']
 STOP = ('Longueur', 'Masse', 'Charge', 'Planche', 'Copyright', 'Nota', 'Gestionnaire',
         'Particularité', 'Pour', 'Les', 'Si')
@@ -62,7 +65,8 @@ def parse_page(page, numero):
     mots = page.extract_words(keep_blank_chars=False)
     if not mots:
         return []
-    ancres = [m for m in mots if m['text'] == 'Rep']
+    # Les planches composites ecrivent « Rép », les autres « Rep ».
+    ancres = [m for m in mots if m['text'] in ('Rep', 'Rép')]
     if not ancres:
         return []
 
@@ -106,6 +110,9 @@ def parse_page(page, numero):
                 if not all(re.fullmatch(r'\d{1,3}|-|–|—', q) for q in quantites):
                     continue
                 ref = ' '.join(txts[1:-nb_qt]).strip()
+                # Les planches composites marquent d'une etoile les elements
+                # qui composent la file isolante : « C 25-130* ».
+                ref = ref.replace('*', '').strip()
                 if not ref or RE_DESIGN.match(ref) or RE_STAR.match(ref):
                     continue
                 lignes.append((ref, quantites))

@@ -18,37 +18,57 @@ from collections import Counter
 
 TENSIONS = {'3': [63], '4': [63, 90], '5': [150], '6': [225], '7': [400]}
 FAISCEAUX = {'U': 'simple', 'D': 'double', 'T': 'triple', 'Q': 'quadruple'}
-TYPES = {'I': 'suspension', 'K': 'suspension', 'V': 'suspension', 'W': 'suspension',
-         'X': 'ancrage', 'H': 'ancrage'}
-SOUS_TYPES = {'I': 'verticale', 'K': 'verticale allégée', 'V': 'en V à 60°',
-              'W': 'en V à 90°', 'X': 'horizontale', 'H': 'horizontale allégée'}
 POLLUTIONS = {'N': 'normale', 'M': 'moyenne', 'F': 'forte', 'E': 'exceptionnelle'}
 FILES = {1: 'simple', 2: 'double', 3: 'triple', 4: 'quadruple'}
 
-RE = re.compile(r'^([AZ]?)([34567])([UDTQ])([0-9])([IKVWXHilkvwxh])([0-9])([NMFE])([0-9]{1,2})([A-Z]?)$')
+# Le code du type de chaine ne se lit pas de la meme facon selon la technologie.
+# Verre (planche L105823) : I K V W = suspension, X H = ancrage.
+# Composite (planche L141251) : S K = suspension, A H = ancrage.
+TYPES_VERRE = {'I': 'suspension', 'K': 'suspension', 'V': 'suspension',
+               'W': 'suspension', 'X': 'ancrage', 'H': 'ancrage'}
+FORMES_VERRE = {'I': 'verticale', 'K': 'verticale allégée', 'V': 'en V à 60°',
+                'W': 'en V à 90°', 'X': 'horizontale', 'H': 'horizontale allégée'}
+TYPES_COMPO = {'S': 'suspension', 'K': 'suspension', 'A': 'ancrage', 'H': 'ancrage'}
+FORMES_COMPO = {'S': 'suspension', 'K': 'suspension allégée',
+                'A': 'ancrage', 'H': 'ancrage allégé'}
+
+# Geometries d'assemblage, propres aux chaines composites : cote charpente
+# puis cote conducteur.
+GEOMETRIES = {'T': 'tenon', 'C': 'chape', 'B': 'rotule', 'S': 'logement de rotule'}
+
+RE = re.compile(r'^([AZ]?)([34567])([UDTQ])([0-9])([A-Za-z])([0-9])([NMFE])([0-9]{1,2})([A-Z]{0,2})$')
 
 
 def decode(d):
     m = RE.match(d)
     if not m:
         return None
-    _part, tens, cond, ecart, typ, files, pol, charge, suffixe = m.groups()
+    prefixe, tens, cond, ecart, typ, files, pol, charge, suffixe = m.groups()
     typ = typ.upper()
-    if typ not in TYPES:
+
+    # Deux lettres finales = geometries d'assemblage, donc chaine composite.
+    composite = len(suffixe) == 2 and all(c in GEOMETRIES for c in suffixe)
+    table, formes = (TYPES_COMPO, FORMES_COMPO) if composite else (TYPES_VERRE, FORMES_VERRE)
+    if typ not in table:
         return None
-    return {
+
+    info = {
         'designation': d,
         'tensions': TENSIONS[tens],
         'faisceau': FAISCEAUX[cond],
-        'type': TYPES[typ],
-        'forme': SOUS_TYPES[typ],
+        'type': table[typ],
+        'forme': formes[typ],
         'files': int(files),
         'chaine': FILES.get(int(files), f'{files} files'),
         'pollution': POLLUTIONS[pol],
         'pollutionCode': pol,
         'charge': int(charge) * 10,
-        'antibruit': _part == 'A',
+        'antibruit': prefixe == 'A',
+        'isolateur': 'composite' if composite else 'verre',
     }
+    if composite:
+        info['assemblage'] = f'{GEOMETRIES[suffixe[0]]} / {GEOMETRIES[suffixe[1]]}'
+    return info
 
 
 def nettoyer(ref):
@@ -61,6 +81,22 @@ def nettoyer(ref):
 
 def main():
     brut = json.load(open('chaines_brut.json', encoding='utf-8'))
+
+    # Nomenclatures relevees a la main, hors de portee du parseur (voir
+    # complement.json pour le detail).
+    try:
+        comp = json.load(open('complement.json', encoding='utf-8'))
+        for c in comp['chaines']:
+            brut.append({
+                'page': c['page'],
+                'generique': None,
+                'designations': c['designations'],
+                'variantes': {'*': [{'ref': r, 'qty': q} for r, q in c['composants']]},
+            })
+        print(f"{len(comp['chaines'])} nomenclatures ajoutees depuis complement.json")
+    except FileNotFoundError:
+        pass
+
     for bloc in brut:
         for comps in bloc['variantes'].values():
             for c in comps:

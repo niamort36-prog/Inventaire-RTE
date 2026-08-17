@@ -48,7 +48,7 @@ def main():
     # Allege : on ne garde que ce dont l'application a besoin.
     sortie = {
         'source': 'Catalogue des matériels d\'équipement de lignes aériennes '
-                  'NT-ING-CNER-DL-ML-11-00021 indice 3 — chaînes en verre (pages 30 à 99)',
+                  'NT-ING-CNER-DL-ML-11-00021 indice 3 — chaînes en verre et composites (pages 30 à 110)',
         'tensions': [63, 90, 150, 225, 400],
         'composants': composants,
         'chaines': [{
@@ -62,6 +62,8 @@ def main():
             'po': c['pollution'],
             'kn': c['charge'],
             'ab': c['antibruit'],
+            'is': c.get('isolateur', 'verre'),
+            'ga': c.get('assemblage'),
             'c': [[x['ref'], x['qty']] for x in c['composants']],
         } for c in chaines],
     }

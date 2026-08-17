@@ -1,0 +1,43 @@
+{
+  "_pourquoi": [
+    "Cinq chaines composites echappent au parseur : sur les planches L143381 et",
+    "L143383, deux chaines partagent la meme numerotation de reperes mais ont",
+    "chacune leur colonne de references — « Rep | ref1 q1 | ref2 q2 » — alors que",
+    "le reste du catalogue place une seule reference par ligne.",
+    "Ecrire un parseur pour une mise en page qui n'apparait que deux fois serait",
+    "plus fragile que de relever ces cinq nomenclatures a la main.",
+    "Verifiees ligne a ligne sur les pages 106 et 108 du catalogue."
+  ],
+  "chaines": [
+    {
+      "designations": ["6U1S1F30SB"],
+      "page": 106,
+      "planche": "L143381",
+      "composants": [
+        ["CC 30 A", 1], ["JUP 30", 2], ["OE 300", 1], ["C 25 N2", 1],
+        ["IC 6 F 30 SB", 1], ["BS 300", 1], ["AP 60 LP1", 2],
+        ["Anneau de répartition", 1]
+      ]
+    },
+    {
+      "designations": ["6U1S1F15SB", "6U1S1M15SB"],
+      "page": 106,
+      "planche": "L143381",
+      "composants": [
+        ["CC 15 A", 1], ["JUP 15", 2], ["OE 150", 1], ["C 25-370-A01", 1],
+        ["IC 6 F 15 SB", 1], ["BS 150", 1], ["AP 60-430-A01", 1],
+        ["Anneau de répartition", 1]
+      ]
+    },
+    {
+      "designations": ["6D1S1F15SB", "6D1S1M15SB"],
+      "page": 108,
+      "planche": "L143383",
+      "composants": [
+        ["CC 15 A", 1], ["JUP 15", 1], ["OE 150", 1], ["C 25-370-A01", 1],
+        ["IC 6 F 15 SB", 1], ["BS 150", 1], ["AP 60-430-A01", 1],
+        ["PT 15 600", 1], ["Anneau de répartition", 1]
+      ]
+    }
+  ]
+}

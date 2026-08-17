@@ -106,9 +106,15 @@ Une fois la chaîne et le nombre d'exemplaires indiqués, tout le matériel qui 
 compose est ajouté au chantier, rattaché à l'ouvrage, quantités multipliées.
 
 Le catalogue [`catalogue-chaines.json`](catalogue-chaines.json) contient
-**231 chaînes en verre** et **63 références**, extraites du *Catalogue des
-matériels d'équipement de lignes aériennes* (NT-ING-CNER-DL-ML-11-00021 indice 3,
-pages 30 à 99). Il est chargé à la demande, jamais au démarrage.
+**249 chaînes** — 234 en verre et 15 à isolateurs composites — et
+**81 références**, extraites du *Catalogue des matériels d'équipement de lignes
+aériennes* (NT-ING-CNER-DL-ML-11-00021 indice 3, pages 30 à 110). Il est chargé
+à la demande, jamais au démarrage.
+
+Verre et composites sont présentés séparément dans la liste. Les composites
+relèvent d'un usage particulier (pollution sévère, montagne, vandalisme) et
+imposent des dispositifs de protection dédiés : l'aperçu le rappelle, avec la
+géométrie d'assemblage de la chaîne.
 
 Les libellés du catalogue et ceux de l'atelier diffèrent (« BS 100 » contre
 « BS100 », « PM 30 400 » contre « PM 30/400 ») : la correspondance se fait sans
@@ -119,10 +125,9 @@ ne couvre pas sont inscrites dans le catalogue (`F 100` → `F100 DC`,
 Une référence sans correspondance est **créée avec une quantité de 0**, signalée
 à l'écran, et à compléter depuis l'onglet Pièces.
 
-**Deux limites :** le catalogue ne contient aucune chaîne en **150 kV** — ce
-domaine reste sélectionnable mais ne propose rien. Les chaînes à **isolateurs
-composites** (pages 100 à 110) ne sont pas reprises, seules les chaînes en verre
-le sont.
+**Une limite :** le catalogue ne contient aucune chaîne en **150 kV** — le code
+existe dans les règles de désignation, mais aucune planche ne l'utilise. Ce
+domaine reste sélectionnable pour nommer les chantiers, sans proposer de chaîne.
 
 ## Bon de chantier imprimable
 

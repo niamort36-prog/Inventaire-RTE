@@ -1,0 +1,12166 @@
+[
+ {
+  "designation": "4U1A1F10SS",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "ancrage",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "composite",
+  "assemblage": "logement de rotule / logement de rotule",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "C 25-130",
+    "qty": 2
+   },
+   {
+    "ref": "IC 4 F 10 SS",
+    "qty": 1
+   }
+  ],
+  "page": 102
+ },
+ {
+  "designation": "4U1X1F10A",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 100",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 2
+   },
+   {
+    "ref": "F 100 P",
+    "qty": 6
+   },
+   {
+    "ref": "BS 100",
+    "qty": 1
+   }
+  ],
+  "page": 39
+ },
+ {
+  "designation": "4U1X1F10B",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 100",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 2
+   },
+   {
+    "ref": "F 100 P",
+    "qty": 6
+   },
+   {
+    "ref": "BS 100",
+    "qty": 1
+   }
+  ],
+  "page": 44
+ },
+ {
+  "designation": "4U1X1F10C",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 100",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 2
+   },
+   {
+    "ref": "F 100",
+    "qty": 8
+   },
+   {
+    "ref": "BS 100",
+    "qty": 1
+   }
+  ],
+  "page": 49
+ },
+ {
+  "designation": "4U1X1F10D",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 100",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 2
+   },
+   {
+    "ref": "F 100",
+    "qty": 9
+   },
+   {
+    "ref": "BS 100",
+    "qty": 1
+   }
+  ],
+  "page": 33
+ },
+ {
+  "designation": "4U1X1F15A",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 2
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 5
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   }
+  ],
+  "page": 41
+ },
+ {
+  "designation": "4U1X1F15B",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 2
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 5
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   }
+  ],
+  "page": 46
+ },
+ {
+  "designation": "4U1X1F15C",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 7
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   }
+  ],
+  "page": 51
+ },
+ {
+  "designation": "4U1X1F15D",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 8
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   }
+  ],
+  "page": 35
+ },
+ {
+  "designation": "4U1X1M10A",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 100",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 2
+   },
+   {
+    "ref": "F 100 P",
+    "qty": 5
+   },
+   {
+    "ref": "BS 100",
+    "qty": 1
+   }
+  ],
+  "page": 39
+ },
+ {
+  "designation": "4U1X1M10B",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 100",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 2
+   },
+   {
+    "ref": "F 100",
+    "qty": 7
+   },
+   {
+    "ref": "BS 100",
+    "qty": 1
+   }
+  ],
+  "page": 44
+ },
+ {
+  "designation": "4U1X1M10C",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 100",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 2
+   },
+   {
+    "ref": "F 100",
+    "qty": 8
+   },
+   {
+    "ref": "BS 100",
+    "qty": 1
+   }
+  ],
+  "page": 49
+ },
+ {
+  "designation": "4U1X1M10D",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 100",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 2
+   },
+   {
+    "ref": "F 100",
+    "qty": 9
+   },
+   {
+    "ref": "BS 100",
+    "qty": 1
+   }
+  ],
+  "page": 33
+ },
+ {
+  "designation": "4U1X1M15A",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 6
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   }
+  ],
+  "page": 41
+ },
+ {
+  "designation": "4U1X1M15B",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 6
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   }
+  ],
+  "page": 46
+ },
+ {
+  "designation": "4U1X1M15C",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 7
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   }
+  ],
+  "page": 51
+ },
+ {
+  "designation": "4U1X1M15D",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 8
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   }
+  ],
+  "page": 35
+ },
+ {
+  "designation": "4U1X1N10A",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 100",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 2
+   },
+   {
+    "ref": "F 100",
+    "qty": 6
+   },
+   {
+    "ref": "BS 100",
+    "qty": 1
+   }
+  ],
+  "page": 39
+ },
+ {
+  "designation": "4U1X1N10B",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 100",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 2
+   },
+   {
+    "ref": "F 100",
+    "qty": 7
+   },
+   {
+    "ref": "BS 100",
+    "qty": 1
+   }
+  ],
+  "page": 44
+ },
+ {
+  "designation": "4U1X1N10C",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 100",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 2
+   },
+   {
+    "ref": "F 100",
+    "qty": 8
+   },
+   {
+    "ref": "BS 100",
+    "qty": 1
+   }
+  ],
+  "page": 49
+ },
+ {
+  "designation": "4U1X1N10D",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 100",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 2
+   },
+   {
+    "ref": "F 100",
+    "qty": 9
+   },
+   {
+    "ref": "BS 100",
+    "qty": 1
+   }
+  ],
+  "page": 33
+ },
+ {
+  "designation": "4U1X1N15A",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 5
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   }
+  ],
+  "page": 41
+ },
+ {
+  "designation": "4U1X1N15B",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 6
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   }
+  ],
+  "page": 46
+ },
+ {
+  "designation": "4U1X1N15C",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 7
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   }
+  ],
+  "page": 51
+ },
+ {
+  "designation": "4U1X1N15D",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 8
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   }
+  ],
+  "page": 35
+ },
+ {
+  "designation": "4U4A2F10SS",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "ancrage",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "composite",
+  "assemblage": "logement de rotule / logement de rotule",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 100",
+    "qty": 4
+   },
+   {
+    "ref": "C 25-130",
+    "qty": 4
+   },
+   {
+    "ref": "IC 4 F 10 SS",
+    "qty": 2
+   }
+  ],
+  "page": 102
+ },
+ {
+  "designation": "4U4H2F10A",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 100 P",
+    "qty": 12
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   }
+  ],
+  "page": 39
+ },
+ {
+  "designation": "4U4H2F10B",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 100 P",
+    "qty": 12
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   }
+  ],
+  "page": 44
+ },
+ {
+  "designation": "4U4H2F10C",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 100",
+    "qty": 16
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   }
+  ],
+  "page": 49
+ },
+ {
+  "designation": "4U4H2F10D",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 100",
+    "qty": 18
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   }
+  ],
+  "page": 33
+ },
+ {
+  "designation": "4U4H2F15A",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 10
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   }
+  ],
+  "page": 41
+ },
+ {
+  "designation": "4U4H2F15B",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 10
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   }
+  ],
+  "page": 46
+ },
+ {
+  "designation": "4U4H2F15C",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 160",
+    "qty": 14
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   }
+  ],
+  "page": 51
+ },
+ {
+  "designation": "4U4H2F15D",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 160",
+    "qty": 16
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   }
+  ],
+  "page": 35
+ },
+ {
+  "designation": "4U4H2M10A",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 100 P",
+    "qty": 10
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   }
+  ],
+  "page": 39
+ },
+ {
+  "designation": "4U4H2M10B",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 100",
+    "qty": 14
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   }
+  ],
+  "page": 44
+ },
+ {
+  "designation": "4U4H2M10C",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 100",
+    "qty": 16
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   }
+  ],
+  "page": 49
+ },
+ {
+  "designation": "4U4H2M10D",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 100",
+    "qty": 18
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   }
+  ],
+  "page": 33
+ },
+ {
+  "designation": "4U4H2M15A",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 160",
+    "qty": 12
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   }
+  ],
+  "page": 41
+ },
+ {
+  "designation": "4U4H2M15B",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 160",
+    "qty": 12
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   }
+  ],
+  "page": 46
+ },
+ {
+  "designation": "4U4H2M15C",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 160",
+    "qty": 14
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   }
+  ],
+  "page": 51
+ },
+ {
+  "designation": "4U4H2M15D",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 160",
+    "qty": 16
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   }
+  ],
+  "page": 35
+ },
+ {
+  "designation": "4U4H2N10A",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 100",
+    "qty": 12
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   }
+  ],
+  "page": 39
+ },
+ {
+  "designation": "4U4H2N10B",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 100",
+    "qty": 14
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   }
+  ],
+  "page": 44
+ },
+ {
+  "designation": "4U4H2N10C",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 100",
+    "qty": 16
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   }
+  ],
+  "page": 49
+ },
+ {
+  "designation": "4U4H2N10D",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 100",
+    "qty": 18
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   }
+  ],
+  "page": 33
+ },
+ {
+  "designation": "4U4H2N15A",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 160",
+    "qty": 10
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   }
+  ],
+  "page": 41
+ },
+ {
+  "designation": "4U4H2N15B",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 160",
+    "qty": 12
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   }
+  ],
+  "page": 46
+ },
+ {
+  "designation": "4U4H2N15C",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 160",
+    "qty": 14
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   }
+  ],
+  "page": 51
+ },
+ {
+  "designation": "4U4H2N15D",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 160",
+    "qty": 16
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   }
+  ],
+  "page": 35
+ },
+ {
+  "designation": "4U4X2F10A",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 100 P",
+    "qty": 12
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   }
+  ],
+  "page": 39
+ },
+ {
+  "designation": "4U4X2F10B",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 100 P",
+    "qty": 12
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   }
+  ],
+  "page": 44
+ },
+ {
+  "designation": "4U4X2F10C",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 100",
+    "qty": 16
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   }
+  ],
+  "page": 49
+ },
+ {
+  "designation": "4U4X2F10D",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 100",
+    "qty": 18
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   }
+  ],
+  "page": 33
+ },
+ {
+  "designation": "4U4X2F15A",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 10
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   }
+  ],
+  "page": 41
+ },
+ {
+  "designation": "4U4X2F15B",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 10
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   }
+  ],
+  "page": 46
+ },
+ {
+  "designation": "4U4X2F15C",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 160",
+    "qty": 14
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   }
+  ],
+  "page": 51
+ },
+ {
+  "designation": "4U4X2F15D",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 160",
+    "qty": 16
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   }
+  ],
+  "page": 35
+ },
+ {
+  "designation": "4U4X2M10A",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 100 P",
+    "qty": 10
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   }
+  ],
+  "page": 39
+ },
+ {
+  "designation": "4U4X2M10B",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 100",
+    "qty": 14
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   }
+  ],
+  "page": 44
+ },
+ {
+  "designation": "4U4X2M10C",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 100",
+    "qty": 16
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   }
+  ],
+  "page": 49
+ },
+ {
+  "designation": "4U4X2M10D",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 100",
+    "qty": 18
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   }
+  ],
+  "page": 33
+ },
+ {
+  "designation": "4U4X2M15A",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 160",
+    "qty": 12
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   }
+  ],
+  "page": 41
+ },
+ {
+  "designation": "4U4X2M15B",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 160",
+    "qty": 12
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   }
+  ],
+  "page": 46
+ },
+ {
+  "designation": "4U4X2M15C",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 160",
+    "qty": 14
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   }
+  ],
+  "page": 51
+ },
+ {
+  "designation": "4U4X2M15D",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 160",
+    "qty": 16
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   }
+  ],
+  "page": 35
+ },
+ {
+  "designation": "4U4X2N10A",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 100",
+    "qty": 12
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   }
+  ],
+  "page": 39
+ },
+ {
+  "designation": "4U4X2N10B",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 100",
+    "qty": 14
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   }
+  ],
+  "page": 44
+ },
+ {
+  "designation": "4U4X2N10C",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 100",
+    "qty": 16
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   }
+  ],
+  "page": 49
+ },
+ {
+  "designation": "4U4X2N10D",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 100",
+    "qty": 18
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   }
+  ],
+  "page": 33
+ },
+ {
+  "designation": "4U4X2N15A",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 160",
+    "qty": 10
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   }
+  ],
+  "page": 41
+ },
+ {
+  "designation": "4U4X2N15B",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 160",
+    "qty": 12
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   }
+  ],
+  "page": 46
+ },
+ {
+  "designation": "4U4X2N15C",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 160",
+    "qty": 14
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   }
+  ],
+  "page": 51
+ },
+ {
+  "designation": "4U4X2N15D",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 160",
+    "qty": 16
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   }
+  ],
+  "page": 35
+ },
+ {
+  "designation": "4U1I1F10B",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "OE 100",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A2",
+    "qty": 2
+   },
+   {
+    "ref": "F 100 P",
+    "qty": 6
+   },
+   {
+    "ref": "BS 100",
+    "qty": 1
+   }
+  ],
+  "page": 45
+ },
+ {
+  "designation": "4U1I1F10C",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "OE 100",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A2",
+    "qty": 2
+   },
+   {
+    "ref": "F 100",
+    "qty": 8
+   },
+   {
+    "ref": "BS 100",
+    "qty": 1
+   }
+  ],
+  "page": 50
+ },
+ {
+  "designation": "4U1I1F10D",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "OE 100",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A2",
+    "qty": 2
+   },
+   {
+    "ref": "F 100",
+    "qty": 9
+   },
+   {
+    "ref": "BS 100",
+    "qty": 1
+   }
+  ],
+  "page": 34
+ },
+ {
+  "designation": "4U1I1F15A",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 P2",
+    "qty": 2
+   },
+   {
+    "ref": "F 160 PF",
+    "qty": 5
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   }
+  ],
+  "page": 42
+ },
+ {
+  "designation": "4U1I1F15B",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A2",
+    "qty": 2
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 5
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   }
+  ],
+  "page": 47
+ },
+ {
+  "designation": "4U1I1F15C",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A2",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 7
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   }
+  ],
+  "page": 52
+ },
+ {
+  "designation": "4U1I1F15D",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A2",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 8
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   }
+  ],
+  "page": 36
+ },
+ {
+  "designation": "4U1I1M10B",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "OE 100",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A2",
+    "qty": 2
+   },
+   {
+    "ref": "F 100 P",
+    "qty": 6
+   },
+   {
+    "ref": "BS 100",
+    "qty": 1
+   }
+  ],
+  "page": 45
+ },
+ {
+  "designation": "4U1I1M10C",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "OE 100",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A2",
+    "qty": 2
+   },
+   {
+    "ref": "F 100",
+    "qty": 8
+   },
+   {
+    "ref": "BS 100",
+    "qty": 1
+   }
+  ],
+  "page": 50
+ },
+ {
+  "designation": "4U1I1M10D",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "OE 100",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A2",
+    "qty": 2
+   },
+   {
+    "ref": "F 100",
+    "qty": 9
+   },
+   {
+    "ref": "BS 100",
+    "qty": 1
+   }
+  ],
+  "page": 34
+ },
+ {
+  "designation": "4U1I1M15A",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 P2",
+    "qty": 2
+   },
+   {
+    "ref": "F 160 PF",
+    "qty": 5
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   }
+  ],
+  "page": 42
+ },
+ {
+  "designation": "4U1I1M15B",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A2",
+    "qty": 2
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 5
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   }
+  ],
+  "page": 47
+ },
+ {
+  "designation": "4U1I1M15C",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A2",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 7
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   }
+  ],
+  "page": 52
+ },
+ {
+  "designation": "4U1I1M15D",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A2",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 8
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   }
+  ],
+  "page": 36
+ },
+ {
+  "designation": "4U1I1N10B",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "OE 100",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A2",
+    "qty": 2
+   },
+   {
+    "ref": "F 100",
+    "qty": 7
+   },
+   {
+    "ref": "BS 100",
+    "qty": 1
+   }
+  ],
+  "page": 45
+ },
+ {
+  "designation": "4U1I1N10C",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "OE 100",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A2",
+    "qty": 2
+   },
+   {
+    "ref": "F 100",
+    "qty": 8
+   },
+   {
+    "ref": "BS 100",
+    "qty": 1
+   }
+  ],
+  "page": 50
+ },
+ {
+  "designation": "4U1I1N10D",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "OE 100",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A2",
+    "qty": 2
+   },
+   {
+    "ref": "F 100",
+    "qty": 9
+   },
+   {
+    "ref": "BS 100",
+    "qty": 1
+   }
+  ],
+  "page": 34
+ },
+ {
+  "designation": "4U1I1N15A",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A2",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 5
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   }
+  ],
+  "page": 42
+ },
+ {
+  "designation": "4U1I1N15B",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A2",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 6
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   }
+  ],
+  "page": 47
+ },
+ {
+  "designation": "4U1I1N15C",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A2",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 7
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   }
+  ],
+  "page": 52
+ },
+ {
+  "designation": "4U1I1N15D",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 A2",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 8
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   }
+  ],
+  "page": 36
+ },
+ {
+  "designation": "4U1S1F10SS",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "suspension",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "composite",
+  "assemblage": "logement de rotule / logement de rotule",
+  "composants": [
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "C 25-130",
+    "qty": 4
+   },
+   {
+    "ref": "IC 4 F 10 SS",
+    "qty": 1
+   }
+  ],
+  "page": 103
+ },
+ {
+  "designation": "4U6K2F10B",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "PT 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 100 P",
+    "qty": 12
+   },
+   {
+    "ref": "JUL B",
+    "qty": 1
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   }
+  ],
+  "page": 45
+ },
+ {
+  "designation": "4U6K2F10C",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "PT 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 100",
+    "qty": 16
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   },
+   {
+    "ref": "JUL B",
+    "qty": 1
+   }
+  ],
+  "page": 50
+ },
+ {
+  "designation": "4U6K2F10D",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "PT 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 100",
+    "qty": 18
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   },
+   {
+    "ref": "JUL B",
+    "qty": 1
+   }
+  ],
+  "page": 34
+ },
+ {
+  "designation": "4U6K2F15A",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "PT 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 P1",
+    "qty": 4
+   },
+   {
+    "ref": "F 160 PF",
+    "qty": 10
+   },
+   {
+    "ref": "JUL B",
+    "qty": 1
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   }
+  ],
+  "page": 42
+ },
+ {
+  "designation": "4U6K2F15B",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "PT 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 10
+   },
+   {
+    "ref": "JUL B",
+    "qty": 1
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   }
+  ],
+  "page": 47
+ },
+ {
+  "designation": "4U6K2F15C",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "PT 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 160",
+    "qty": 14
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "JUL B",
+    "qty": 1
+   }
+  ],
+  "page": 52
+ },
+ {
+  "designation": "4U6K2F15D",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "PT 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 160",
+    "qty": 16
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "JUL B",
+    "qty": 1
+   }
+  ],
+  "page": 36
+ },
+ {
+  "designation": "4U6K2M10B",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "PT 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 100 P",
+    "qty": 12
+   },
+   {
+    "ref": "JUL B",
+    "qty": 1
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   }
+  ],
+  "page": 45
+ },
+ {
+  "designation": "4U6K2M10C",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "PT 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 100",
+    "qty": 16
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   },
+   {
+    "ref": "JUL B",
+    "qty": 1
+   }
+  ],
+  "page": 50
+ },
+ {
+  "designation": "4U6K2M10D",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "PT 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 100",
+    "qty": 18
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   },
+   {
+    "ref": "JUL B",
+    "qty": 1
+   }
+  ],
+  "page": 34
+ },
+ {
+  "designation": "4U6K2M15A",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "PT 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 P1",
+    "qty": 4
+   },
+   {
+    "ref": "F 160 PF",
+    "qty": 10
+   },
+   {
+    "ref": "JUL B",
+    "qty": 1
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   }
+  ],
+  "page": 42
+ },
+ {
+  "designation": "4U6K2M15B",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "PT 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 10
+   },
+   {
+    "ref": "JUL B",
+    "qty": 1
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   }
+  ],
+  "page": 47
+ },
+ {
+  "designation": "4U6K2M15C",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "PT 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 160",
+    "qty": 14
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "JUL B",
+    "qty": 1
+   }
+  ],
+  "page": 52
+ },
+ {
+  "designation": "4U6K2M15D",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "PT 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 160",
+    "qty": 16
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "JUL B",
+    "qty": 1
+   }
+  ],
+  "page": 36
+ },
+ {
+  "designation": "4U6K2N10B",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "PT 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 100",
+    "qty": 14
+   },
+   {
+    "ref": "JUL B",
+    "qty": 1
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   }
+  ],
+  "page": 45
+ },
+ {
+  "designation": "4U6K2N10C",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "PT 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 100",
+    "qty": 16
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   },
+   {
+    "ref": "JUL B",
+    "qty": 1
+   }
+  ],
+  "page": 50
+ },
+ {
+  "designation": "4U6K2N10D",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "PT 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 100",
+    "qty": 18
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   },
+   {
+    "ref": "JUL B",
+    "qty": 1
+   }
+  ],
+  "page": 34
+ },
+ {
+  "designation": "4U6K2N15A",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "PT 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 160",
+    "qty": 10
+   },
+   {
+    "ref": "JUL B",
+    "qty": 1
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   }
+  ],
+  "page": 42
+ },
+ {
+  "designation": "4U6K2N15B",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "PT 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 160",
+    "qty": 12
+   },
+   {
+    "ref": "JUL B",
+    "qty": 1
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   }
+  ],
+  "page": 47
+ },
+ {
+  "designation": "4U6K2N15C",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "PT 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 160",
+    "qty": 14
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "JUL B",
+    "qty": 1
+   }
+  ],
+  "page": 52
+ },
+ {
+  "designation": "4U6K2N15D",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "PT 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 A1",
+    "qty": 4
+   },
+   {
+    "ref": "F 160",
+    "qty": 16
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "JUL B",
+    "qty": 1
+   }
+  ],
+  "page": 36
+ },
+ {
+  "designation": "4U6S2F10SS",
+  "tensions": [
+   63,
+   90
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "suspension",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "composite",
+  "assemblage": "logement de rotule / logement de rotule",
+  "composants": [
+   {
+    "ref": "PT 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 100",
+    "qty": 4
+   },
+   {
+    "ref": "C 25-130",
+    "qty": 4
+   },
+   {
+    "ref": "IC 4 F 10 SS",
+    "qty": 2
+   },
+   {
+    "ref": "JUL B",
+    "qty": 1
+   }
+  ],
+  "page": 103
+ },
+ {
+  "designation": "6D6A1F15SB",
+  "tensions": [
+   225
+  ],
+  "faisceau": "double",
+  "type": "ancrage",
+  "forme": "ancrage",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "composite",
+  "assemblage": "logement de rotule / rotule",
+  "composants": [
+   {
+    "ref": "RL 30 900",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 2
+   },
+   {
+    "ref": "ICL 6 F 15 SB",
+    "qty": 2
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "PR 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 LP1",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   }
+  ],
+  "page": 107
+ },
+ {
+  "designation": "6U4A1F15SB",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "ancrage",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "composite",
+  "assemblage": "logement de rotule / rotule",
+  "composants": [
+   {
+    "ref": "RL 30 900",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 1
+   },
+   {
+    "ref": "ICL 6 F 15 SB",
+    "qty": 2
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 LP1",
+    "qty": 1
+   },
+   {
+    "ref": "Anneau de répartition",
+    "qty": 2
+   }
+  ],
+  "page": 105
+ },
+ {
+  "designation": "6U4H1F15SB",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "ancrage allégé",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "composite",
+  "assemblage": "logement de rotule / rotule",
+  "composants": [
+   {
+    "ref": "RL 15 900",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 1
+   },
+   {
+    "ref": "ICL 6 F 15 SB",
+    "qty": 2
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 LP1",
+    "qty": 1
+   },
+   {
+    "ref": "Anneau de répartition",
+    "qty": 2
+   }
+  ],
+  "page": 105
+ },
+ {
+  "designation": "6D4X2N15",
+  "tensions": [
+   225
+  ],
+  "faisceau": "double",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 900",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 24
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "PR 15 400",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 C1",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   }
+  ],
+  "page": 68
+ },
+ {
+  "designation": "6D4X2N30",
+  "tensions": [
+   225
+  ],
+  "faisceau": "double",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 300,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 60 900",
+    "qty": 1
+   },
+   {
+    "ref": "CC 60 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 60 400",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 1
+   },
+   {
+    "ref": "OE 300",
+    "qty": 2
+   },
+   {
+    "ref": "F 300",
+    "qty": 28
+   },
+   {
+    "ref": "BS 300",
+    "qty": 2
+   },
+   {
+    "ref": "PR 30 400",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 C1",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   }
+  ],
+  "page": 68
+ },
+ {
+  "designation": "6D6X2F15",
+  "tensions": [
+   225
+  ],
+  "faisceau": "double",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 900",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 NE1",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 24
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "PR 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 L1",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   }
+  ],
+  "page": 64
+ },
+ {
+  "designation": "6D6X2F30",
+  "tensions": [
+   225
+  ],
+  "faisceau": "double",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 300,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 60 900",
+    "qty": 1
+   },
+   {
+    "ref": "CC 60 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 60 600",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 NE1",
+    "qty": 1
+   },
+   {
+    "ref": "OE 300",
+    "qty": 2
+   },
+   {
+    "ref": "F 300 P",
+    "qty": 18
+   },
+   {
+    "ref": "BS 300",
+    "qty": 2
+   },
+   {
+    "ref": "PR 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 L1",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   }
+  ],
+  "page": 64
+ },
+ {
+  "designation": "6D6X2M15",
+  "tensions": [
+   225
+  ],
+  "faisceau": "double",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 900",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 NE1",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 28
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "PR 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 L1",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   }
+  ],
+  "page": 64
+ },
+ {
+  "designation": "6D6X2M30",
+  "tensions": [
+   225
+  ],
+  "faisceau": "double",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 300,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 60 900",
+    "qty": 1
+   },
+   {
+    "ref": "CC 60 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 60 600",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 NL1",
+    "qty": 1
+   },
+   {
+    "ref": "OE 300",
+    "qty": 2
+   },
+   {
+    "ref": "F 300",
+    "qty": 22
+   },
+   {
+    "ref": "BS 300",
+    "qty": 2
+   },
+   {
+    "ref": "PR 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 L1",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   }
+  ],
+  "page": 64
+ },
+ {
+  "designation": "6D6X2N15",
+  "tensions": [
+   225
+  ],
+  "faisceau": "double",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 900",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 24
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "PR 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 L1",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   }
+  ],
+  "page": 64
+ },
+ {
+  "designation": "6D6X2N30",
+  "tensions": [
+   225
+  ],
+  "faisceau": "double",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 300,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 60 900",
+    "qty": 1
+   },
+   {
+    "ref": "CC 60 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 60 600",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 1
+   },
+   {
+    "ref": "OE 300",
+    "qty": 2
+   },
+   {
+    "ref": "F 300",
+    "qty": 18
+   },
+   {
+    "ref": "BS 300",
+    "qty": 2
+   },
+   {
+    "ref": "PR 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 L1",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   }
+  ],
+  "page": 64
+ },
+ {
+  "designation": "6U4H2F10",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 900",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 NE1",
+    "qty": 1
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "F 100 P",
+    "qty": 28
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 C1",
+    "qty": 1
+   }
+  ],
+  "page": 60
+ },
+ {
+  "designation": "6U4H2F15",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 900",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 NE1",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 24
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 C1",
+    "qty": 1
+   }
+  ],
+  "page": 62
+ },
+ {
+  "designation": "6U4H2M10",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 900",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 NE1",
+    "qty": 1
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "F 100",
+    "qty": 32
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 C1",
+    "qty": 1
+   }
+  ],
+  "page": 60
+ },
+ {
+  "designation": "6U4H2M15",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 900",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 NE1",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 28
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 C1",
+    "qty": 1
+   }
+  ],
+  "page": 62
+ },
+ {
+  "designation": "6U4H2N10",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 900",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 1
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "F 100",
+    "qty": 28
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 C1",
+    "qty": 1
+   }
+  ],
+  "page": 60
+ },
+ {
+  "designation": "6U4H2N15",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 15 900",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 24
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 C1",
+    "qty": 1
+   }
+  ],
+  "page": 62
+ },
+ {
+  "designation": "6U4X2F15",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 900",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 NE1",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 24
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 C1",
+    "qty": 1
+   }
+  ],
+  "page": 60
+ },
+ {
+  "designation": "6U4X2M15",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 900",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 NE1",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 28
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 C1",
+    "qty": 1
+   }
+  ],
+  "page": 60
+ },
+ {
+  "designation": "6U4X2N15",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 900",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 24
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 C1",
+    "qty": 1
+   }
+  ],
+  "page": 60
+ },
+ {
+  "designation": "6U6X2F30",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 300,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 60 900",
+    "qty": 1
+   },
+   {
+    "ref": "CC 60 A",
+    "qty": 2
+   },
+   {
+    "ref": "PM 60 600",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 NE1",
+    "qty": 1
+   },
+   {
+    "ref": "OE 300",
+    "qty": 2
+   },
+   {
+    "ref": "F 300 P",
+    "qty": 18
+   },
+   {
+    "ref": "BS 300",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L1",
+    "qty": 1
+   }
+  ],
+  "page": 62
+ },
+ {
+  "designation": "6U6X2M30",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 300,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 60 900",
+    "qty": 1
+   },
+   {
+    "ref": "CC 60 A",
+    "qty": 2
+   },
+   {
+    "ref": "PM 60 600",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 NL1",
+    "qty": 1
+   },
+   {
+    "ref": "OE 300",
+    "qty": 2
+   },
+   {
+    "ref": "F 300",
+    "qty": 22
+   },
+   {
+    "ref": "BS 300",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L1",
+    "qty": 1
+   }
+  ],
+  "page": 62
+ },
+ {
+  "designation": "6U6X2N30",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 300,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 60 900",
+    "qty": 1
+   },
+   {
+    "ref": "CC 60 A",
+    "qty": 2
+   },
+   {
+    "ref": "PM 60 600",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 1
+   },
+   {
+    "ref": "OE 300",
+    "qty": 2
+   },
+   {
+    "ref": "F 300",
+    "qty": 18
+   },
+   {
+    "ref": "BS 300",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L1",
+    "qty": 1
+   }
+  ],
+  "page": 62
+ },
+ {
+  "designation": "6D1I1F15R",
+  "tensions": [
+   225
+  ],
+  "faisceau": "double",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CC 15 A",
+    "qty": 1
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N2",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "F 160 PF",
+    "qty": 12
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 C2",
+    "qty": 1
+   },
+   {
+    "ref": "PT 15 600",
+    "qty": 1
+   }
+  ],
+  "page": 64
+ },
+ {
+  "designation": "6D1I1M15R",
+  "tensions": [
+   225
+  ],
+  "faisceau": "double",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CC 15 A",
+    "qty": 1
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N2",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 10
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 C2",
+    "qty": 1
+   },
+   {
+    "ref": "PT 15 600",
+    "qty": 1
+   }
+  ],
+  "page": 64
+ },
+ {
+  "designation": "6D1I1N15R",
+  "tensions": [
+   225
+  ],
+  "faisceau": "double",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CC 15 A",
+    "qty": 1
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N2",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "F 160",
+    "qty": 12
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 C2",
+    "qty": 1
+   },
+   {
+    "ref": "PT 15 600",
+    "qty": 1
+   }
+  ],
+  "page": 64
+ },
+ {
+  "designation": "6D1S1F15SB",
+  "tensions": [
+   225
+  ],
+  "faisceau": "double",
+  "type": "suspension",
+  "forme": "suspension",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "composite",
+  "assemblage": "logement de rotule / rotule",
+  "composants": [
+   {
+    "ref": "CC 15 A",
+    "qty": 1
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "C 25-370-A01",
+    "qty": 1
+   },
+   {
+    "ref": "IC 6 F 15 SB",
+    "qty": 1
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60-430-A01",
+    "qty": 1
+   },
+   {
+    "ref": "PT 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "Anneau de répartition",
+    "qty": 1
+   }
+  ],
+  "page": 108
+ },
+ {
+  "designation": "6D1S1M15SB",
+  "tensions": [
+   225
+  ],
+  "faisceau": "double",
+  "type": "suspension",
+  "forme": "suspension",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "composite",
+  "assemblage": "logement de rotule / rotule",
+  "composants": [
+   {
+    "ref": "CC 15 A",
+    "qty": 1
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "C 25-370-A01",
+    "qty": 1
+   },
+   {
+    "ref": "IC 6 F 15 SB",
+    "qty": 1
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60-430-A01",
+    "qty": 1
+   },
+   {
+    "ref": "PT 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "Anneau de répartition",
+    "qty": 1
+   }
+  ],
+  "page": 108
+ },
+ {
+  "designation": "6D4I1N15R",
+  "tensions": [
+   225
+  ],
+  "faisceau": "double",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CC 15 A",
+    "qty": 1
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N2",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "F 160",
+    "qty": 12
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 C2",
+    "qty": 1
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 1
+   }
+  ],
+  "page": 68
+ },
+ {
+  "designation": "6D6S1F15SB",
+  "tensions": [
+   225
+  ],
+  "faisceau": "double",
+  "type": "suspension",
+  "forme": "suspension",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "composite",
+  "assemblage": "logement de rotule / rotule",
+  "composants": [
+   {
+    "ref": "CC 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 25-370-A01",
+    "qty": 1
+   },
+   {
+    "ref": "IC 6 F 15 SB",
+    "qty": 2
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "PR 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60-430-A01",
+    "qty": 1
+   },
+   {
+    "ref": "Anneau de répartition",
+    "qty": 2
+   }
+  ],
+  "page": 108
+ },
+ {
+  "designation": "6U1I1F10",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "OE 100",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 F2",
+    "qty": 1
+   },
+   {
+    "ref": "F 100 PF",
+    "qty": 12
+   },
+   {
+    "ref": "AP 18 C2",
+    "qty": 1
+   },
+   {
+    "ref": "BS 100",
+    "qty": 1
+   }
+  ],
+  "page": 60
+ },
+ {
+  "designation": "6U1I1F15",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 F2",
+    "qty": 1
+   },
+   {
+    "ref": "F 160 PF",
+    "qty": 12
+   },
+   {
+    "ref": "AP 18 C2",
+    "qty": 1
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   }
+  ],
+  "page": 60
+ },
+ {
+  "designation": "6U1I1F15R",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CC 15 A",
+    "qty": 1
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N2",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "F 160 PF",
+    "qty": 12
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 C2",
+    "qty": 1
+   }
+  ],
+  "page": 63
+ },
+ {
+  "designation": "6U1I1F30R",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 300,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CC 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "JUP 30",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 NE2",
+    "qty": 1
+   },
+   {
+    "ref": "OE 300",
+    "qty": 1
+   },
+   {
+    "ref": "F 300 P",
+    "qty": 9
+   },
+   {
+    "ref": "BS 300",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 C2",
+    "qty": 1
+   }
+  ],
+  "page": 63
+ },
+ {
+  "designation": "6U1I1M10",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "OE 100",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 F2",
+    "qty": 1
+   },
+   {
+    "ref": "F 100 P",
+    "qty": 12
+   },
+   {
+    "ref": "AP 18 C2",
+    "qty": 1
+   },
+   {
+    "ref": "BS 100",
+    "qty": 1
+   }
+  ],
+  "page": 60
+ },
+ {
+  "designation": "6U1I1M15",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 F2",
+    "qty": 1
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 10
+   },
+   {
+    "ref": "AP 18 C2",
+    "qty": 1
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   }
+  ],
+  "page": 60
+ },
+ {
+  "designation": "6U1I1M15R",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CC 15 A",
+    "qty": 1
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N2",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 10
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 C2",
+    "qty": 1
+   }
+  ],
+  "page": 63
+ },
+ {
+  "designation": "6U1I1M30R",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 300,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CC 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "JUP 30",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N2",
+    "qty": 1
+   },
+   {
+    "ref": "OE 300",
+    "qty": 1
+   },
+   {
+    "ref": "F 300 P",
+    "qty": 8
+   },
+   {
+    "ref": "BS 300",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 C2",
+    "qty": 1
+   }
+  ],
+  "page": 63
+ },
+ {
+  "designation": "6U1I1N10",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "OE 100",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 F2",
+    "qty": 1
+   },
+   {
+    "ref": "F 100",
+    "qty": 14
+   },
+   {
+    "ref": "AP 18 C2",
+    "qty": 1
+   },
+   {
+    "ref": "BS 100",
+    "qty": 1
+   }
+  ],
+  "page": 60
+ },
+ {
+  "designation": "6U1I1N15",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "C 18 F2",
+    "qty": 1
+   },
+   {
+    "ref": "F 160",
+    "qty": 12
+   },
+   {
+    "ref": "AP 18 C2",
+    "qty": 1
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   }
+  ],
+  "page": 60
+ },
+ {
+  "designation": "6U1I1N15R",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CC 15 A",
+    "qty": 1
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N2",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "F 160",
+    "qty": 12
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 C2",
+    "qty": 1
+   }
+  ],
+  "page": 63
+ },
+ {
+  "designation": "6U1I1N30R",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 300,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CC 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "JUP 30",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N2",
+    "qty": 1
+   },
+   {
+    "ref": "OE 300",
+    "qty": 1
+   },
+   {
+    "ref": "F 300",
+    "qty": 9
+   },
+   {
+    "ref": "BS 300",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 C2",
+    "qty": 1
+   }
+  ],
+  "page": 63
+ },
+ {
+  "designation": "6U1S1F15SB",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "suspension",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "composite",
+  "assemblage": "logement de rotule / rotule",
+  "composants": [
+   {
+    "ref": "CC 15 A",
+    "qty": 1
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "C 25-370-A01",
+    "qty": 1
+   },
+   {
+    "ref": "IC 6 F 15 SB",
+    "qty": 1
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60-430-A01",
+    "qty": 1
+   },
+   {
+    "ref": "Anneau de répartition",
+    "qty": 1
+   }
+  ],
+  "page": 106
+ },
+ {
+  "designation": "6U1S1F30SB",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "suspension",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 300,
+  "antibruit": false,
+  "isolateur": "composite",
+  "assemblage": "logement de rotule / rotule",
+  "composants": [
+   {
+    "ref": "CC 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "JUP 30",
+    "qty": 2
+   },
+   {
+    "ref": "OE 300",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N2",
+    "qty": 1
+   },
+   {
+    "ref": "IC 6 F 30 SB",
+    "qty": 1
+   },
+   {
+    "ref": "BS 300",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 LP1",
+    "qty": 2
+   },
+   {
+    "ref": "Anneau de répartition",
+    "qty": 1
+   }
+  ],
+  "page": 106
+ },
+ {
+  "designation": "6U1S1M15SB",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "suspension",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "composite",
+  "assemblage": "logement de rotule / rotule",
+  "composants": [
+   {
+    "ref": "CC 15 A",
+    "qty": 1
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "C 25-370-A01",
+    "qty": 1
+   },
+   {
+    "ref": "IC 6 F 15 SB",
+    "qty": 1
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60-430-A01",
+    "qty": 1
+   },
+   {
+    "ref": "Anneau de répartition",
+    "qty": 1
+   }
+  ],
+  "page": 106
+ },
+ {
+  "designation": "6D4I2N15",
+  "tensions": [
+   225
+  ],
+  "faisceau": "double",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CC 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N2",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 24
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 C2",
+    "qty": 1
+   },
+   {
+    "ref": "PR 15 400",
+    "qty": 1
+   }
+  ],
+  "page": 69
+ },
+ {
+  "designation": "6D6I2F15",
+  "tensions": [
+   225
+  ],
+  "faisceau": "double",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CC 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N2",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160 PF",
+    "qty": 24
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L2",
+    "qty": 1
+   },
+   {
+    "ref": "PR 15 600",
+    "qty": 1
+   }
+  ],
+  "page": 65
+ },
+ {
+  "designation": "6D6I2M15",
+  "tensions": [
+   225
+  ],
+  "faisceau": "double",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CC 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N2",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 20
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L2",
+    "qty": 1
+   },
+   {
+    "ref": "PR 15 600",
+    "qty": 1
+   }
+  ],
+  "page": 65
+ },
+ {
+  "designation": "6D6I2N15",
+  "tensions": [
+   225
+  ],
+  "faisceau": "double",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CC 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N2",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 24
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L2",
+    "qty": 1
+   },
+   {
+    "ref": "PR 15 600",
+    "qty": 1
+   }
+  ],
+  "page": 65
+ },
+ {
+  "designation": "6U6I2F15",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 F1",
+    "qty": 2
+   },
+   {
+    "ref": "F 160 PF",
+    "qty": 24
+   },
+   {
+    "ref": "AP 18 C1",
+    "qty": 2
+   },
+   {
+    "ref": "JUL B",
+    "qty": 1
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   }
+  ],
+  "page": 61
+ },
+ {
+  "designation": "6U6I2F15R",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 4
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160 PF",
+    "qty": 24
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 C1",
+    "qty": 2
+   },
+   {
+    "ref": "JUL B",
+    "qty": 1
+   }
+  ],
+  "page": 63
+ },
+ {
+  "designation": "6U6I2M15",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 F1",
+    "qty": 2
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 20
+   },
+   {
+    "ref": "AP 18 C1",
+    "qty": 2
+   },
+   {
+    "ref": "JUL B",
+    "qty": 1
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   }
+  ],
+  "page": 61
+ },
+ {
+  "designation": "6U6I2M15R",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 4
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 20
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 C1",
+    "qty": 2
+   },
+   {
+    "ref": "JUL B",
+    "qty": 1
+   }
+  ],
+  "page": 63
+ },
+ {
+  "designation": "6U6I2N15",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 F1",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 24
+   },
+   {
+    "ref": "AP 18 C1",
+    "qty": 2
+   },
+   {
+    "ref": "JUL B",
+    "qty": 1
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   }
+  ],
+  "page": 61
+ },
+ {
+  "designation": "6U6I2N15R",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 4
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 24
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 C1",
+    "qty": 2
+   },
+   {
+    "ref": "JUL B",
+    "qty": 1
+   }
+  ],
+  "page": 63
+ },
+ {
+  "designation": "6U6K2F10",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 15 A",
+    "qty": 1
+   },
+   {
+    "ref": "PT 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 F1",
+    "qty": 2
+   },
+   {
+    "ref": "F 100 PF",
+    "qty": 24
+   },
+   {
+    "ref": "AP 18 C1",
+    "qty": 2
+   },
+   {
+    "ref": "JUL B",
+    "qty": 1
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   }
+  ],
+  "page": 61
+ },
+ {
+  "designation": "6U6K2F15SB",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "suspension allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "composite",
+  "assemblage": "logement de rotule / rotule",
+  "composants": [
+   {
+    "ref": "CD 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 4
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "C 25-370-A01-1",
+    "qty": 1
+   },
+   {
+    "ref": "IC 6 F 15 SB",
+    "qty": 2
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60-430-A01-1",
+    "qty": 1
+   },
+   {
+    "ref": "Anneau de répartition",
+    "qty": 2
+   }
+  ],
+  "page": 106
+ },
+ {
+  "designation": "6U6K2M10",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 15 A",
+    "qty": 1
+   },
+   {
+    "ref": "PT 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 F1",
+    "qty": 2
+   },
+   {
+    "ref": "F 100 P",
+    "qty": 24
+   },
+   {
+    "ref": "AP 18 C1",
+    "qty": 2
+   },
+   {
+    "ref": "JUL B",
+    "qty": 1
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   }
+  ],
+  "page": 61
+ },
+ {
+  "designation": "6U6K2N10",
+  "tensions": [
+   225
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale allégée",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 100,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 15 A",
+    "qty": 1
+   },
+   {
+    "ref": "PT 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "OE 100",
+    "qty": 2
+   },
+   {
+    "ref": "C 18 F1",
+    "qty": 2
+   },
+   {
+    "ref": "F 100",
+    "qty": 28
+   },
+   {
+    "ref": "AP 18 C1",
+    "qty": 2
+   },
+   {
+    "ref": "JUL B",
+    "qty": 1
+   },
+   {
+    "ref": "BS 100",
+    "qty": 2
+   }
+  ],
+  "page": 61
+ },
+ {
+  "designation": "7D4X2N15",
+  "tensions": [
+   400
+  ],
+  "faisceau": "double",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 1500",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 38
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "PR 15 400",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 C1",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   }
+  ],
+  "page": 92
+ },
+ {
+  "designation": "7D4X2N30",
+  "tensions": [
+   400
+  ],
+  "faisceau": "double",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 300,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 60 1500",
+    "qty": 1
+   },
+   {
+    "ref": "CC 60 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 60 400",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 1
+   },
+   {
+    "ref": "OE 300",
+    "qty": 2
+   },
+   {
+    "ref": "F 300",
+    "qty": 28
+   },
+   {
+    "ref": "BS 300",
+    "qty": 2
+   },
+   {
+    "ref": "PR 30 400",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 C1",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   }
+  ],
+  "page": 92
+ },
+ {
+  "designation": "7D6A2M60TT",
+  "tensions": [
+   400
+  ],
+  "faisceau": "double",
+  "type": "ancrage",
+  "forme": "ancrage",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 600,
+  "antibruit": false,
+  "isolateur": "composite",
+  "assemblage": "tenon / tenon",
+  "composants": [
+   {
+    "ref": "RL 120 1500",
+    "qty": 1
+   },
+   {
+    "ref": "CC 120",
+    "qty": 1
+   },
+   {
+    "ref": "PM 120 600",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 1000",
+    "qty": 1
+   },
+   {
+    "ref": "IC 7 M 60 TT",
+    "qty": 2
+   },
+   {
+    "ref": "Anneau 1000-567",
+    "qty": 1
+   },
+   {
+    "ref": "PR 60 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 60 A",
+    "qty": 2
+   },
+   {
+    "ref": "Pièces de répartition",
+    "qty": 4
+   }
+  ],
+  "page": 110
+ },
+ {
+  "designation": "7D6X2F15",
+  "tensions": [
+   400
+  ],
+  "faisceau": "double",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 1500",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 NL1",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 38
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "PR 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 L1",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   }
+  ],
+  "page": 79
+ },
+ {
+  "designation": "7D6X2M15",
+  "tensions": [
+   400
+  ],
+  "faisceau": "double",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 1500",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 32
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "PR 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 L1",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   }
+  ],
+  "page": 79
+ },
+ {
+  "designation": "7D6X2M30",
+  "tensions": [
+   400
+  ],
+  "faisceau": "double",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 300,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 60 1500",
+    "qty": 1
+   },
+   {
+    "ref": "CC 60 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 60 600",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 1
+   },
+   {
+    "ref": "OE 300",
+    "qty": 2
+   },
+   {
+    "ref": "F 300 P",
+    "qty": 24
+   },
+   {
+    "ref": "BS 300",
+    "qty": 2
+   },
+   {
+    "ref": "PR 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 L1",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   }
+  ],
+  "page": 79
+ },
+ {
+  "designation": "7D6X2N15",
+  "tensions": [
+   400
+  ],
+  "faisceau": "double",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 1500",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 38
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "PR 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 L1",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   }
+  ],
+  "page": 79
+ },
+ {
+  "designation": "7D6X2N30",
+  "tensions": [
+   400
+  ],
+  "faisceau": "double",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 300,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 60 1500",
+    "qty": 1
+   },
+   {
+    "ref": "CC 60 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 60 600",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 1
+   },
+   {
+    "ref": "OE 300",
+    "qty": 2
+   },
+   {
+    "ref": "F 300",
+    "qty": 28
+   },
+   {
+    "ref": "BS 300",
+    "qty": 2
+   },
+   {
+    "ref": "PR 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 L1",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   }
+  ],
+  "page": 79
+ },
+ {
+  "designation": "7Q4X2M15",
+  "tensions": [
+   400
+  ],
+  "faisceau": "quadruple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 1500",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 32
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "PR 15 400",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 C1",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 2
+   },
+   {
+    "ref": "CD 15 A",
+    "qty": 4
+   },
+   {
+    "ref": "RL 15 300",
+    "qty": 2
+   }
+  ],
+  "page": 89
+ },
+ {
+  "designation": "7Q4X2N15",
+  "tensions": [
+   400
+  ],
+  "faisceau": "quadruple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 1500",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 38
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "PR 15 400",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 C1",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 2
+   },
+   {
+    "ref": "CD 15 A",
+    "qty": 4
+   },
+   {
+    "ref": "RL 15 300",
+    "qty": 2
+   }
+  ],
+  "page": 89
+ },
+ {
+  "designation": "7T6X2M15",
+  "tensions": [
+   400
+  ],
+  "faisceau": "triple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 1500",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "ECL 7",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 32
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "PR 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 3
+   }
+  ],
+  "page": 90
+ },
+ {
+  "designation": "7T6X2N15",
+  "tensions": [
+   400
+  ],
+  "faisceau": "triple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 1500",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "ECL 7",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 38
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "PR 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 3
+   }
+  ],
+  "page": 90
+ },
+ {
+  "designation": "7U4X2M15",
+  "tensions": [
+   400
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 1500",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 32
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 C1",
+    "qty": 1
+   }
+  ],
+  "page": 89
+ },
+ {
+  "designation": "7U4X2N15",
+  "tensions": [
+   400
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 30 1500",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 38
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 C1",
+    "qty": 1
+   }
+  ],
+  "page": 89
+ },
+ {
+  "designation": "7U6X2M30",
+  "tensions": [
+   400
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 300,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 60 1500",
+    "qty": 1
+   },
+   {
+    "ref": "CC 60 A",
+    "qty": 2
+   },
+   {
+    "ref": "PM 60 600",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 1
+   },
+   {
+    "ref": "OE 300",
+    "qty": 2
+   },
+   {
+    "ref": "BS 300",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L1",
+    "qty": 1
+   }
+  ],
+  "page": 77
+ },
+ {
+  "designation": "7U6X2N30",
+  "tensions": [
+   400
+  ],
+  "faisceau": "simple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 300,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "RL 60 1500",
+    "qty": 1
+   },
+   {
+    "ref": "CC 60 A",
+    "qty": 2
+   },
+   {
+    "ref": "PM 60 600",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 1
+   },
+   {
+    "ref": "OE 300",
+    "qty": 2
+   },
+   {
+    "ref": "BS 300",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L1",
+    "qty": 1
+   }
+  ],
+  "page": 77
+ },
+ {
+  "designation": "7T6H3M30",
+  "tensions": [
+   400
+  ],
+  "faisceau": "triple",
+  "type": "ancrage",
+  "forme": "horizontale allégée",
+  "files": 3,
+  "chaine": "triple",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 300,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 60 A",
+    "qty": 1
+   },
+   {
+    "ref": "RL 60 1500",
+    "qty": 1
+   },
+   {
+    "ref": "PMDS 60 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 3
+   },
+   {
+    "ref": "CC 60 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 60 600",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 NL1",
+    "qty": 1
+   },
+   {
+    "ref": "JUP 30",
+    "qty": 1
+   },
+   {
+    "ref": "OE 300",
+    "qty": 3
+   },
+   {
+    "ref": "F 300",
+    "qty": 54
+   },
+   {
+    "ref": "BS 300",
+    "qty": 3
+   },
+   {
+    "ref": "PR 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 LP1",
+    "qty": 1
+   }
+  ],
+  "page": 80
+ },
+ {
+  "designation": "7T6H3N30",
+  "tensions": [
+   400
+  ],
+  "faisceau": "triple",
+  "type": "ancrage",
+  "forme": "horizontale allégée",
+  "files": 3,
+  "chaine": "triple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 300,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 60 A",
+    "qty": 1
+   },
+   {
+    "ref": "RL 60 1500",
+    "qty": 1
+   },
+   {
+    "ref": "PMDS 60 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 3
+   },
+   {
+    "ref": "CC 60 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 60 600",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 1
+   },
+   {
+    "ref": "JUP 30",
+    "qty": 1
+   },
+   {
+    "ref": "OE 300",
+    "qty": 3
+   },
+   {
+    "ref": "F 300",
+    "qty": 42
+   },
+   {
+    "ref": "BS 300",
+    "qty": 3
+   },
+   {
+    "ref": "PR 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 L1",
+    "qty": 1
+   }
+  ],
+  "page": 80
+ },
+ {
+  "designation": "7T6X3F15",
+  "tensions": [
+   400
+  ],
+  "faisceau": "triple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 3,
+  "chaine": "triple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 60 A",
+    "qty": 1
+   },
+   {
+    "ref": "RL 60 1500",
+    "qty": 1
+   },
+   {
+    "ref": "PMD 60 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 3
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 NL1",
+    "qty": 1
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 3
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 57
+   },
+   {
+    "ref": "BS 150",
+    "qty": 3
+   },
+   {
+    "ref": "PR 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 L1",
+    "qty": 1
+   }
+  ],
+  "page": 80
+ },
+ {
+  "designation": "7T6X3M15",
+  "tensions": [
+   400
+  ],
+  "faisceau": "triple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 3,
+  "chaine": "triple",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 60 A",
+    "qty": 1
+   },
+   {
+    "ref": "RL 60 1500",
+    "qty": 1
+   },
+   {
+    "ref": "PMD 60 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 3
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 1
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 3
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 48
+   },
+   {
+    "ref": "BS 150",
+    "qty": 3
+   },
+   {
+    "ref": "PR 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 L1",
+    "qty": 1
+   }
+  ],
+  "page": 80
+ },
+ {
+  "designation": "7T6X3N15",
+  "tensions": [
+   400
+  ],
+  "faisceau": "triple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 3,
+  "chaine": "triple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 60 A",
+    "qty": 1
+   },
+   {
+    "ref": "RL 60 1500",
+    "qty": 1
+   },
+   {
+    "ref": "PMD 60 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 3
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 1
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 3
+   },
+   {
+    "ref": "F 160",
+    "qty": 57
+   },
+   {
+    "ref": "BS 150",
+    "qty": 3
+   },
+   {
+    "ref": "PR 15 600",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 L1",
+    "qty": 1
+   }
+  ],
+  "page": 80
+ },
+ {
+  "designation": "7Q4X4F15",
+  "tensions": [
+   400
+  ],
+  "faisceau": "quadruple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 4,
+  "chaine": "quadruple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 60 A",
+    "qty": 1
+   },
+   {
+    "ref": "RL 60 1500",
+    "qty": 1
+   },
+   {
+    "ref": "PM 60 400",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 NL1",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 4
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 76
+   },
+   {
+    "ref": "BS 150",
+    "qty": 4
+   },
+   {
+    "ref": "PR 15 400",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 C1",
+    "qty": 1
+   },
+   {
+    "ref": "RL 15 300",
+    "qty": 2
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 4
+   }
+  ],
+  "page": 81
+ },
+ {
+  "designation": "7Q4X4M15",
+  "tensions": [
+   400
+  ],
+  "faisceau": "quadruple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 4,
+  "chaine": "quadruple",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 60 A",
+    "qty": 1
+   },
+   {
+    "ref": "RL 60 1500",
+    "qty": 1
+   },
+   {
+    "ref": "PM 60 400",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 4
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 64
+   },
+   {
+    "ref": "BS 150",
+    "qty": 4
+   },
+   {
+    "ref": "PR 15 400",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 C1",
+    "qty": 1
+   },
+   {
+    "ref": "RL 15 300",
+    "qty": 2
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 4
+   }
+  ],
+  "page": 81
+ },
+ {
+  "designation": "7Q4X4N15",
+  "tensions": [
+   400
+  ],
+  "faisceau": "quadruple",
+  "type": "ancrage",
+  "forme": "horizontale",
+  "files": 4,
+  "chaine": "quadruple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 60 A",
+    "qty": 1
+   },
+   {
+    "ref": "RL 60 1500",
+    "qty": 1
+   },
+   {
+    "ref": "PM 60 400",
+    "qty": 1
+   },
+   {
+    "ref": "CC 30 A",
+    "qty": 2
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 4
+   },
+   {
+    "ref": "F 160",
+    "qty": 76
+   },
+   {
+    "ref": "BS 150",
+    "qty": 4
+   },
+   {
+    "ref": "PR 15 400",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 C1",
+    "qty": 1
+   },
+   {
+    "ref": "RL 15 300",
+    "qty": 2
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 4
+   }
+  ],
+  "page": 81
+ },
+ {
+  "designation": "7D4I1N15R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "double",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CC 15 A",
+    "qty": 1
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N2",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "F 160",
+    "qty": 19
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 C2",
+    "qty": 1
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 1
+   }
+  ],
+  "page": 92
+ },
+ {
+  "designation": "7D4V1N15R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "double",
+  "type": "suspension",
+  "forme": "en V à 60°",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "RL 15 600",
+    "qty": 2
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 38
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L2",
+    "qty": 1
+   },
+   {
+    "ref": "PR 15 400",
+    "qty": 1
+   }
+  ],
+  "page": 93
+ },
+ {
+  "designation": "7D4W1N15R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "double",
+  "type": "suspension",
+  "forme": "en V à 90°",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "RL 15 1500",
+    "qty": 2
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 38
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L2",
+    "qty": 1
+   },
+   {
+    "ref": "PR 15 400",
+    "qty": 1
+   }
+  ],
+  "page": 93
+ },
+ {
+  "designation": "7D6V1F15R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "double",
+  "type": "suspension",
+  "forme": "en V à 60°",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "RL 15 600",
+    "qty": 2
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160 PF",
+    "qty": 38
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L2",
+    "qty": 1
+   },
+   {
+    "ref": "PR 15 600",
+    "qty": 1
+   }
+  ],
+  "page": 84
+ },
+ {
+  "designation": "7D6V1M15R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "double",
+  "type": "suspension",
+  "forme": "en V à 60°",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "RL 15 600",
+    "qty": 2
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 32
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L2",
+    "qty": 1
+   },
+   {
+    "ref": "PR 15 600",
+    "qty": 1
+   }
+  ],
+  "page": 84
+ },
+ {
+  "designation": "7D6V1M30R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "double",
+  "type": "suspension",
+  "forme": "en V à 60°",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 300,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 30 A",
+    "qty": 2
+   },
+   {
+    "ref": "RL 30 600",
+    "qty": 2
+   },
+   {
+    "ref": "JUP 30",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 2
+   },
+   {
+    "ref": "OE 300",
+    "qty": 2
+   },
+   {
+    "ref": "F 300 P",
+    "qty": 24
+   },
+   {
+    "ref": "BS 300",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L2",
+    "qty": 1
+   },
+   {
+    "ref": "PR 30 600",
+    "qty": 1
+   }
+  ],
+  "page": 91
+ },
+ {
+  "designation": "7D6V1N15R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "double",
+  "type": "suspension",
+  "forme": "en V à 60°",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "RL 15 600",
+    "qty": 2
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 38
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L2",
+    "qty": 1
+   },
+   {
+    "ref": "PR 15 600",
+    "qty": 1
+   }
+  ],
+  "page": 84
+ },
+ {
+  "designation": "7D6V1N30R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "double",
+  "type": "suspension",
+  "forme": "en V à 60°",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 300,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 30 A",
+    "qty": 2
+   },
+   {
+    "ref": "RL 30 600",
+    "qty": 2
+   },
+   {
+    "ref": "JUP 30",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 2
+   },
+   {
+    "ref": "OE 300",
+    "qty": 2
+   },
+   {
+    "ref": "F 300",
+    "qty": 28
+   },
+   {
+    "ref": "BS 300",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L2",
+    "qty": 1
+   },
+   {
+    "ref": "PR 30 600",
+    "qty": 1
+   }
+  ],
+  "page": 91
+ },
+ {
+  "designation": "7D6W1F15R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "double",
+  "type": "suspension",
+  "forme": "en V à 90°",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "RL 15 1500",
+    "qty": 2
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160 PF",
+    "qty": 38
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L2",
+    "qty": 1
+   },
+   {
+    "ref": "PR 15 600",
+    "qty": 1
+   }
+  ],
+  "page": 85
+ },
+ {
+  "designation": "7D6W1M15R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "double",
+  "type": "suspension",
+  "forme": "en V à 90°",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "RL 15 1500",
+    "qty": 2
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 32
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L2",
+    "qty": 1
+   },
+   {
+    "ref": "PR 15 600",
+    "qty": 1
+   }
+  ],
+  "page": 85
+ },
+ {
+  "designation": "7D6W1M30R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "double",
+  "type": "suspension",
+  "forme": "en V à 90°",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 300,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 30 A",
+    "qty": 2
+   },
+   {
+    "ref": "RL 30 1500",
+    "qty": 2
+   },
+   {
+    "ref": "JUP 30",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 2
+   },
+   {
+    "ref": "OE 300",
+    "qty": 2
+   },
+   {
+    "ref": "F 300 P",
+    "qty": 24
+   },
+   {
+    "ref": "BS 300",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L2",
+    "qty": 1
+   },
+   {
+    "ref": "PR 30 600",
+    "qty": 1
+   }
+  ],
+  "page": 91
+ },
+ {
+  "designation": "7D6W1N15R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "double",
+  "type": "suspension",
+  "forme": "en V à 90°",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "RL 15 1500",
+    "qty": 2
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 38
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L2",
+    "qty": 1
+   },
+   {
+    "ref": "PR 15 600",
+    "qty": 1
+   }
+  ],
+  "page": 85
+ },
+ {
+  "designation": "7D6W1N30R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "double",
+  "type": "suspension",
+  "forme": "en V à 90°",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 300,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 30 A",
+    "qty": 2
+   },
+   {
+    "ref": "RL 30 1500",
+    "qty": 2
+   },
+   {
+    "ref": "JUP 30",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 2
+   },
+   {
+    "ref": "OE 300",
+    "qty": 2
+   },
+   {
+    "ref": "F 300",
+    "qty": 28
+   },
+   {
+    "ref": "BS 300",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L2",
+    "qty": 1
+   },
+   {
+    "ref": "PR 30 600",
+    "qty": 1
+   }
+  ],
+  "page": 91
+ },
+ {
+  "designation": "7Q1I1F15R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "quadruple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CC 15 A",
+    "qty": 1
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N2",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "F 160 PF",
+    "qty": 19
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 C2",
+    "qty": 1
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 1
+   }
+  ],
+  "page": 82
+ },
+ {
+  "designation": "7Q1I1M15R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "quadruple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CC 15 A",
+    "qty": 1
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N2",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 16
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 C2",
+    "qty": 1
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 1
+   }
+  ],
+  "page": 82
+ },
+ {
+  "designation": "7Q1I1N15R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "quadruple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CC 15 A",
+    "qty": 1
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N2",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "F 160",
+    "qty": 19
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 C2",
+    "qty": 1
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 1
+   }
+  ],
+  "page": 82
+ },
+ {
+  "designation": "7Q4V1F15R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "quadruple",
+  "type": "suspension",
+  "forme": "en V à 60°",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "RL 15 600",
+    "qty": 2
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160 PF",
+    "qty": 38
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L2",
+    "qty": 1
+   },
+   {
+    "ref": "PR 15 400",
+    "qty": 1
+   }
+  ],
+  "page": 84
+ },
+ {
+  "designation": "7Q4V1M15R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "quadruple",
+  "type": "suspension",
+  "forme": "en V à 60°",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "RL 15 600",
+    "qty": 2
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 32
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L2",
+    "qty": 1
+   },
+   {
+    "ref": "PR 15 400",
+    "qty": 1
+   }
+  ],
+  "page": 84
+ },
+ {
+  "designation": "7Q4V1N15R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "quadruple",
+  "type": "suspension",
+  "forme": "en V à 60°",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "RL 15 600",
+    "qty": 2
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 38
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L2",
+    "qty": 1
+   },
+   {
+    "ref": "PR 15 400",
+    "qty": 1
+   }
+  ],
+  "page": 84
+ },
+ {
+  "designation": "7Q4W1F15R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "quadruple",
+  "type": "suspension",
+  "forme": "en V à 90°",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "RL 15 1500",
+    "qty": 2
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160 PF",
+    "qty": 38
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L2",
+    "qty": 1
+   },
+   {
+    "ref": "PR 15 400",
+    "qty": 1
+   }
+  ],
+  "page": 85
+ },
+ {
+  "designation": "7Q4W1M15R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "quadruple",
+  "type": "suspension",
+  "forme": "en V à 90°",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "RL 15 1500",
+    "qty": 2
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 32
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L2",
+    "qty": 1
+   },
+   {
+    "ref": "PR 15 400",
+    "qty": 1
+   }
+  ],
+  "page": 85
+ },
+ {
+  "designation": "7Q4W1N15R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "quadruple",
+  "type": "suspension",
+  "forme": "en V à 90°",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "RL 15 1500",
+    "qty": 2
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 38
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L2",
+    "qty": 1
+   },
+   {
+    "ref": "PR 15 400",
+    "qty": 1
+   }
+  ],
+  "page": 85
+ },
+ {
+  "designation": "7T1I1F15R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "triple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CC 15 A",
+    "qty": 1
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N2",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "F 160 PF",
+    "qty": 19
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 C2",
+    "qty": 1
+   },
+   {
+    "ref": "PT 15 600",
+    "qty": 1
+   }
+  ],
+  "page": 82
+ },
+ {
+  "designation": "7T1I1M15R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "triple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CC 15 A",
+    "qty": 1
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N2",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 16
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 C2",
+    "qty": 1
+   },
+   {
+    "ref": "PT 15 600",
+    "qty": 1
+   }
+  ],
+  "page": 82
+ },
+ {
+  "designation": "7T1I1N15R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "triple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CC 15 A",
+    "qty": 1
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N2",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "F 160",
+    "qty": 19
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 C2",
+    "qty": 1
+   },
+   {
+    "ref": "PT 15 600",
+    "qty": 1
+   }
+  ],
+  "page": 82
+ },
+ {
+  "designation": "7U1I1F15R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CC 15 A",
+    "qty": 1
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N2",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 C2",
+    "qty": 1
+   }
+  ],
+  "page": 77
+ },
+ {
+  "designation": "7U1I1M15R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CC 15 A",
+    "qty": 1
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N2",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 16
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 C2",
+    "qty": 1
+   }
+  ],
+  "page": 77
+ },
+ {
+  "designation": "7U1I1M30R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 300,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CC 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "JUP 30",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N2",
+    "qty": 1
+   },
+   {
+    "ref": "OE 300",
+    "qty": 1
+   },
+   {
+    "ref": "BS 300",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 C2",
+    "qty": 1
+   }
+  ],
+  "page": 77
+ },
+ {
+  "designation": "7U1I1N15R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CC 15 A",
+    "qty": 1
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N2",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 1
+   },
+   {
+    "ref": "BS 150",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 C2",
+    "qty": 1
+   }
+  ],
+  "page": 77
+ },
+ {
+  "designation": "7U1I1N30R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 300,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CC 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "JUP 30",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N2",
+    "qty": 1
+   },
+   {
+    "ref": "OE 300",
+    "qty": 1
+   },
+   {
+    "ref": "BS 300",
+    "qty": 1
+   },
+   {
+    "ref": "AP 60 C2",
+    "qty": 1
+   }
+  ],
+  "page": 77
+ },
+ {
+  "designation": "7U4V1F15R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "en V à 60°",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "RL 15 600",
+    "qty": 2
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160 PF",
+    "qty": 38
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L2",
+    "qty": 1
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 1
+   }
+  ],
+  "page": 78
+ },
+ {
+  "designation": "7U4V1M15R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "en V à 60°",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "RL 15 600",
+    "qty": 2
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 32
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L2",
+    "qty": 1
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 1
+   }
+  ],
+  "page": 78
+ },
+ {
+  "designation": "7U4V1N15R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "en V à 60°",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "RL 15 600",
+    "qty": 2
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 38
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L2",
+    "qty": 1
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 1
+   }
+  ],
+  "page": 78
+ },
+ {
+  "designation": "7U4W1F15R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "en V à 90°",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "RL 15 1500",
+    "qty": 2
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160 PF",
+    "qty": 38
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L2",
+    "qty": 1
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 1
+   }
+  ],
+  "page": 78
+ },
+ {
+  "designation": "7U4W1M15R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "en V à 90°",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "RL 15 1500",
+    "qty": 2
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 32
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L2",
+    "qty": 1
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 1
+   }
+  ],
+  "page": 78
+ },
+ {
+  "designation": "7U4W1N15R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "en V à 90°",
+  "files": 1,
+  "chaine": "simple",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "RL 15 1500",
+    "qty": 2
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 2
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 38
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L2",
+    "qty": 1
+   },
+   {
+    "ref": "PT 15 400",
+    "qty": 1
+   }
+  ],
+  "page": 78
+ },
+ {
+  "designation": "7D4I2N15",
+  "tensions": [
+   400
+  ],
+  "faisceau": "double",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CC 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N2",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 38
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 C2",
+    "qty": 1
+   },
+   {
+    "ref": "PR 15 400",
+    "qty": 1
+   }
+  ],
+  "page": 93
+ },
+ {
+  "designation": "7D6I2M30",
+  "tensions": [
+   400
+  ],
+  "faisceau": "double",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 300,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CC 60 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 60 600",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N2",
+    "qty": 1
+   },
+   {
+    "ref": "OE 300",
+    "qty": 2
+   },
+   {
+    "ref": "F 300 P",
+    "qty": 24
+   },
+   {
+    "ref": "BS 300",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L2",
+    "qty": 1
+   },
+   {
+    "ref": "PR 30 600",
+    "qty": 1
+   }
+  ],
+  "page": 83
+ },
+ {
+  "designation": "7D6I2N30",
+  "tensions": [
+   400
+  ],
+  "faisceau": "double",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 300,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CC 60 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 60 600",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N2",
+    "qty": 1
+   },
+   {
+    "ref": "OE 300",
+    "qty": 2
+   },
+   {
+    "ref": "F 300",
+    "qty": 28
+   },
+   {
+    "ref": "BS 300",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L2",
+    "qty": 1
+   },
+   {
+    "ref": "PR 30 600",
+    "qty": 1
+   }
+  ],
+  "page": 83
+ },
+ {
+  "designation": "7Q4I2F15",
+  "tensions": [
+   400
+  ],
+  "faisceau": "quadruple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CC 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N2",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160 PF",
+    "qty": 38
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L2",
+    "qty": 1
+   },
+   {
+    "ref": "PR 15 400",
+    "qty": 1
+   }
+  ],
+  "page": 83
+ },
+ {
+  "designation": "7Q4I2M15",
+  "tensions": [
+   400
+  ],
+  "faisceau": "quadruple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CC 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N2",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 32
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L2",
+    "qty": 1
+   },
+   {
+    "ref": "PR 15 400",
+    "qty": 1
+   }
+  ],
+  "page": 83
+ },
+ {
+  "designation": "7Q4I2N15",
+  "tensions": [
+   400
+  ],
+  "faisceau": "quadruple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CC 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 30 400",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N2",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 38
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L2",
+    "qty": 1
+   },
+   {
+    "ref": "PR 15 400",
+    "qty": 1
+   }
+  ],
+  "page": 83
+ },
+ {
+  "designation": "7T6I2F15",
+  "tensions": [
+   400
+  ],
+  "faisceau": "triple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CC 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N2",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160 PF",
+    "qty": 38
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L2",
+    "qty": 1
+   },
+   {
+    "ref": "PR 15 600",
+    "qty": 1
+   }
+  ],
+  "page": 83
+ },
+ {
+  "designation": "7T6I2M15",
+  "tensions": [
+   400
+  ],
+  "faisceau": "triple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CC 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N2",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 32
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L2",
+    "qty": 1
+   },
+   {
+    "ref": "PR 15 600",
+    "qty": 1
+   }
+  ],
+  "page": 83
+ },
+ {
+  "designation": "7T6I2N15",
+  "tensions": [
+   400
+  ],
+  "faisceau": "triple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CC 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "C 25 N2",
+    "qty": 1
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 38
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 L2",
+    "qty": 1
+   },
+   {
+    "ref": "PR 15 600",
+    "qty": 1
+   }
+  ],
+  "page": 83
+ },
+ {
+  "designation": "7U6I2F15R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "forte",
+  "pollutionCode": "F",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 4
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160 PF",
+    "qty": 38
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 C1",
+    "qty": 2
+   },
+   {
+    "ref": "JUL B",
+    "qty": 1
+   }
+  ],
+  "page": 78
+ },
+ {
+  "designation": "7U6I2M15R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "moyenne",
+  "pollutionCode": "M",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 4
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160 P",
+    "qty": 32
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 C1",
+    "qty": 2
+   },
+   {
+    "ref": "JUL B",
+    "qty": 1
+   }
+  ],
+  "page": 78
+ },
+ {
+  "designation": "7U6I2N15R",
+  "tensions": [
+   400
+  ],
+  "faisceau": "simple",
+  "type": "suspension",
+  "forme": "verticale",
+  "files": 2,
+  "chaine": "double",
+  "pollution": "normale",
+  "pollutionCode": "N",
+  "charge": 150,
+  "antibruit": false,
+  "isolateur": "verre",
+  "composants": [
+   {
+    "ref": "CD 30 A",
+    "qty": 1
+   },
+   {
+    "ref": "PM 30 600",
+    "qty": 1
+   },
+   {
+    "ref": "CC 15 A",
+    "qty": 2
+   },
+   {
+    "ref": "JUP 15",
+    "qty": 4
+   },
+   {
+    "ref": "C 25 N1",
+    "qty": 2
+   },
+   {
+    "ref": "OE 150",
+    "qty": 2
+   },
+   {
+    "ref": "F 160",
+    "qty": 38
+   },
+   {
+    "ref": "BS 150",
+    "qty": 2
+   },
+   {
+    "ref": "AP 60 C1",
+    "qty": 2
+   },
+   {
+    "ref": "JUL B",
+    "qty": 1
+   }
+  ],
+  "page": 78
+ }
+]

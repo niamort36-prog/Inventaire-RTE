@@ -1996,9 +1996,16 @@ function remplirChoixChaines() {
         ctx.textContent += ' — aucune chaîne du catalogue ne correspond';
         return;
     }
-    sel.innerHTML = '<option value="">— Aucune —</option>' + dispo.map(x =>
-        `<option value="${esc(x.d)}">${esc(x.d)} — ${esc(x.fo)}, pollution ${esc(x.po)}, ${x.kn} kN</option>`
-    ).join('');
+
+    // Verre et composite sont séparés : les composites relèvent d'un usage
+    // particulier (pollution sévère, montagne, vandalisme) et imposent des
+    // dispositifs de protection dédiés.
+    const ligne = x => `<option value="${esc(x.d)}">${esc(x.d)} — ${esc(x.fo)}, pollution ${esc(x.po)}, ${x.kn} kN</option>`;
+    const verre = dispo.filter(x => x.is !== 'composite');
+    const compo = dispo.filter(x => x.is === 'composite');
+    sel.innerHTML = '<option value="">— Aucune —</option>'
+        + (verre.length ? `<optgroup label="Isolateurs verre">${verre.map(ligne).join('')}</optgroup>` : '')
+        + (compo.length ? `<optgroup label="Isolateurs composites">${compo.map(ligne).join('')}</optgroup>` : '');
 }
 
 function apercuChaine() {
@@ -2012,7 +2019,14 @@ function apercuChaine() {
     const nb = Math.max(1, num(document.getElementById('input-chain-qty').value, 1));
     wrap.classList.remove('hidden');
     prev.classList.remove('hidden');
-    prev.innerHTML = '<b>Matériel qui sera ajouté :</b><br>' + ch.c.map(([ref, q]) => {
+
+    const avertissement = ch.is === 'composite'
+        ? `<div class="mb-1 text-orange-700 bg-orange-50 border border-orange-200 rounded p-1">
+             <b>Isolateur composite</b> — assemblage ${esc(ch.ga || '')}.
+             Les dispositifs de protection et anneaux de répartition sont obligatoires.
+           </div>` : '';
+
+    prev.innerHTML = avertissement + '<b>Matériel qui sera ajouté :</b><br>' + ch.c.map(([ref, q]) => {
         const p = piecePourReference(ref);
         const etat = p ? '' : ' <span class="text-orange-600">(à créer)</span>';
         return `${q * nb} × ${esc(p ? p.name : ref)}${etat}`;
