@@ -1288,7 +1288,6 @@ async function handlePartSubmit(e) {
     const part = {
         id,
         name: document.getElementById('input-part-name').value.trim(),
-        cable,
         qty: q(document.getElementById('input-part-qty').value),
         alertQty: q(document.getElementById('input-part-alert').value),
         familyId: famVal === '' ? null : num(famVal, null),
@@ -1297,6 +1296,10 @@ async function handlePartSubmit(e) {
         hasImage: currentImageBuffer !== undefined ? !!currentImageBuffer : !!(existing && existing.hasImage),
         hasDoc:   currentDocBuffer   !== undefined ? !!currentDocBuffer   : !!(existing && existing.hasDoc)
     };
+    // Seuls les câbles portent ce champ : décocher la case le fait disparaître,
+    // et une pièce ordinaire reste enregistrable même si les règles de sécurité
+    // ne le connaissent pas encore.
+    if (cable) part.cable = true;
 
     if (!part.name) { toast("Le nom est obligatoire", 'err'); return; }
 
