@@ -3454,8 +3454,11 @@ function boot() {
             if (!teams[teamKey]) {
                 // L'équipe mémorisée n'existe plus : on bascule au lieu de planter.
                 const first = Object.keys(teams)[0];
-                if (first) { teamKey = first; localStorage.setItem('inventrte.team', first); renderTeamLabel(); }
+                if (first) { teamKey = first; localStorage.setItem('inventrte.team', first); }
             }
+            // Le libellé n'est connu qu'ici : au premier affichage, la liste des
+            // équipes n'était pas encore chargée et seule la clé était disponible.
+            renderTeamLabel();
         }, err => console.error('Équipes', err));
         attachListeners();
     };
