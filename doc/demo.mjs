@@ -28,6 +28,8 @@ export const PIECES = [
     ['Harnais antichute',         'Sécurité',            'Local sécurité',    11, 4],
     ['Gants isolants classe 2',   'Sécurité',            'Local sécurité',     2, 6],
     ['Cordage 12 mm (50 m)',      'Câbles',              'Aire de stockage',   7, 3],
+    ['ASTER 228',                 'Câbles',              'Aire de stockage', 1983, 500, true],
+    ['CANNA 181',                 'Câbles',              'Aire de stockage',  240, 400, true],
 
     // Références du catalogue RTE : elles permettent de montrer la
     // correspondance qui s'opère quand une chaîne est ajoutée à un pylône.

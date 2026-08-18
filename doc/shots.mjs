@@ -62,13 +62,15 @@ await page.evaluate(async ({ FAMILLES, ZONES, PIECES, planSrc }) => {
     await write('map/image', plan);
 
     const ids = {};
-    for (const [nom, fam, zone, qty, seuil] of PIECES) {
+    for (const [nom, fam, zone, qty, seuil, cable] of PIECES) {
         const id = Date.now() + Math.floor(Math.random() * 100000);
         ids[nom] = id;
-        await write('parts/p' + id, {
+        const piece = {
             id, name: nom, qty, alertQty: seuil, familyId: famIds[fam],
             location: zone, desc: '', hasImage: false, hasDoc: false
-        });
+        };
+        if (cable) piece.cable = true;      // quantité comptée en mètres
+        await write('parts/p' + id, piece);
         await w(120);
     }
     window.__ids = ids;
@@ -97,6 +99,14 @@ await shotEl('fiche-piece', '#modal-quick-view .inline-block');
 await page.evaluate(() => { closeModal('modal-quick-view'); openPartModal(); });
 await wait(1200);
 await shotEl('ajouter-piece', '#modal-part .bg-white');
+
+// Formulaire d'une pièce en mode câble : la quantité passe en mètres
+await page.evaluate(() => {
+    closeModal('modal-part');
+    openPartModal(parts.find(p => p.name === 'ASTER 228').id);
+});
+await wait(1200);
+await shotEl('piece-cable', '#modal-part .bg-white');
 
 await page.evaluate(() => { closeModal('modal-part'); showPage('familles'); });
 await wait(1500);
@@ -204,6 +214,9 @@ await page.evaluate(async () => {
     activeGroupId = null; await w(600);
     openConfirmAddModal(nom('Perche'));
     document.getElementById('confirm-add-qty').value = '2';
+    // Sans déduction du stock : c'est ce cas qui fait apparaître la mention
+    // « déjà prévu sur un chantier » sur la pièce.
+    document.getElementById('confirm-add-deduct').checked = false;
     finalizeAddToBasket(); await w(1800);
     openBasketDetail(window.__bid);
 });
@@ -276,6 +289,20 @@ await wait(2000);
 await page.setViewportSize({ width: 1280, height: 560 });
 await wait(600);
 await shot('chantiers');
+
+// Mention d'engagement : une pièce promise à un chantier, non déduite du stock
+await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms));
+    showPage('pieces');
+    document.getElementById('search-input-parts').value = 'perche';
+    renderPartsGrid(); await w(400);
+});
+await wait(1200);
+await shotEl('engagement', '#all-parts-grid > div');
+await page.evaluate(() => {
+    document.getElementById('search-input-parts').value = '';
+    renderPartsGrid();
+});
 
 await page.evaluate(() => showPage('scanner'));
 await wait(2500);
