@@ -785,20 +785,24 @@ function loadCache() {
    ========================================================================== */
 const teamRef = sub => db.ref('profiles/' + teamKey + (sub ? '/' + sub : ''));
 
-/** Écrit un noeud et signale l'échec à l'utilisateur (au lieu d'échouer en silence). */
+/** Écrit un noeud. Renvoie true si l'enregistrement a abouti, false sinon :
+ *  sans cela, l'appelant annoncerait un succès alors que rien n'est enregistré. */
 function write(path, value) {
-    if (!db) { toast("Hors ligne : modification non enregistrée", 'err'); return Promise.resolve(); }
+    if (!db) { toast("Hors ligne : modification non enregistrée", 'err'); return Promise.resolve(false); }
     const p = value === null ? teamRef(path).remove() : teamRef(path).set(value);
-    return p.catch(err => {
+    return p.then(() => true).catch(err => {
         if (!reportPermissionError(err, 'Écriture ' + path)) toast("Échec de l'enregistrement", 'err');
+        return false;
     });
 }
 
 function updateNode(path, patch) {
-    if (!db) { toast("Hors ligne : modification non enregistrée", 'err'); return Promise.resolve(); }
+    if (!db) { toast("Hors ligne : modification non enregistrée", 'err'); return Promise.resolve(false); }
     return teamRef(path).update(patch)
+        .then(() => true)
         .catch(err => {
             if (!reportPermissionError(err, 'Update ' + path)) toast("Échec de l'enregistrement", 'err');
+            return false;
         });
 }
 
@@ -860,10 +864,9 @@ let permissionWarned = false;
 function reportPermissionError(err, action) {
     console.error(action, err);
     if (err && err.code === 'PERMISSION_DENIED') {
-        setSyncState('offline');
         if (!permissionWarned) {
             permissionWarned = true;
-            toast("Accès refusé par les règles Firebase", 'err');
+            toast("Refusé par les règles Firebase — rien n'a été enregistré", 'err');
         }
         return true;
     }
@@ -877,7 +880,10 @@ function bind(path, handler) {
         setSyncState('online');
         saveCache();
     }, err => {
-        if (!reportPermissionError(err, 'Lecture ' + path)) setSyncState('offline');
+        // Un refus en lecture prive l'application de ses données : l'indicateur
+        // doit le montrer, contrairement à un refus ponctuel en écriture.
+        reportPermissionError(err, 'Lecture ' + path);
+        setSyncState('offline');
     });
     activeRefs.push({ ref, cb });
 }
@@ -1296,7 +1302,7 @@ async function handlePartSubmit(e) {
 
     btn.disabled = true; btn.textContent = "Enregistrement...";
     try {
-        await write('parts/p' + id, part);
+        if (!await write('parts/p' + id, part)) return;   // refus : la fenêtre reste ouverte
 
         // Médias écrits séparément : ils ne polluent pas le flux temps réel.
         if (currentImageBuffer !== undefined || currentDocBuffer !== undefined) {
@@ -1634,7 +1640,7 @@ async function handleFamilySubmit(e) {
         color: document.getElementById('input-family-color').value || 'red'
     };
     if (!data.name) { toast("Le nom est obligatoire", 'err'); return; }
-    await write('families/f' + id, data);
+    if (!await write('families/f' + id, data)) return;
     closeModal('modal-family');
     toast(idRaw ? "Famille modifiée" : "Famille créée", 'ok');
 }
@@ -1847,12 +1853,13 @@ async function handleMarkerSubmit(e) {
         }
     } else {
         const id = Date.now();
-        await write('map/markers/m' + id, {
+        const ok = await write('map/markers/m' + id, {
             id,
             x: parseFloat(document.getElementById('marker-x').value) || 0,
             y: parseFloat(document.getElementById('marker-y').value) || 0,
             name, desc
         });
+        if (!ok) return;
         logHistory(`Zone « ${name} » créée`);
     }
     closeModal('modal-marker');
@@ -2379,7 +2386,7 @@ async function handleNewBasket(e) {
     const id = Date.now();
     const basket = { id, name, status: 'draft', createdAt: id };
     if (tension) basket.tension = tension;
-    await write('baskets/b' + id, basket);
+    if (!await write('baskets/b' + id, basket)) return;
     closeModal('modal-new-basket');
     logHistory(`Chantier « ${name} » créé${tension ? ' (' + tension + ' kV)' : ''}`);
     openBasketDetail(id);
