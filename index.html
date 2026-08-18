@@ -928,21 +928,36 @@ function attachListeners() {
 /* ============================================================================
    ÉQUIPES
    ========================================================================== */
+/** Le nom affiché d'une équipe est distinct de sa clé : celle-ci identifie ses
+ *  données dans la base et ne peut pas changer sans les déplacer toutes.
+ *  Renommer une équipe ne touche donc qu'à ce libellé. */
+function teamLabel(key = teamKey) {
+    const t = teams[key];
+    return (t && t.name) || key;
+}
+
 function renderTeamLabel() {
-    document.getElementById('team-label').textContent = teamKey;
+    document.getElementById('team-label').textContent = teamLabel();
 }
 
 function openTeamModal() {
     const list = document.getElementById('team-list');
     list.innerHTML = '';
-    Object.keys(teams).sort().forEach(key => {
+    Object.keys(teams).sort((a, b) => teamLabel(a).localeCompare(teamLabel(b), 'fr')).forEach(key => {
         const active = key === teamKey;
-        const btn = document.createElement('button');
-        btn.className = `w-full text-left px-4 py-3 rounded border transition flex justify-between items-center ${
-            active ? 'border-indigo-500 bg-indigo-50 text-indigo-800 font-bold' : 'border-gray-200 hover:bg-gray-50'}`;
-        btn.innerHTML = `<span>${esc(key)}</span>${active ? '<i class="fa-solid fa-check"></i>' : ''}`;
-        btn.onclick = () => { switchTeam(key); closeModal('modal-team'); };
-        list.appendChild(btn);
+        const ligne = document.createElement('div');
+        ligne.className = `w-full rounded border transition flex items-center ${
+            active ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200 hover:bg-gray-50'}`;
+        ligne.innerHTML = `
+            <button data-choisir class="flex-1 text-left px-4 py-3 ${active ? 'text-indigo-800 font-bold' : ''}">
+                ${esc(teamLabel(key))}${active ? ' <i class="fa-solid fa-check ml-1"></i>' : ''}
+            </button>
+            <button data-renommer class="px-3 py-3 text-gray-400 hover:text-indigo-600" title="Renommer">
+                <i class="fa-solid fa-pen text-sm"></i>
+            </button>`;
+        ligne.querySelector('[data-choisir]').onclick = () => { switchTeam(key); closeModal('modal-team'); };
+        ligne.querySelector('[data-renommer]').onclick = () => renommerTeam(key);
+        list.appendChild(ligne);
     });
     document.getElementById('input-user-name').value = userName;
     document.getElementById('modal-team').classList.remove('hidden');
@@ -951,6 +966,22 @@ function openTeamModal() {
 function saveUserName(v) {
     userName = (v || '').trim();
     localStorage.setItem('inventrte.user', userName);
+}
+
+/** Renommer ne touche qu'au libellé : les données restent rangées sous la clé
+ *  d'origine, et les liens déjà partagés continuent de fonctionner. */
+function renommerTeam(key) {
+    const actuel = teamLabel(key);
+    const nom = prompt("Nom de l'équipe :", actuel);
+    if (!nom || !nom.trim() || nom.trim() === actuel) return;
+    if (!db) { toast("Connexion requise", 'err'); return; }
+    db.ref('teams/' + key + '/name').set(nom.trim())
+        .then(() => {
+            toast("Équipe renommée", 'ok');
+            renderTeamLabel();
+            openTeamModal();
+        })
+        .catch(err => { console.error(err); toast("Échec du renommage", 'err'); });
 }
 
 function createTeam() {
@@ -985,7 +1016,7 @@ function switchTeam(key) {
     loadCache();                 // affichage instantané des données connues
     renderAll();
     if (db) { setSyncState('wait'); attachListeners(); }
-    toast("Équipe : " + key, 'ok');
+    toast("Équipe : " + teamLabel(key), 'ok');
 }
 
 /* ============================================================================
@@ -2872,7 +2903,7 @@ function printBasket() {
 
     const dateStr = new Date().toLocaleDateString('fr-FR', {
         weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-    const titre = `${basket.name} — ${teamKey}`;
+    const titre = `${basket.name} — ${teamLabel()}`;
 
     const html = `<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
 <title>${esc(titre)}</title><style>
@@ -2922,7 +2953,7 @@ function printBasket() {
 <header>
   <h1>${esc(basket.name)}</h1>
   <div class="meta">
-    <span>Équipe : <b>${esc(teamKey)}</b></span>
+    <span>Équipe : <b>${esc(teamLabel())}</b></span>
     <span>État : <b>${isDraft ? 'Préparation' : 'Chargement'}</b></span>
     <span>Édité le <b>${dateStr}</b></span>
     ${userName ? `<span>Par <b>${esc(userName)}</b></span>` : ''}
@@ -2937,7 +2968,7 @@ function printBasket() {
 <table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table>
 ${recap}
 <footer>
-  <span>Invent'RTE — ${esc(teamKey)}</span>
+  <span>Invent'RTE — ${esc(teamLabel())}</span>
   <span class="sign">Visa / observations</span>
 </footer>
 </body></html>`;
@@ -3308,7 +3339,7 @@ function downloadExcel() {
     ws['!cols'] = [{ wch: 38 }, { wch: 10 }, { wch: 7 }, { wch: 12 }, { wch: 10 }, { wch: 22 }, { wch: 22 }, { wch: 40 }];
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Inventaire");
-    XLSX.writeFile(wb, `Inventaire_${teamKey.replace(/\s+/g, '_')}_${new Date().toISOString().slice(0, 10)}.xlsx`);
+    XLSX.writeFile(wb, `Inventaire_${teamLabel().replace(/\s+/g, '_')}_${new Date().toISOString().slice(0, 10)}.xlsx`);
     toast("Export Excel généré", 'ok');
 }
 
@@ -3328,7 +3359,7 @@ function downloadAllQRCodes() {
     }).join('');
     document.body.removeChild(tempContainer);
 
-    const html = `<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>QR Codes — ${esc(teamKey)}</title><style>
+    const html = `<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>QR Codes — ${esc(teamLabel())}</title><style>
         body { font-family: 'Segoe UI', Tahoma, sans-serif; text-align: center; color: #333; background: #f8f9fa; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; padding: 20px; margin: 0 auto; }
         .label { border: 1px dashed #aaa; padding: 15px; display: flex; flex-direction: column; align-items: center; background: #fff; border-radius: 8px; page-break-inside: avoid; }
@@ -3338,7 +3369,7 @@ function downloadAllQRCodes() {
         .btn-print { background: #4F46E5; color: white; border: none; padding: 12px 24px; font-size: 16px; border-radius: 6px; cursor: pointer; margin-top: 20px; font-weight: bold; }
         @media print { body { background: #fff; } .no-print { display: none !important; } .label { border: 1px solid #000; break-inside: avoid; width: 140px; } .grid { display: flex; flex-wrap: wrap; gap: 10px; padding: 0; } }
         </style></head><body>
-        <div class="no-print"><h2 style="margin-top:20px;">Étiquettes QR — ${esc(teamKey)}</h2>
+        <div class="no-print"><h2 style="margin-top:20px;">Étiquettes QR — ${esc(teamLabel())}</h2>
         <button class="btn-print" onclick="window.print()">Imprimer / Sauvegarder en PDF</button></div>
         <div class="grid">${labels}</div></body></html>`;
 
@@ -3379,7 +3410,7 @@ function onScanSuccess(text) {
     if (!String(text).startsWith("PART:")) { toast("QR code non reconnu", 'warn'); return; }
     const id = num(String(text).split(":")[1]);
     const part = parts.find(p => p.id === id);
-    if (!part) { toast("Cette pièce n'existe pas dans l'équipe " + teamKey, 'warn'); return; }
+    if (!part) { toast("Cette pièce n'existe pas dans l'équipe " + teamLabel(), 'warn'); return; }
     stopScanner();
     showPage('pieces');
     openQuickView(id);

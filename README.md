@@ -41,7 +41,10 @@ supplémentaires en dehors de `rules`, que Firebase rejetterait.
 
 ## Organisation des données
 
-Chaque équipe possède son propre espace, totalement séparé des autres :
+Chaque équipe possède son propre espace, totalement séparé des autres. La clé
+`<équipe>` identifie ces données et ne change jamais : renommer une équipe ne
+touche qu'à son libellé (`teams/<équipe>/name`), ce qui évite de déplacer tout
+son contenu et laisse fonctionner les liens déjà partagés.
 
 ```
 teams/<équipe>                  index léger (liste des équipes)
