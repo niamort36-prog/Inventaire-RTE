@@ -3106,12 +3106,14 @@ function openConfirmAddModal(partId) {
     if (groups.length) {
         // Plusieurs ouvrages peuvent recevoir la même quantité en une fois :
         // sur une ligne, le même matériel revient souvent d'un pylône à l'autre.
+        // Le numéro d'ouvrage ne doit jamais être rogné : c'est lui qu'on coche.
+        // Seules ses caractéristiques cèdent la place quand l'écran est étroit.
         liste.innerHTML = groups.map(g => `
             <label class="flex items-center gap-2 px-2 py-1.5 hover:bg-gray-50 cursor-pointer">
-                <input type="checkbox" data-ouvrage="${g.gid}" class="h-4 w-4 text-indigo-600 rounded"
+                <input type="checkbox" data-ouvrage="${g.gid}" class="h-4 w-4 flex-none text-indigo-600 rounded"
                        ${activeGroupId === g.gid ? 'checked' : ''}>
-                <span class="text-sm truncate">${esc(groupShortLabel(g))}</span>
-                <span class="text-xs text-gray-400 truncate">${esc(groupDetail(g))}</span>
+                <span class="text-sm font-semibold whitespace-nowrap flex-none">${esc(groupShortLabel(g))}</span>
+                <span class="text-xs text-gray-400 truncate min-w-0" title="${esc(groupDetail(g))}">${esc(groupDetail(g))}</span>
             </label>`).join('');
         liste.querySelectorAll('[data-ouvrage]').forEach(el =>
             el.onchange = majTotalAjout);
