@@ -88,6 +88,12 @@ puis d'y rattacher le matériel.
 - **Portée** : numéro et faisceau (simple ou double) — une portée n'a ni
   fonction ni type de chaîne, ces champs disparaissent.
 
+Quand des ouvrages sont déclarés, la fenêtre d'ajout de matériel présente la
+liste à cocher : la quantité saisie est ajoutée **à chacun des ouvrages cochés**
+— 3 pièces sur les pylônes 1, 2 et 4 font 3 lignes de 3, soit 9 au total, que la
+fenêtre annonce avant validation. Sur un chantier déjà validé, c'est bien ce
+total qui est déduit du stock.
+
 L'ouvrage qui vient d'être créé devient celui auquel les ajouts se rattachent :
 on déclare le pylône 1, on ajoute son outillage, puis on passe au suivant. Le
 bouton **Ajouter ici** d'un intertitre permet de revenir sur un ouvrage précédent,

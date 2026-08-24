@@ -283,8 +283,13 @@
                     <p class="text-xs text-gray-500 mt-1" id="confirm-add-stock-info">Stock disponible: 0</p>
                 </div>
                 <div class="mb-4 hidden" id="confirm-add-group-wrap">
-                    <label class="block text-sm font-semibold mb-1">Rattacher à</label>
-                    <select id="confirm-add-group" class="w-full border p-2 rounded bg-white text-sm"></select>
+                    <div class="flex justify-between items-baseline mb-1">
+                        <label class="block text-sm font-semibold">Rattacher à</label>
+                        <button type="button" onclick="toutCocherOuvrages()" id="btn-tout-ouvrages"
+                                class="text-xs text-indigo-600 hover:underline">Tout cocher</button>
+                    </div>
+                    <div id="confirm-add-groups" class="border rounded max-h-40 overflow-y-auto divide-y"></div>
+                    <p class="text-xs text-indigo-700 mt-1 font-semibold" id="confirm-add-total"></p>
                 </div>
                 <div class="mb-4">
                     <label class="block text-sm font-semibold mb-1">Commentaire</label>
@@ -1977,6 +1982,17 @@ function groupLabel(g) {
     return suite ? `${tete.trim()} — ${suite}` : tete.trim();
 }
 
+/** Caractéristiques d'un ouvrage, sans son numéro : sert à distinguer deux
+ *  ouvrages dans une liste où le numéro figure déjà. */
+function groupDetail(g) {
+    if (!g) return '';
+    const carac = g.kind === 'portee'
+        ? [FAISCEAUX[g.faisceau]]
+        : [FONCTIONS[g.fonction], CHAINES[g.chaine], FAISCEAUX[g.faisceau]];
+    if (g.cable) carac.push(g.cable);
+    return carac.filter(Boolean).join(' · ');
+}
+
 function groupShortLabel(g) {
     if (!g) return 'Non affecté';
     return (g.kind === 'portee' ? 'Portée ' : 'Pylône ') + (g.name || '');
@@ -3073,6 +3089,8 @@ function openConfirmAddModal(partId) {
     document.getElementById('confirm-add-part-id').value = partId;
     document.getElementById('confirm-add-title').textContent = "Ajouter : " + part.name;
     document.getElementById('confirm-add-qty').value = 1;
+    document.getElementById('confirm-add-qty').oninput = majTotalAjout;
+    document.getElementById('btn-tout-ouvrages').textContent = 'Tout cocher';
     document.getElementById('confirm-add-comment').value = "";
     document.getElementById('confirm-add-stock-info').textContent =
         "Stock disponible : " + qtyTxt(part.qty, part) + (estCable(part) ? " — quantité en mètres" : "");
@@ -3083,58 +3101,105 @@ function openConfirmAddModal(partId) {
     const basket = currentBasket();
     const groups = basket ? groupsOf(basket) : [];
     const wrap = document.getElementById('confirm-add-group-wrap');
-    const sel = document.getElementById('confirm-add-group');
+    const liste = document.getElementById('confirm-add-groups');
     wrap.classList.toggle('hidden', groups.length === 0);
     if (groups.length) {
-        sel.innerHTML = '<option value="">— Non affecté —</option>' +
-            groups.map(g => `<option value="${g.gid}">${esc(groupLabel(g))}</option>`).join('');
-        sel.value = activeGroupId && groups.some(g => g.gid === activeGroupId) ? activeGroupId : '';
+        // Plusieurs ouvrages peuvent recevoir la même quantité en une fois :
+        // sur une ligne, le même matériel revient souvent d'un pylône à l'autre.
+        liste.innerHTML = groups.map(g => `
+            <label class="flex items-center gap-2 px-2 py-1.5 hover:bg-gray-50 cursor-pointer">
+                <input type="checkbox" data-ouvrage="${g.gid}" class="h-4 w-4 text-indigo-600 rounded"
+                       ${activeGroupId === g.gid ? 'checked' : ''}>
+                <span class="text-sm truncate">${esc(groupShortLabel(g))}</span>
+                <span class="text-xs text-gray-400 truncate">${esc(groupDetail(g))}</span>
+            </label>`).join('');
+        liste.querySelectorAll('[data-ouvrage]').forEach(el =>
+            el.onchange = majTotalAjout);
+        majTotalAjout();
     }
 
     document.getElementById('modal-confirm-add-basket').classList.remove('hidden');
     document.getElementById('basket-search-results').classList.add('hidden');
 }
 
+/** Ouvrages cochés dans la fenêtre d'ajout. */
+function ouvragesCoches() {
+    return [...document.querySelectorAll('#confirm-add-groups [data-ouvrage]')]
+        .filter(el => el.checked).map(el => el.dataset.ouvrage);
+}
+
+/** La quantité saisie vaut pour chaque ouvrage coché : on affiche le total
+ *  obtenu, pour lever toute ambiguïté avant de valider. */
+function majTotalAjout() {
+    const p = document.getElementById('confirm-add-total');
+    const n = ouvragesCoches().length;
+    const q = num(document.getElementById('confirm-add-qty').value, 0);
+    const partId = num(document.getElementById('confirm-add-part-id').value);
+    const part = parts.find(x => x.id === partId);
+
+    if (n <= 1) { p.textContent = ''; return; }
+    p.textContent = `${qtyTxt(q, part)} sur chacun des ${n} ouvrages — total ${qtyTxt(q * n, part)}`;
+}
+
+function toutCocherOuvrages() {
+    const cases = [...document.querySelectorAll('#confirm-add-groups [data-ouvrage]')];
+    const tout = cases.every(c => c.checked);
+    cases.forEach(c => { c.checked = !tout; });
+    document.getElementById('btn-tout-ouvrages').textContent = tout ? 'Tout cocher' : 'Tout décocher';
+    majTotalAjout();
+}
+
 function finalizeAddToBasket() {
     const partId = num(document.getElementById('confirm-add-part-id').value);
-    const qty = num(document.getElementById('confirm-add-qty').value);
     const deduct = document.getElementById('confirm-add-deduct').checked;
     const comment = document.getElementById('confirm-add-comment').value;
-    if (qty <= 0) { toast("Quantité invalide", 'err'); return; }
 
     const basket = currentBasket();
     if (!basket) return;
     const part = parts.find(p => p.id === partId);
     if (!part) { toast("Pièce introuvable", 'err'); return; }
 
+    const qty = numQty(document.getElementById('confirm-add-qty').value, part);
+    if (qty <= 0) { toast("Quantité invalide", 'err'); return; }
+
+    // La quantité saisie vaut pour chaque ouvrage coché. Sans ouvrage coché —
+    // ou sans ouvrage déclaré — une seule ligne, non affectée.
+    const cibles = groupsOf(basket).length ? ouvragesCoches() : [];
+    const destinations = cibles.length ? cibles : [null];
+    const total = qty * destinations.length;
+
     // Sur un chantier déjà validé, l'ajout impacte le stock immédiatement.
     if (basket.status === 'active' && deduct) {
-        if (num(part.qty) < qty && !confirm(`Stock insuffisant pour « ${part.name} » (${num(part.qty)} disponible).\n\nContinuer ?`)) return;
-        adjustQty(partId, -qty);
-        logHistory(`-${qty} « ${part.name} » (chantier ${basket.name})`);
+        if (numQty(part.qty, part) < total &&
+            !confirm(`Stock insuffisant pour « ${part.name} » (${qtyTxt(part.qty, part)} disponible, ${qtyTxt(total, part)} demandé).
+
+Continuer ?`)) return;
+        adjustQty(partId, -total);
+        logHistory(`-${qtyTxt(total, part)} « ${part.name} » (chantier ${basket.name})`);
     }
 
-    // Pylône / portée choisi dans la fenêtre, vide si le chantier n'en a pas.
-    const groupId = document.getElementById('confirm-add-group').value || null;
+    destinations.forEach(groupId => {
+        // Une ligne identique sur le même ouvrage est complétée plutôt que dupliquée.
+        const existing = itemsOf(basket).find(i =>
+            i.partId === partId && !!i.deduct === deduct && (i.comment || '') === comment
+            && (i.groupId || null) === groupId);
 
-    // Regroupement avec une ligne identique deja presente, sinon nouvelle ligne.
-    // Deux lignes sur des ouvrages differents restent distinctes.
-    const existing = itemsOf(basket).find(i =>
-        i.partId === partId && !!i.deduct === deduct && (i.comment || '') === comment
-        && (i.groupId || null) === groupId);
-
-    if (existing) {
-        updateNode(itemRef(basket.id, existing.uid), { qty: num(existing.qty) + qty });
-    } else {
-        const uid = newItemUid();
-        const item = { uid, partId, qty, deduct, comment };
-        if (groupId) item.groupId = groupId;
-        write(itemRef(basket.id, uid), item);
-    }
+        if (existing) {
+            updateNode(itemRef(basket.id, existing.uid), { qty: numQty(existing.qty, part) + qty });
+        } else {
+            const uid = newItemUid();
+            const item = { uid, partId, qty, deduct, comment };
+            if (groupId) item.groupId = groupId;
+            write(itemRef(basket.id, uid), item);
+        }
+    });
 
     closeModal('modal-confirm-add-basket');
     document.getElementById('basket-search-input').value = "";
     updateStats();
+    if (destinations.length > 1) {
+        toast(`${qtyTxt(qty, part)} ajouté sur ${destinations.length} ouvrages — total ${qtyTxt(total, part)}`, 'ok');
+    }
 }
 
 function removeItemFromBasket(uid) {
