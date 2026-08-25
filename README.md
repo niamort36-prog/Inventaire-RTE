@@ -148,6 +148,18 @@ séparément. Le matériel qui en découle suit la fonction de l'ouvrage :
 La quantité proposée suit le faisceau (2 pour un faisceau double), et reste
 corrigeable avant validation.
 
+Certaines pinces demandent en plus une **garniture de câble** qui protège le
+conducteur sous la pince. Quand c'est le cas, elle est proposée par une case à
+cocher — cochée par défaut, à décocher si elle est déjà en place — et ajoutée
+dans la même quantité que la pince.
+
+Les garnitures ont été relevées sur la planche L105145 page 154, où chaque câble
+de garde porte explicitement la sienne, y compris les pinces qui s'en dispensent
+(`P19H` sur PASTEL 147 et 181). Les conducteurs de phase de la page 151 n'en
+reçoivent pas : leur colonne y est vide ou marquée « - », et les cellules
+fusionnées ne permettent pas de trancher — en cas de doute, se reporter au
+catalogue.
+
 La table câble → pinces a été **relevée à la main** sur les planches L105145
 (pages 151, 153 et 154), et non extraite automatiquement : sur ces tableaux à
 cellules fusionnées, la détection automatique attribuait des pinces au câble

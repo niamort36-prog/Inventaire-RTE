@@ -402,6 +402,13 @@
                                 <input type="number" id="input-cable-qty" value="1" min="1" class="w-20 border p-2 rounded text-sm">
                                 <span class="text-xs text-gray-500" id="cable-qty-hint"></span>
                             </div>
+                            <label class="hidden mt-2 flex items-start gap-2 bg-amber-50 border border-amber-200 rounded p-2 cursor-pointer" id="cable-gc-wrap">
+                                <input type="checkbox" id="input-cable-gc" class="h-4 w-4 mt-0.5 flex-none text-indigo-600 rounded" checked>
+                                <span class="text-xs text-amber-900">
+                                    Cette pince demande une <b>garniture de câble</b> :
+                                    <b id="cable-gc-ref"></b>. Décochez si elle est déjà en place.
+                                </span>
+                            </label>
                         </div>
                     </div>
 
@@ -2106,10 +2113,14 @@ function handleGroupSubmit(e) {
             if (cable) {
                 const ref = document.getElementById('input-cable-piece').value;
                 const nb = Math.max(1, num(document.getElementById('input-cable-qty').value, 1));
-                const r = await ajouterCableAuChantier(basket, gid, cable, ref, nb);
-                ajoutes += 1;
+                const gcWrap = document.getElementById('cable-gc-wrap');
+                const gc = !gcWrap.classList.contains('hidden') &&
+                           document.getElementById('input-cable-gc').checked
+                    ? document.getElementById('cable-gc-ref').textContent : null;
+                const r = await ajouterCableAuChantier(basket, gid, cable, ref, nb, gc);
+                ajoutes += r.ajoutes;
                 crees.push(...r.crees);
-                logHistory(`${groupShortLabel(data)} : câble ${cable} → ${nb} × ${ref}`);
+                logHistory(`${groupShortLabel(data)} : câble ${cable} → ${nb} × ${ref}${gc ? ' + ' + gc : ''}`);
             }
             let msg = `${groupShortLabel(data)} créé — ${ajoutes} référence(s) ajoutée(s)`;
             if (crees.length) msg += `, dont ${crees.length} nouvelle(s) à quantité 0`;
@@ -2315,6 +2326,33 @@ function majChoixCable() {
     document.getElementById('cable-qty-hint').textContent =
         parFaisceau > 1 ? `${parFaisceau} par faisceau ${c.faisceau}` : '';
     bloc.classList.remove('hidden');
+    majGarniture();
+}
+
+/** Certaines pinces de suspension demandent une garniture qui protège le câble.
+ *  Elle dépend du câble, et quelques pinces s'en dispensent. */
+function garniturePour(cable, pince) {
+    const g = cable && cable.garniture;
+    if (!g) return null;
+    if (Array.isArray(g.sauf) && g.sauf.includes(pince)) return null;
+    return g.ref;
+}
+
+function majGarniture() {
+    const wrap = document.getElementById('cable-gc-wrap');
+    const sel = document.getElementById('input-cable');
+    const cable = catalogue && catalogue.cables &&
+                  catalogue.cables.find(c => c.nom === sel.value);
+    const c = critereChaines(currentBasket());
+    // Une garniture accompagne une pince de suspension, pas un manchon d'ancrage.
+    const ref = c.type === 'ancrage' ? null
+              : garniturePour(cable, document.getElementById('input-cable-piece').value);
+
+    wrap.classList.toggle('hidden', !ref);
+    if (ref) {
+        document.getElementById('cable-gc-ref').textContent = ref;
+        document.getElementById('input-cable-gc').checked = true;
+    }
 }
 
 /** Retrouve la pièce correspondant à une référence du catalogue.
@@ -2354,11 +2392,17 @@ async function ajouterReference(basket, gid, ref, quantite, commentaire, crees) 
     await write(itemRef(basket.id, uid), item);
 }
 
-/** Matériel de câble : manchon d'ancrage ou pince de suspension. */
-async function ajouterCableAuChantier(basket, gid, cable, ref, nb) {
+/** Matériel de câble : manchon d'ancrage ou pince de suspension, et le cas
+ *  échéant la garniture qui protège le câble sous la pince. */
+async function ajouterCableAuChantier(basket, gid, cable, ref, nb, garniture) {
     const crees = [];
+    let ajoutes = 1;
     await ajouterReference(basket, gid, ref, nb, `Câble ${cable}`, crees);
-    return { crees };
+    if (garniture) {
+        await ajouterReference(basket, gid, garniture, nb, `Garniture pour ${ref}`, crees);
+        ajoutes++;
+    }
+    return { crees, ajoutes };
 }
 
 async function ajouterChaineAuChantier(basket, gid, designation, nb) {
@@ -2405,6 +2449,7 @@ function wireGroupPickers() {
         });
     });
     document.getElementById('input-cable').addEventListener('change', majChoixCable);
+    document.getElementById('input-cable-piece').addEventListener('change', majGarniture);
     document.getElementById('basket-tension-picker').addEventListener('click', e => {
         const b = e.target.closest('button[data-tension]');
         if (b) pickOption('basket-tension-picker', 'tension', b.dataset.tension);

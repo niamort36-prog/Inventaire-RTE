@@ -1,51 +1,409 @@
 {
-  "_source": [
-    "Pinces de suspension : planche L105145, pages 151 (conducteurs simples),",
-    "153 (faisceaux) et 154 (câbles de garde).",
-    "Manchons d'ancrage : chapitre 4, planches L124222 / L104090 / L104091 /",
-    "L131640 / L104089 — désignation « MA <câble> ».",
-    "",
-    "Table relevée à la main : la détection automatique de tableaux attribuait",
-    "des pinces à un câble voisin lorsque les cellules sont fusionnées (P4HT",
-    "prêté à ASTER 228, P46G à ASTER 570). Sur du matériel qui tient un",
-    "conducteur, une correspondance approximative n'est pas acceptable.",
-    "",
-    "Les variantes de manchon (MAL allongé, MAR réduit, MAE étagé, et la charge",
-    "— « MA 15 ASTER 570 ») relèvent du cas d'emploi et ne sont pas déduites ;",
-    "seule la désignation de base est proposée."
-  ],
-
-  "cables": [
-    { "nom": "ASTER 228",      "usage": "phase", "tensions": [63, 90],            "pinces": ["P1HT", "P2HT", "P23D", "P23H"] },
-    { "nom": "ASTER 288",      "usage": "phase", "tensions": [63, 90],            "pinces": ["P1HT", "P23D", "P23H"] },
-    { "nom": "ASTER 366",      "usage": "phase", "tensions": [63, 90, 225],       "pinces": ["P27D", "P3HT"] },
-    { "nom": "ASTER 570",      "usage": "phase", "tensions": [63, 90, 225, 400],  "pinces": ["P34D", "P6HT"] },
-    { "nom": "ASTER 851",      "usage": "phase", "tensions": [225, 400],          "pinces": ["P40F"] },
-    { "nom": "ASTER 1144",     "usage": "phase", "tensions": [400],               "pinces": ["P46G"] },
-    { "nom": "ASTER 1600",     "usage": "phase", "tensions": [225, 400],          "pinces": ["P54G"] },
-
-    { "nom": "PASTEL 147",     "usage": "phase", "tensions": [63, 90],            "pinces": ["P19H", "P23H", "P23D"] },
-    { "nom": "PASTEL 181",     "usage": "phase", "tensions": [63, 90],            "pinces": ["P19H", "P27D"] },
-    { "nom": "PASTEL 228",     "usage": "phase", "tensions": [63, 90],            "pinces": ["P1HT", "P23E", "P23H"] },
-    { "nom": "PASTEL 288",     "usage": "phase", "tensions": [63, 90],            "pinces": ["P23E", "P23H"] },
-    { "nom": "PASTEL 299",     "usage": "phase", "tensions": [63, 90],            "pinces": ["P1HT", "P23E"] },
-    { "nom": "PASTEL 412",     "usage": "phase", "tensions": [63, 90, 225],       "pinces": ["P27E", "P4HT"] },
-
-    { "nom": "PETUNIA 612",    "usage": "phase", "tensions": [63, 90, 225, 400],  "pinces": ["P34E", "P5HT"] },
-    { "nom": "PETUNIA 865",    "usage": "phase", "tensions": [225, 400],          "pinces": ["P40G"] },
-    { "nom": "POLYGONUM 1185", "usage": "phase", "tensions": [400],               "pinces": ["P46G"] },
-
-    { "nom": "PHLOX 59,7",     "usage": "garde", "tensions": [63, 90, 225, 400],  "pinces": ["P19H"] },
-    { "nom": "PHLOX 94",       "usage": "garde", "tensions": [63, 90, 225, 400],  "pinces": ["P2HT", "P23D", "P23H"] },
-    { "nom": "PHLOX 116",      "usage": "garde", "tensions": [63, 90, 225, 400],  "pinces": ["P2HT", "P23D", "P23H"] },
-    { "nom": "PHLOX 147",      "usage": "garde", "tensions": [63, 90, 225, 400],  "pinces": ["P2HT", "P23D", "P23E", "P23H"] },
-    { "nom": "PHLOX 181",      "usage": "garde", "tensions": [225, 400],          "pinces": ["P4HT", "P27E"] },
-    { "nom": "PHLOX 228",      "usage": "garde", "tensions": [225, 400],          "pinces": ["P4HT", "P27E"] },
-    { "nom": "PHLOX 288",      "usage": "garde", "tensions": [225, 400],          "pinces": ["P5HT", "P34E"] },
-    { "nom": "PHLOX 376",      "usage": "garde", "tensions": [400],               "pinces": ["P40F", "P40G"] },
-
-    { "nom": "CANNA 181",      "usage": "garde", "tensions": [63, 90, 225, 400],  "pinces": ["P19H", "P23H"] },
-    { "nom": "CROCUS 147",     "usage": "garde", "tensions": [63, 90, 225],       "pinces": ["P2HT"] },
-    { "nom": "CROCUS 228",     "usage": "garde", "tensions": [225, 400],          "pinces": ["P4HT"] }
-  ]
+ "_source": [
+  "Pinces de suspension : planche L105145, pages 151 (conducteurs simples),",
+  "153 (faisceaux) et 154 (câbles de garde).",
+  "Manchons d'ancrage : chapitre 4, planches L124222 / L104090 / L104091 /",
+  "L131640 / L104089 — désignation « MA <câble> ».",
+  "",
+  "Table relevée à la main : la détection automatique de tableaux attribuait",
+  "des pinces à un câble voisin lorsque les cellules sont fusionnées (P4HT",
+  "prêté à ASTER 228, P46G à ASTER 570). Sur du matériel qui tient un",
+  "conducteur, une correspondance approximative n'est pas acceptable.",
+  "",
+  "Les variantes de manchon (MAL allongé, MAR réduit, MAE étagé, et la charge",
+  "— « MA 15 ASTER 570 ») relèvent du cas d'emploi et ne sont pas déduites ;",
+  "seule la désignation de base est proposée.",
+  "",
+  "Garnitures de cable (GC) : relevees a la main sur la planche L105145",
+  "page 154, ou chaque cable de garde porte explicitement la sienne. Les",
+  "conducteurs de phase de la page 151 n'en recoivent pas : leur colonne y est",
+  "vide ou marquee « - », et les cellules fusionnees ne permettent pas de",
+  "trancher de facon sure. En cas de doute, se reporter au catalogue."
+ ],
+ "cables": [
+  {
+   "nom": "ASTER 228",
+   "usage": "phase",
+   "tensions": [
+    63,
+    90
+   ],
+   "pinces": [
+    "P1HT",
+    "P2HT",
+    "P23D",
+    "P23H"
+   ]
+  },
+  {
+   "nom": "ASTER 288",
+   "usage": "phase",
+   "tensions": [
+    63,
+    90
+   ],
+   "pinces": [
+    "P1HT",
+    "P23D",
+    "P23H"
+   ]
+  },
+  {
+   "nom": "ASTER 366",
+   "usage": "phase",
+   "tensions": [
+    63,
+    90,
+    225
+   ],
+   "pinces": [
+    "P27D",
+    "P3HT"
+   ]
+  },
+  {
+   "nom": "ASTER 570",
+   "usage": "phase",
+   "tensions": [
+    63,
+    90,
+    225,
+    400
+   ],
+   "pinces": [
+    "P34D",
+    "P6HT"
+   ]
+  },
+  {
+   "nom": "ASTER 851",
+   "usage": "phase",
+   "tensions": [
+    225,
+    400
+   ],
+   "pinces": [
+    "P40F"
+   ]
+  },
+  {
+   "nom": "ASTER 1144",
+   "usage": "phase",
+   "tensions": [
+    400
+   ],
+   "pinces": [
+    "P46G"
+   ]
+  },
+  {
+   "nom": "ASTER 1600",
+   "usage": "phase",
+   "tensions": [
+    225,
+    400
+   ],
+   "pinces": [
+    "P54G"
+   ]
+  },
+  {
+   "nom": "PASTEL 147",
+   "usage": "phase",
+   "tensions": [
+    63,
+    90
+   ],
+   "pinces": [
+    "P19H",
+    "P23H",
+    "P23D"
+   ],
+   "garniture": {
+    "ref": "GC 147 288 D",
+    "sauf": [
+     "P19H"
+    ]
+   }
+  },
+  {
+   "nom": "PASTEL 181",
+   "usage": "phase",
+   "tensions": [
+    63,
+    90
+   ],
+   "pinces": [
+    "P19H",
+    "P27D"
+   ],
+   "garniture": {
+    "ref": "GC 181 366 D",
+    "sauf": [
+     "P19H"
+    ]
+   }
+  },
+  {
+   "nom": "PASTEL 228",
+   "usage": "phase",
+   "tensions": [
+    63,
+    90
+   ],
+   "pinces": [
+    "P1HT",
+    "P23E",
+    "P23H"
+   ],
+   "garniture": {
+    "ref": "GC 228 412 D"
+   }
+  },
+  {
+   "nom": "PASTEL 288",
+   "usage": "phase",
+   "tensions": [
+    63,
+    90
+   ],
+   "pinces": [
+    "P23E",
+    "P23H"
+   ]
+  },
+  {
+   "nom": "PASTEL 299",
+   "usage": "phase",
+   "tensions": [
+    63,
+    90
+   ],
+   "pinces": [
+    "P1HT",
+    "P23E"
+   ]
+  },
+  {
+   "nom": "PASTEL 412",
+   "usage": "phase",
+   "tensions": [
+    63,
+    90,
+    225
+   ],
+   "pinces": [
+    "P27E",
+    "P4HT"
+   ]
+  },
+  {
+   "nom": "PETUNIA 612",
+   "usage": "phase",
+   "tensions": [
+    63,
+    90,
+    225,
+    400
+   ],
+   "pinces": [
+    "P34E",
+    "P5HT"
+   ]
+  },
+  {
+   "nom": "PETUNIA 865",
+   "usage": "phase",
+   "tensions": [
+    225,
+    400
+   ],
+   "pinces": [
+    "P40G"
+   ]
+  },
+  {
+   "nom": "POLYGONUM 1185",
+   "usage": "phase",
+   "tensions": [
+    400
+   ],
+   "pinces": [
+    "P46G"
+   ]
+  },
+  {
+   "nom": "PHLOX 59,7",
+   "usage": "garde",
+   "tensions": [
+    63,
+    90,
+    225,
+    400
+   ],
+   "pinces": [
+    "P19H"
+   ],
+   "garniture": {
+    "ref": "GC 59 147 D"
+   }
+  },
+  {
+   "nom": "PHLOX 94",
+   "usage": "garde",
+   "tensions": [
+    63,
+    90,
+    225,
+    400
+   ],
+   "pinces": [
+    "P2HT",
+    "P23D",
+    "P23H"
+   ],
+   "garniture": {
+    "ref": "GC 94 228 D"
+   }
+  },
+  {
+   "nom": "PHLOX 116",
+   "usage": "garde",
+   "tensions": [
+    63,
+    90,
+    225,
+    400
+   ],
+   "pinces": [
+    "P2HT",
+    "P23D",
+    "P23H"
+   ],
+   "garniture": {
+    "ref": "GC 116 288 D"
+   }
+  },
+  {
+   "nom": "PHLOX 147",
+   "usage": "garde",
+   "tensions": [
+    63,
+    90,
+    225,
+    400
+   ],
+   "pinces": [
+    "P2HT",
+    "P23D",
+    "P23E",
+    "P23H"
+   ],
+   "garniture": {
+    "ref": "GC 147 288 D"
+   }
+  },
+  {
+   "nom": "PHLOX 181",
+   "usage": "garde",
+   "tensions": [
+    225,
+    400
+   ],
+   "pinces": [
+    "P4HT",
+    "P27E"
+   ],
+   "garniture": {
+    "ref": "GC 181 366 D"
+   }
+  },
+  {
+   "nom": "PHLOX 228",
+   "usage": "garde",
+   "tensions": [
+    225,
+    400
+   ],
+   "pinces": [
+    "P4HT",
+    "P27E"
+   ],
+   "garniture": {
+    "ref": "GC 228 412 D"
+   }
+  },
+  {
+   "nom": "PHLOX 288",
+   "usage": "garde",
+   "tensions": [
+    225,
+    400
+   ],
+   "pinces": [
+    "P5HT",
+    "P34E"
+   ],
+   "garniture": {
+    "ref": "GC 288 570 D"
+   }
+  },
+  {
+   "nom": "PHLOX 376",
+   "usage": "garde",
+   "tensions": [
+    400
+   ],
+   "pinces": [
+    "P40F",
+    "P40G"
+   ],
+   "garniture": {
+    "ref": "GC 376 865 D"
+   }
+  },
+  {
+   "nom": "CANNA 181",
+   "usage": "garde",
+   "tensions": [
+    63,
+    90,
+    225,
+    400
+   ],
+   "pinces": [
+    "P19H",
+    "P23H"
+   ]
+  },
+  {
+   "nom": "CROCUS 147",
+   "usage": "garde",
+   "tensions": [
+    63,
+    90,
+    225
+   ],
+   "pinces": [
+    "P2HT"
+   ],
+   "garniture": {
+    "ref": "GC 147 288 D"
+   }
+  },
+  {
+   "nom": "CROCUS 228",
+   "usage": "garde",
+   "tensions": [
+    225,
+    400
+   ],
+   "pinces": [
+    "P4HT"
+   ],
+   "garniture": {
+    "ref": "GC 228 412 D"
+   }
+  }
+ ]
 }
