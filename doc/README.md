@@ -6,10 +6,10 @@ Ce dossier contient de quoi le régénérer entièrement.
 | Fichier | Rôle |
 |---|---|
 | `guide.html` | Le texte et la mise en page du guide |
-| `captures/` | Les 15 captures d'écran utilisées |
+| `captures/` | Les 21 captures d'écran utilisées |
 | `demo.mjs` | Le jeu de données fictif servant aux captures |
 | `shots.mjs` | Crée le jeu de démonstration, prend les captures, puis efface tout |
-| `pdf.mjs` | Convertit `guide.html` en PDF A4 paginé |
+| `pdf.mjs` | Convertit `guide.html` en PDF A4 paginé, écrit à la racine du dépôt |
 
 ## Régénérer le guide
 
@@ -31,9 +31,16 @@ Puis, depuis ce dossier :
 node shots.mjs && node pdf.mjs
 ```
 
-`shots.mjs` fabrique un jeu de démonstration dans l'équipe **EL Aurillac**, prend les captures,
-puis supprime tout ce qu'il a créé. Il affiche le contenu restant en fin d'exécution : il doit
-être à zéro.
+`shots.mjs` fabrique un jeu de démonstration dans l'équipe `EL Aurillac` — la clé technique de
+**EEL Aurillac** —, prend les captures, puis supprime tout ce qu'il a créé. Il affiche le contenu
+restant en fin d'exécution : **il doit être à zéro**.
+
+Si l'exécution s'interrompt en cours de route, le ménage n'a pas lieu : relancer le script tel quel
+ajouterait un second jeu au premier, et les captures montreraient chaque pièce en double. Vider
+l'équipe avant de relancer.
+
+Les captures sont renumérotées à chaque exécution, dans l'ordre où elles sont prises. Après avoir
+inséré ou retiré une capture, vérifier les chemins `captures/NN-nom.png` cités dans `guide.html`.
 
 ## Deux règles à respecter
 
@@ -44,6 +51,12 @@ le matériel, les quantités et parfois des noms de personnes.
 **Travailler dans une équipe vide.** `shots.mjs` écrit dans la vraie base. Il vise `EL Aurillac`
 parce qu'elle ne sert pas ; le pointer sur une équipe en activité y créerait puis y supprimerait
 du matériel.
+
+## Un détail sur les avertissements de poids
+
+`shots.mjs` n'enregistre pas le champ `poids` des pièces de démonstration : il le pose à
+l'affichage, juste avant chaque capture. Le jeu est effacé ensuite, rien ne sert de l'écrire — et
+cela rend le script indépendant des règles publiées sur la base.
 
 ## Quand mettre le guide à jour
 

@@ -4,7 +4,8 @@ import path from 'path';
 import fs from 'fs';
 
 const html = path.resolve('guide.html');
-const out = path.resolve('Guide-Invent-RTE.pdf');
+// Le guide publie est a la racine du depot, pas dans ce dossier de sources.
+const out = path.resolve('..', 'Guide-Invent-RTE.pdf');
 
 const browser = await chromium.launch({ channel: 'msedge', headless: true });
 const page = await browser.newPage();

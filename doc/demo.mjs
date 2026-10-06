@@ -19,17 +19,20 @@ export const ZONES = [
     { name: 'Local sécurité',    x: 72, y: 72, desc: 'EPI et perches' },
 ];
 
+// [ nom, famille, zone, quantité, seuil d'alerte, câble, avertissement de poids ]
 export const PIECES = [
-    ['Poulie de levage 200',      'Outillage de levage', 'Magasin outillage', 12, 4],
-    ['Palan à chaîne 1,5 t',      'Outillage de levage', 'Magasin outillage',  6, 2],
+    ['Poulie de levage 200',      'Outillage de levage', 'Magasin outillage', 12, 4, false, 'leger'],
+    ['Palan à chaîne 1,5 t',      'Outillage de levage', 'Magasin outillage',  6, 2, false, 'lourd'],
+    ['Treuil de déroulage 3 t',   'Outillage de levage', 'Aire de stockage',   2, 1, false, 'treslourd'],
     ['Élingue 4 m',               'Outillage de levage', 'Magasin outillage', 18, 6],
-    ['Pince à sertir 240',        'Connectique',         'Atelier',            4, 2],
+    ['Pince à sertir 240',        'Connectique',         'Atelier',            4, 2, false, 'leger'],
     ['Perche de terre 63/90 kV',  'Sécurité',            'Local sécurité',     5, 2],
     ['Harnais antichute',         'Sécurité',            'Local sécurité',    11, 4],
     ['Gants isolants classe 2',   'Sécurité',            'Local sécurité',     2, 6],
-    ['Cordage 12 mm (50 m)',      'Câbles',              'Aire de stockage',   7, 3],
+    ['Cordage 12 mm (50 m)',      'Câbles',              'Aire de stockage',   7, 3, false, 'lourd'],
     ['ASTER 228',                 'Câbles',              'Aire de stockage', 1983, 500, true],
     ['CANNA 181',                 'Câbles',              'Aire de stockage',  240, 400, true],
+    ['PHLOX 228',                 'Câbles',              'Aire de stockage',  860, 300, true],
 
     // Références du catalogue RTE : elles permettent de montrer la
     // correspondance qui s'opère quand une chaîne est ajoutée à un pylône.
@@ -42,6 +45,8 @@ export const PIECES = [
     ['AP 60 C1',                  'Isolateurs',          'Aire de stockage',   9, 3],
     ['F 100',                     'Isolateurs',          'Aire de stockage', 240, 60],
     ['MA ASTER 570',              'Connectique',         'Atelier',            8, 2],
+    ['P4HT',                      'Connectique',         'Magasin outillage', 10, 4],
+    ['GC 228 412 D',              'Connectique',         'Magasin outillage',  6, 2],
 ];
 
 /** Plan d'atelier schématique, dessiné dans le navigateur (aucun plan réel). */

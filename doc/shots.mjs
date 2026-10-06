@@ -62,7 +62,7 @@ await page.evaluate(async ({ FAMILLES, ZONES, PIECES, planSrc }) => {
     await write('map/image', plan);
 
     const ids = {};
-    for (const [nom, fam, zone, qty, seuil, cable] of PIECES) {
+    for (const [nom, fam, zone, qty, seuil, cable, poids] of PIECES) {
         const id = Date.now() + Math.floor(Math.random() * 100000);
         ids[nom] = id;
         const piece = {
@@ -70,10 +70,23 @@ await page.evaluate(async ({ FAMILLES, ZONES, PIECES, planSrc }) => {
             location: zone, desc: '', hasImage: false, hasDoc: false
         };
         if (cable) piece.cable = true;      // quantité comptée en mètres
+        // Le poids n'est pas enregistré : il est posé à l'affichage, juste
+        // avant chaque capture (voir __majPoids plus bas). Le jeu de
+        // démonstration est effacé ensuite, rien ne sert de le stocker.
         await write('parts/p' + id, piece);
         await w(120);
     }
     window.__ids = ids;
+
+    // Le champ poids n'est accepté qu'une fois les règles publiées. Pour que
+    // les captures montrent les pictogrammes dans tous les cas, on garde la
+    // correspondance de côté et on la réapplique avant chaque capture : un
+    // rechargement de la liste des pièces la ferait sinon disparaître.
+    window.__poids = Object.fromEntries(
+        PIECES.filter(l => l[6]).map(l => [l[0], l[6]]));
+    window.__majPoids = () => {
+        parts.forEach(p => { if (window.__poids[p.name]) p.poids = window.__poids[p.name]; });
+    };
     await w(2500);
 }, { FAMILLES, ZONES, PIECES, planSrc: PLAN_SCRIPT.toString() });
 await wait(3000);
@@ -83,16 +96,23 @@ await page.reload({ waitUntil: 'networkidle' });
 await page.waitForFunction(() => typeof parts !== 'undefined' && parts.length > 0, { timeout: 60000 });
 await wait(3000);
 
+await page.evaluate(PIECES => {
+    window.__poids = Object.fromEntries(PIECES.filter(l => l[6]).map(l => [l[0], l[6]]));
+    window.__majPoids = () => {
+        parts.forEach(p => { if (window.__poids[p.name]) p.poids = window.__poids[p.name]; });
+    };
+}, PIECES);
+
 // ------------------------------------------------------------------- Écrans
 await page.evaluate(() => showPage('dashboard'));
 await wait(2000);
 await shot('accueil');
 
-await page.evaluate(() => showPage('pieces'));
+await page.evaluate(() => { __majPoids(); showPage('pieces'); renderPartsGrid(); });
 await wait(1800);
 await shot('pieces');
 
-await page.evaluate(() => openQuickView(parts.find(p => p.name.startsWith('Poulie')).id));
+await page.evaluate(() => { __majPoids(); openQuickView(parts.find(p => p.name.startsWith('Poulie')).id); });
 await wait(1500);
 await shotEl('fiche-piece', '#modal-quick-view .inline-block');
 
@@ -108,7 +128,24 @@ await page.evaluate(() => {
 await wait(1200);
 await shotEl('piece-cable', '#modal-part .bg-white');
 
-await page.evaluate(() => { closeModal('modal-part'); showPage('familles'); });
+// Les trois avertissements de poids, reunis sur une seule image
+await page.evaluate(() => {
+    closeModal('modal-part');
+    const d = document.createElement('div');
+    d.id = 'planche-poids';
+    // Ajusté au contenu : un cadre plein écran laisserait une capture
+    // aux trois quarts vide.
+    d.style.cssText = 'position:fixed;top:0;left:0;z-index:999;background:#fff;' +
+                      'width:max-content;display:flex;gap:26px;padding:24px;align-items:flex-start';
+    d.innerHTML = Object.keys(POIDS).map(c =>
+        `<div style="width:240px">${pictoPoidsGrand(c)}</div>`).join('');
+    document.body.appendChild(d);
+});
+await wait(900);
+await shotEl('avertissements-poids', '#planche-poids');
+await page.evaluate(() => document.getElementById('planche-poids').remove());
+
+await page.evaluate(() => { showPage('familles'); });
 await wait(1500);
 await page.setViewportSize({ width: 1280, height: 620 });   // cadrage serre : evite une capture a moitie vide
 await wait(600);
@@ -195,6 +232,28 @@ await page.evaluate(async () => {
 });
 await wait(1500);
 
+// Pylone d'alignement : la pince retenue reclame une garniture de cable
+await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms));
+    closeModal('modal-group');
+    openGroupModal(); await w(1800);
+    selectGroupKind('pylone');
+    document.getElementById('input-group-name').value = '3';
+    pickOption('group-fonction-picker', 'fonction', 'alignement');
+    pickOption('group-chaine-picker', 'chaine', 'simple');
+    pickOption('group-faisceau-picker', 'faisceau', 'simple');
+    remplirChoixChaines(); remplirChoixCables(); await w(600);
+    document.getElementById('input-cable').value = 'PHLOX 228';
+    majChoixCable(); await w(300);
+    document.getElementById('input-cable-piece').value = 'P4HT';
+    majGarniture();
+    document.getElementById('input-cable').parentElement.id = 'bloc-cable';
+});
+await wait(900);
+await shotEl('pylone-garniture', '#bloc-cable');
+await page.evaluate(() => closeModal('modal-group'));
+await wait(500);
+
 // Une portée, et de l'outillage non affecté
 await page.evaluate(async () => {
     const w = ms => new Promise(r => setTimeout(r, ms));
@@ -218,6 +277,7 @@ await page.evaluate(async () => {
     // « déjà prévu sur un chantier » sur la pièce.
     document.getElementById('confirm-add-deduct').checked = false;
     finalizeAddToBasket(); await w(1800);
+    __majPoids();
     openBasketDetail(window.__bid);
 });
 await wait(2500);
@@ -231,7 +291,13 @@ await page.evaluate(() => {
 await wait(800);
 await shotEl('total-a-charger', '#basket-total');
 
-await page.evaluate(() => openConfirmAddModal(parts.find(p => p.name.startsWith('Harnais')).id));
+await page.evaluate(() => {
+    openConfirmAddModal(parts.find(p => p.name.startsWith('Harnais')).id);
+    document.getElementById('confirm-add-qty').value = '3';
+    const cases = [...document.querySelectorAll('#confirm-add-groups [data-ouvrage]')];
+    [0, 1].forEach(i => { if (cases[i]) cases[i].checked = true; });
+    majTotalAjout();
+});
 await wait(900);
 await shotEl('ajouter-materiel', '#modal-confirm-add-basket .bg-white');
 await page.evaluate(() => closeModal('modal-confirm-add-basket'));
@@ -247,6 +313,7 @@ await page.evaluate(async () => {
     toggleItemLoad(its[2].uid, true); await w(700);
     updateLoadQty(its[3].uid, '0'); await w(700);
     updateLoadComment(its[3].uid, 'reste au magasin'); await w(900);
+    __majPoids();
     openBasketDetail(window.__bid);
 });
 await wait(2500);
@@ -293,6 +360,7 @@ await shot('chantiers');
 // Mention d'engagement : une pièce promise à un chantier, non déduite du stock
 await page.evaluate(async () => {
     const w = ms => new Promise(r => setTimeout(r, ms));
+    __majPoids();
     showPage('pieces');
     document.getElementById('search-input-parts').value = 'perche';
     renderPartsGrid(); await w(400);
@@ -318,10 +386,11 @@ const mob = await browser.newPage({
 });
 await mob.goto(URL, { waitUntil: 'networkidle' });
 await mob.waitForFunction(() => typeof parts !== 'undefined', { timeout: 60000 });
-await mob.evaluate(async () => {
+await mob.evaluate(async (POIDS_DEMO) => {
     if (teamKey !== 'EL Aurillac') { switchTeam('EL Aurillac'); await new Promise(r => setTimeout(r, 4000)); }
-    showPage('pieces');
-});
+    parts.forEach(p => { if (POIDS_DEMO[p.name]) p.poids = POIDS_DEMO[p.name]; });
+    showPage('pieces'); renderPartsGrid();
+}, Object.fromEntries(PIECES.filter(l => l[6]).map(l => [l[0], l[6]])));
 await wait(4000);
 n++;
 await mob.screenshot({ path: `${OUT}/${String(n).padStart(2, '0')}-mobile.png` });

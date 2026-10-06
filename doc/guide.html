@@ -89,7 +89,7 @@
     préparer et charger le matériel de chantier.
   </div>
   <div class="foot">
-    Version du 18 août 2026 · Ce guide décrit toutes les fonctions de l'application.<br>
+    Version du 6 octobre 2026 · Ce guide décrit toutes les fonctions de l'application.<br>
     Aucune connaissance préalable n'est nécessaire.
   </div>
 </div>
@@ -102,7 +102,7 @@
   <div class="toc-item"><div class="toc-num">1</div><div class="toc-txt"><b>Découvrir l'application</b><span>À quoi elle sert, comment l'ouvrir, choisir son équipe</span></div></div>
   <div class="toc-item"><div class="toc-num">2</div><div class="toc-txt"><b>L'accueil</b><span>Voir l'essentiel d'un coup d'œil</span></div></div>
   <div class="toc-item"><div class="toc-num">3</div><div class="toc-txt"><b>Les pièces</b><span>Chercher, consulter, ajuster un stock</span></div></div>
-  <div class="toc-item"><div class="toc-num">4</div><div class="toc-txt"><b>Ajouter ou modifier une pièce</b><span>Photo, notice, seuil d'alerte, câbles en mètres</span></div></div>
+  <div class="toc-item"><div class="toc-num">4</div><div class="toc-txt"><b>Ajouter ou modifier une pièce</b><span>Photo, notice, seuil d'alerte, avertissement de poids, câbles en mètres</span></div></div>
   <div class="toc-item"><div class="toc-num">5</div><div class="toc-txt"><b>Les familles</b><span>Classer le matériel par type</span></div></div>
   <div class="toc-item"><div class="toc-num">6</div><div class="toc-txt"><b>Le plan de l'atelier</b><span>Placer les zones de rangement</span></div></div>
   <div class="toc-item"><div class="toc-num">7</div><div class="toc-txt"><b>Préparer un chantier</b><span>Constituer la liste du matériel à emporter</span></div></div>
@@ -165,7 +165,7 @@ n'est demandé : l'application vous connecte toute seule.</p>
 pour en changer ou pour saisir votre nom.</p>
 
 <figure>
-  <img src="captures/08-equipes.png" alt="Fenêtre de choix de l'équipe">
+  <img src="captures/09-equipes.png" alt="Fenêtre de choix de l'équipe">
   <figcaption>Le choix de l'équipe, et le nom qui apparaîtra dans l'historique</figcaption>
 </figure>
 
@@ -239,6 +239,9 @@ de la pièce concernée.</p>
 <p>Une pièce dont le stock est au niveau du seuil s'affiche en rouge avec la mention
 <strong>Stock bas</strong>.</p>
 
+<p>Un <strong>triangle coloré</strong> devant le nom signale le matériel lourd : vert à partir de
+10 kg, orange à partir de 25, rouge au-delà de 50. Le chapitre 4 explique comment le renseigner.</p>
+
 <h3>La fiche d'une pièce</h3>
 <p>Cliquez sur une fiche pour l'ouvrir.</p>
 
@@ -277,9 +280,36 @@ Pour modifier une pièce existante, ouvrez sa fiche puis <strong>Modifier</stron
   <tr><td class="k">Seuil d'alerte</td><td>En dessous ou à ce niveau, la pièce remonte dans les alertes de l'accueil. Laissez 0 si vous ne voulez pas d'alerte.</td></tr>
   <tr><td class="k">Famille</td><td>Facultatif, mais très utile pour trier ensuite.</td></tr>
   <tr><td class="k">Lieu</td><td>La zone de rangement, choisie parmi celles du plan.</td></tr>
+  <tr><td class="k">Avertissement de poids</td><td>Facultatif. Prévient de ce qu'il faut pour soulever la pièce — voir ci-dessous.</td></tr>
   <tr><td class="k">Notice PDF</td><td>Facultatif, 5 Mo maximum. Consultable depuis la fiche.</td></tr>
   <tr><td class="k">Photo</td><td>Facultatif. L'icône appareil photo permet de la prendre directement avec le téléphone.</td></tr>
 </table>
+
+<h3>Avertir du poids</h3>
+<p>Sous la famille et le lieu, quatre cases permettent de signaler ce que pèse la pièce. Elles
+reprennent les étiquettes collées sur le matériel :</p>
+
+<figure>
+  <img src="captures/06-avertissements-poids.png" alt="Les trois avertissements de poids" style="width:160mm;margin:0 auto;">
+  <figcaption>Les trois avertissements, et la consigne de manutention correspondante</figcaption>
+</figure>
+
+<table>
+  <tr><td class="k">Moins de 10&nbsp;kg</td><td>La case retenue par défaut : aucun avertissement n'apparaît.</td></tr>
+  <tr><td class="k">10 à 25&nbsp;kg — vert</td><td>Une personne suffit.</td></tr>
+  <tr><td class="k">25 à 50&nbsp;kg — orange</td><td>Deux personnes.</td></tr>
+  <tr><td class="k">50&nbsp;kg et plus — rouge</td><td>Moyens de levage.</td></tr>
+</table>
+
+<p>Une fois le choix fait, le triangle accompagne la pièce <strong>partout où son nom
+apparaît</strong> : la liste des pièces, sa fiche, les lignes d'un chantier et le total à charger.
+On sait donc ce qui attend l'équipe avant même d'arriver au magasin.</p>
+
+<div class="tip">
+  <b>Pour lire la consigne en entier</b>
+  Sur ordinateur, passez la souris sur le triangle : il s'affiche en grand. Sur téléphone,
+  touchez-le — la même consigne s'ouvre, avec le nombre de personnes ou les moyens nécessaires.
+</div>
 
 <h3>Une pièce comptée en mètres</h3>
 <p>Pour un câble, la quantité n'est pas un nombre de pièces mais une longueur. Cochez
@@ -315,7 +345,7 @@ Sur l'accueil, mètres et unités sont comptés séparément — les additionner
 Elles servent à filtrer les listes et à structurer le bon de chargement.</p>
 
 <figure>
-  <img src="captures/06-familles.png" alt="Les familles">
+  <img src="captures/07-familles.png" alt="Les familles">
   <figcaption>Chaque famille a une couleur et affiche le nombre de pièces qu'elle contient</figcaption>
 </figure>
 
@@ -337,7 +367,7 @@ Elles servent à filtrer les listes et à structurer le bon de chargement.</p>
 et chaque pièce est rattachée à une zone.</p>
 
 <figure>
-  <img src="captures/07-plan.png" alt="Le plan de l'atelier">
+  <img src="captures/08-plan.png" alt="Le plan de l'atelier">
   <figcaption>Les zones posées sur le plan, et leur liste à droite avec le nombre de pièces</figcaption>
 </figure>
 
@@ -365,7 +395,7 @@ et chaque pièce est rattachée à une zone.</p>
 d'abord la <strong>préparation</strong>, ensuite le <strong>chargement</strong>.</p>
 
 <figure>
-  <img src="captures/16-chantiers.png" alt="Liste des chantiers">
+  <img src="captures/18-chantiers.png" alt="Liste des chantiers">
   <figcaption>La liste des chantiers. Le camembert indique l'avancement du chargement</figcaption>
 </figure>
 
@@ -375,7 +405,7 @@ d'abord la <strong>préparation</strong>, ensuite le <strong>chargement</strong>
 <div class="step"><div class="step-n">3</div><div>Indiquez le <strong>domaine de tension</strong>. Il sert à ne proposer, plus tard, que les chaînes isolantes et les câbles du domaine concerné.</div></div>
 
 <figure>
-  <img src="captures/09-creer-chantier.png" alt="Création d'un chantier" style="width:88mm;margin:0 auto;">
+  <img src="captures/10-creer-chantier.png" alt="Création d'un chantier" style="width:88mm;margin:0 auto;">
   <figcaption>Le nom et le domaine de tension du chantier</figcaption>
 </figure>
 
@@ -389,16 +419,31 @@ d'abord la <strong>préparation</strong>, ensuite le <strong>chargement</strong>
 <p>Utilisez la barre de recherche en haut de la fenêtre du chantier.</p>
 
 <figure>
-  <img src="captures/13-ajouter-materiel.png" alt="Ajouter du matériel" style="width:88mm;margin:0 auto;">
+  <img src="captures/15-ajouter-materiel.png" alt="Ajouter du matériel" style="width:88mm;margin:0 auto;">
   <figcaption>La fenêtre d'ajout de matériel</figcaption>
 </figure>
 
 <table>
-  <tr><td class="k">Quantité à charger</td><td>Le nombre d'articles à emporter.</td></tr>
-  <tr><td class="k">Rattacher à</td><td>Le pylône ou la portée concerné — voir le chapitre suivant. N'apparaît que si vous en avez créé.</td></tr>
+  <tr><td class="k">Quantité à charger</td><td>Le nombre d'articles à emporter, <strong>pour chaque ouvrage coché</strong>.</td></tr>
+  <tr><td class="k">Rattacher à</td><td>Les pylônes et portées concernés — voir le chapitre suivant. N'apparaît que si vous en avez créé.</td></tr>
   <tr><td class="k">Commentaire</td><td>Une précision libre, qui apparaîtra sur le bon imprimé.</td></tr>
   <tr><td class="k">Déduire du stock</td><td>Coché, la quantité sera retirée de l'inventaire à la validation. Décochez pour du matériel qui revient toujours.</td></tr>
 </table>
+
+<h3>Le même matériel sur plusieurs ouvrages</h3>
+<p>Quand le chantier compte plusieurs pylônes ou portées, <strong>cochez-en autant que
+nécessaire</strong> : la quantité saisie est ajoutée à chacun. Trois PF 15/80 sur les pylônes 1, 2
+et 4 se font donc en une seule fois, et non en trois.</p>
+
+<p>La ligne bleue sous la liste récapitule ce qui sera réellement ajouté — dans la capture
+ci-dessus, <em>3 sur chacun des 2 ouvrages — total 6</em>. Le lien <strong>Tout cocher</strong>
+sélectionne ou désélectionne l'ensemble d'un geste.</p>
+
+<div class="note">
+  <b>Si vous ne cochez rien</b>
+  L'article part en « Non affecté », avec la quantité saisie. C'est ce qu'il faut pour l'outillage
+  commun à tout le chantier.
+</div>
 
 <div class="note">
   <b>Tant que le chantier est en « Brouillon », le stock n'est pas touché</b>
@@ -429,7 +474,7 @@ qui permettent de laisser l'application composer le matériel. Ils font l'objet 
 pylône 1, ajoutez son outillage, puis passez au suivant. Rien à resélectionner à chaque fois.</p>
 
 <figure>
-  <img src="captures/11-chantier-prepare.png" alt="Chantier organisé par ouvrages">
+  <img src="captures/13-chantier-prepare.png" alt="Chantier organisé par ouvrages">
   <figcaption>Le matériel regroupé sous chaque ouvrage, avec ses caractéristiques rappelées</figcaption>
 </figure>
 
@@ -457,7 +502,7 @@ pylône 1, ajoutez son outillage, puis passez au suivant. Rien à resélectionne
 un ouvrage se déclare très bien sans.</p>
 
 <figure>
-  <img src="captures/10-creer-pylone.png" alt="Déclaration d'un pylône avec chaîne et câble" style="width:78mm;margin:0 auto;">
+  <img src="captures/11-creer-pylone.png" alt="Déclaration d'un pylône avec chaîne et câble" style="width:78mm;margin:0 auto;">
   <figcaption>Un pylône d'ancrage 225 kV, avec son câble et sa chaîne isolante</figcaption>
 </figure>
 
@@ -472,6 +517,26 @@ d'accrochage :</p>
 </table>
 
 <p>La quantité proposée suit le faisceau — 2 pour un faisceau double — et reste modifiable.</p>
+
+<h3>La garniture de câble</h3>
+<p>Certaines pinces de suspension ne serrent pas le câble directement : il faut interposer une
+<strong>garniture (GC)</strong> qui le protège. Dès que la pince retenue en demande une,
+l'application la signale et propose de l'ajouter.</p>
+
+<figure>
+  <img src="captures/12-pylone-garniture.png" alt="Garniture de câble proposée" style="width:92mm;margin:0 auto;">
+  <figcaption>La garniture correspondant au câble et à la pince, proposée cochée</figcaption>
+</figure>
+
+<p>La case est cochée d'avance et la quantité suit celle de la pince. <strong>Décochez-la</strong>
+si les garnitures sont déjà en place sur le câble.</p>
+
+<div class="note">
+  <b>Toutes les pinces n'en demandent pas</b>
+  La garniture dépend du câble, et quelques pinces s'en dispensent : la case n'apparaît alors pas.
+  Elle ne concerne que les pinces de suspension — un pylône d'ancrage reçoit un manchon, qui n'en
+  demande aucune.
+</div>
 
 <h3>La chaîne isolante</h3>
 <p>La liste ne contient que les chaînes qui correspondent réellement à ce que vous venez de saisir :
@@ -518,7 +583,7 @@ La liste détaillée dit <em>où</em> va chaque pièce ; elle ne dit pas <em>com
 du magasin. C'est le rôle du bandeau <strong>Total à charger</strong>, en bas du chantier.</p>
 
 <figure>
-  <img src="captures/12-total-a-charger.png" alt="Total à charger">
+  <img src="captures/14-total-a-charger.png" alt="Total à charger">
   <figcaption>Les lignes cumulées par pièce, avec le stock disponible en regard</figcaption>
 </figure>
 
@@ -547,7 +612,7 @@ disponible. Rien n'indiquerait qu'il est déjà promis, et deux personnes pourra
 l'emporter le même jour.</p>
 
 <figure>
-  <img src="captures/17-engagement.png" alt="Mention de matériel déjà prévu" style="width:95mm;margin:0 auto;">
+  <img src="captures/19-engagement.png" alt="Mention de matériel déjà prévu" style="width:95mm;margin:0 auto;">
   <figcaption>La pièce reste disponible, mais son engagement est signalé</figcaption>
 </figure>
 
@@ -591,7 +656,7 @@ concerné.</p>
 </div>
 
 <figure>
-  <img src="captures/14-chantier-chargement.png" alt="Chantier en chargement">
+  <img src="captures/16-chantier-chargement.png" alt="Chantier en chargement">
   <figcaption>Le mode chargement : on coche au fur et à mesure</figcaption>
 </figure>
 
@@ -633,7 +698,7 @@ ce que vous avez à l'écran : le <strong>tri</strong> choisi et les <strong>fil
 </table>
 
 <figure>
-  <img src="captures/15-bon-imprime.png" alt="Bon de chargement imprimé">
+  <img src="captures/17-bon-imprime.png" alt="Bon de chargement imprimé">
   <figcaption>Le bon de chargement, ici regroupé par ouvrage</figcaption>
 </figure>
 
@@ -656,7 +721,7 @@ les observations et un emplacement pour le visa. Les en-têtes de colonnes se r�
 sa fiche instantanément, sans la chercher dans la liste.</p>
 
 <figure>
-  <img src="captures/18-scan.png" alt="Le scanner">
+  <img src="captures/20-scan.png" alt="Le scanner">
   <figcaption>L'onglet Scan. Autorisez l'accès à la caméra à la première utilisation</figcaption>
 </figure>
 
@@ -683,7 +748,7 @@ Pratique pour un inventaire annuel ou une commande.</p>
 <p>L'application est prévue pour être utilisée en atelier et en chantier, directement sur le téléphone.</p>
 
 <figure>
-  <img src="captures/19-mobile.png" class="phone" alt="L'application sur téléphone">
+  <img src="captures/21-mobile.png" class="phone" alt="L'application sur téléphone">
   <figcaption>L'affichage s'adapte automatiquement à l'écran</figcaption>
 </figure>
 
