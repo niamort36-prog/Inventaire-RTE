@@ -834,8 +834,44 @@ function pictoPoidsGrand(code, avecConsigne) {
     </svg>`;
 }
 
-/** Version réduite, pour tenir à côté d'un nom : à cette taille, seules la
- *  couleur et la silhouette restent lisibles, le texte ne l'est pas. */
+/** Silhouettes du petit format. Celles du grand pictogramme sont dessinées
+ *  pour un carré : réduites, leurs bras et leurs têtes sortent du triangle et
+ *  leurs traits deviennent invisibles. Celles-ci tiennent dans le trapèze
+ *  réellement disponible — étroit en haut, large en bas — et portent un trait
+ *  assez épais pour rester lisibles à 20 px. Elles sont dessinées dans un
+ *  repère local de 160 × 96 posé par `pictoPoidsPetit`. */
+const PICTOS_PETITS = {
+    leger: `<g fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="66" cy="14" r="11" fill="#fff" stroke="none"/>
+        <path d="M66 30 L58 62"/>
+        <path d="M58 62 L44 92"/>
+        <path d="M58 62 L72 76 L70 92"/>
+        <path d="M64 36 L88 50"/>
+        <path d="M61 48 L88 64"/>
+        <rect x="86" y="46" width="36" height="32" rx="4" fill="#fff" stroke="none"/>
+    </g>`,
+    lourd: `<g fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="48" cy="40" r="11" fill="#fff" stroke="none"/>
+        <path d="M48 56 L50 94"/>
+        <path d="M48 58 L68 72"/>
+        <circle cx="112" cy="40" r="11" fill="#fff" stroke="none"/>
+        <path d="M112 56 L110 94"/>
+        <path d="M112 58 L92 72"/>
+        <rect x="62" y="68" width="36" height="24" rx="4" fill="#fff" stroke="none"/>
+    </g>`,
+    treslourd: `<g fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="60" y="34" width="52" height="32" rx="4"/>
+        <path d="M48 42 L48 78 L124 78"/>
+        <path d="M48 42 L34 42"/>
+        <circle cx="66" cy="90" r="8"/>
+        <circle cx="114" cy="90" r="8"/>
+    </g>`,
+};
+
+
+/** Version réduite, posée à côté d'un nom. Le texte y serait illisible : seules
+ *  la couleur et la silhouette portent l'information, le détail complet
+ *  s'obtient au survol ou au clic. */
 function pictoPoidsPetit(code, px) {
     const p = POIDS[code];
     if (!p) return '';
@@ -845,7 +881,7 @@ function pictoPoidsPetit(code, px) {
               stroke-width="12" stroke-linejoin="round"/>
         <path d="M100 22 L180 168 L20 168 Z" fill="${p.couleur}" stroke="${p.couleur}"
               stroke-width="20" stroke-linejoin="round"/>
-        <g transform="translate(32 56) scale(0.66)">${PICTOS[code]}</g>
+        <g transform="translate(20 76)">${PICTOS_PETITS[code]}</g>
     </svg>`;
 }
 
