@@ -57,6 +57,19 @@
         .img-skeleton { background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 37%, #f3f4f6 63%); background-size: 400% 100%; animation: shimmer 1.4s ease infinite; }
         @keyframes shimmer { 0% { background-position: 100% 0 } 100% { background-position: -100% 0 } }
 
+        /* Pictogramme de poids : discret dans les listes, agrandi au survol
+           sur ordinateur. Au doigt, c'est le clic qui ouvre la consigne. */
+        .picto-poids { display: inline-flex; align-items: center; vertical-align: middle;
+                       cursor: pointer; position: relative; flex: none; }
+        .picto-poids svg { display: block; }
+        .picto-bulle {
+            position: fixed; opacity: 0; pointer-events: none; z-index: 95;
+            transition: opacity .12s; background: #fff; border-radius: 10px; padding: 6px;
+            box-shadow: 0 10px 25px rgba(0,0,0,.25);
+        }
+        /* Au doigt, c'est le clic qui ouvre la consigne : pas de survol. */
+        @media (hover: hover) { .picto-bulle.visible { opacity: 1; } }
+
         #toast-zone { position: fixed; bottom: 1rem; left: 50%; transform: translateX(-50%); z-index: 90; display: flex; flex-direction: column; gap: .5rem; align-items: center; pointer-events: none; }
         .toast { padding: .6rem 1.1rem; border-radius: 9999px; color: #fff; font-size: .875rem; font-weight: 600; box-shadow: 0 10px 15px -3px rgba(0,0,0,.25); animation: toastIn .2s ease; }
         @keyframes toastIn { from { opacity: 0; transform: translateY(10px) } to { opacity: 1; transform: none } }
@@ -307,6 +320,20 @@
         </div>
     </div>
 
+    <!-- Consigne de manutention, ouverte au clic sur un pictogramme -->
+    <div id="modal-poids" class="hidden fixed z-80 inset-0 overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="fixed inset-0 bg-gray-600 bg-opacity-75" onclick="closeModal('modal-poids')"></div>
+            <div class="bg-white rounded-lg w-full max-w-xs p-5 relative z-10 shadow-xl text-center">
+                <div id="poids-visuel" class="mx-auto" style="max-width:230px"></div>
+                <h3 class="text-lg font-bold mt-3" id="poids-titre"></h3>
+                <p class="text-sm text-gray-600 mt-1" id="poids-texte"></p>
+                <button onclick="closeModal('modal-poids')"
+                        class="mt-4 w-full bg-gray-100 py-2 rounded hover:bg-gray-200 text-sm font-medium">Fermer</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Création d'un chantier : nom et domaine de tension -->
     <div id="modal-new-basket" class="hidden fixed z-60 inset-0 overflow-y-auto">
         <div class="flex items-center justify-center min-h-screen px-4">
@@ -524,7 +551,7 @@
                 </div>
                 <div class="px-6 py-4">
                     <div class="flex justify-between items-start mb-2">
-                        <h3 class="text-xl font-bold text-gray-900" id="quick-view-name">Nom Pièce</h3>
+                        <h3 class="text-xl font-bold text-gray-900 flex items-center gap-2" id="quick-view-name">Nom Pièce</h3>
                         <span id="quick-view-family" class="badge">Famille</span>
                     </div>
                     <div class="flex gap-2 mb-4">
@@ -644,7 +671,7 @@
 
     <div id="modal-qr-display" class="hidden fixed z-70 inset-0 overflow-y-auto"><div class="flex items-center justify-center min-h-screen px-4"><div class="fixed inset-0 bg-gray-600 bg-opacity-75" onclick="closeModal('modal-qr-display')"></div><div class="relative bg-white rounded-lg p-8 max-w-sm w-full text-center shadow-xl"><h3 class="text-lg font-bold mb-1">QR Code Pièce</h3><p class="text-sm text-gray-500 mb-4" id="qr-part-name"></p><div id="qrcode-container" class="flex justify-center mb-4"></div><button onclick="closeModal('modal-qr-display')" class="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 w-full">Fermer</button></div></div></div>
 
-    <div id="modal-part" class="hidden fixed z-50 inset-0 overflow-y-auto"><div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 sm:items-center"><div class="fixed inset-0 bg-gray-600 bg-opacity-75" onclick="closeModal('modal-part')"></div><div class="bg-white rounded-lg w-full max-w-lg p-6 relative z-10"><form id="form-part" onsubmit="handlePartSubmit(event)"><h3 class="text-xl font-bold mb-4" id="modal-part-title">Pièce</h3><input type="hidden" id="part-edit-id"><div class="space-y-4 max-h-[70vh] overflow-y-auto pr-2"><div><label class="block text-sm font-semibold">Nom</label><input type="text" id="input-part-name" required class="w-full border p-2 rounded"></div><div class="flex items-center bg-gray-50 border rounded p-2"><input type="checkbox" id="input-part-cable" class="h-4 w-4 text-indigo-600 border-gray-300 rounded" onchange="majUnitePiece()"><label for="input-part-cable" class="ml-2 block text-sm text-gray-900">C'est un <b>câble</b> — la quantité se compte en <b>mètres</b></label></div><div class="grid grid-cols-2 gap-4"><div><label class="block text-sm font-semibold"><span id="label-part-qty">Qté</span></label><input type="number" id="input-part-qty" required min="0" step="any" class="w-full border p-2 rounded"></div><div><label class="block text-sm font-semibold">Seuil d'alerte</label><input type="number" id="input-part-alert" min="0" step="any" class="w-full border p-2 rounded"></div></div><div class="grid grid-cols-2 gap-4"><div><label class="block text-sm font-semibold">Famille</label><select id="input-part-family" class="w-full border p-2 rounded bg-white"></select></div><div><label class="block text-sm font-semibold">Lieu</label><select id="input-part-location" class="w-full border p-2 rounded bg-white"></select></div></div><div><label class="block text-sm font-semibold">Description</label><textarea id="input-part-desc" class="w-full border p-2 rounded"></textarea></div><div><label class="block text-sm font-semibold">Notice PDF</label><input type="file" id="input-part-doc" accept=".pdf" onchange="previewDoc(event)" class="w-full text-sm"><p class="text-xs text-gray-500 mt-1" id="doc-status"></p></div><div><label class="block text-sm font-semibold">Photo</label><div class="flex gap-2 items-center"><input type="file" id="input-part-photo" accept="image/*" class="w-full border p-1.5 rounded text-sm bg-white" onchange="previewImage(event)"><label class="bg-indigo-50 border border-indigo-200 text-indigo-700 p-1.5 px-3 rounded cursor-pointer hover:bg-indigo-100 flex-none flex items-center shadow-sm" title="Prendre une photo"><i class="fa-solid fa-camera"></i><input type="file" accept="image/*" capture="environment" class="hidden" onchange="previewImage(event)"></label></div><div class="mt-2 flex items-center gap-3"><img id="part-photo-preview" class="hidden h-20 w-20 object-cover rounded border" alt=""><button type="button" id="btn-remove-photo" class="hidden text-xs text-red-600 hover:underline" onclick="removePhoto()">Retirer la photo</button></div></div></div><div class="flex justify-between items-center gap-2 mt-4"><button type="button" id="btn-delete-part" class="hidden text-red-600 hover:text-red-800 text-sm font-medium px-2 py-2" onclick="deletePart()"><i class="fa-solid fa-trash mr-1"></i> Supprimer</button><div class="flex gap-2 ml-auto"><button type="button" class="border px-4 py-2 rounded" onclick="closeModal('modal-part')">Annuler</button><button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded">Sauvegarder</button></div></div></form></div></div></div>
+    <div id="modal-part" class="hidden fixed z-50 inset-0 overflow-y-auto"><div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 sm:items-center"><div class="fixed inset-0 bg-gray-600 bg-opacity-75" onclick="closeModal('modal-part')"></div><div class="bg-white rounded-lg w-full max-w-lg p-6 relative z-10"><form id="form-part" onsubmit="handlePartSubmit(event)"><h3 class="text-xl font-bold mb-4" id="modal-part-title">Pièce</h3><input type="hidden" id="part-edit-id"><div class="space-y-4 max-h-[70vh] overflow-y-auto pr-2"><div><label class="block text-sm font-semibold">Nom</label><input type="text" id="input-part-name" required class="w-full border p-2 rounded"></div><div class="flex items-center bg-gray-50 border rounded p-2"><input type="checkbox" id="input-part-cable" class="h-4 w-4 text-indigo-600 border-gray-300 rounded" onchange="majUnitePiece()"><label for="input-part-cable" class="ml-2 block text-sm text-gray-900">C'est un <b>câble</b> — la quantité se compte en <b>mètres</b></label></div><div class="grid grid-cols-2 gap-4"><div><label class="block text-sm font-semibold"><span id="label-part-qty">Qté</span></label><input type="number" id="input-part-qty" required min="0" step="any" class="w-full border p-2 rounded"></div><div><label class="block text-sm font-semibold">Seuil d'alerte</label><input type="number" id="input-part-alert" min="0" step="any" class="w-full border p-2 rounded"></div></div><div class="grid grid-cols-2 gap-4"><div><label class="block text-sm font-semibold">Famille</label><select id="input-part-family" class="w-full border p-2 rounded bg-white"></select></div><div><label class="block text-sm font-semibold">Lieu</label><select id="input-part-location" class="w-full border p-2 rounded bg-white"></select></div></div><div><label class="block text-sm font-semibold mb-1">Avertissement de poids</label><div class="grid grid-cols-4 gap-1.5" id="poids-picker"></div><p class="text-xs text-gray-500 mt-1" id="poids-choix-info">Laissez vide en dessous de 10 kg.</p></div><div><label class="block text-sm font-semibold">Description</label><textarea id="input-part-desc" class="w-full border p-2 rounded"></textarea></div><div><label class="block text-sm font-semibold">Notice PDF</label><input type="file" id="input-part-doc" accept=".pdf" onchange="previewDoc(event)" class="w-full text-sm"><p class="text-xs text-gray-500 mt-1" id="doc-status"></p></div><div><label class="block text-sm font-semibold">Photo</label><div class="flex gap-2 items-center"><input type="file" id="input-part-photo" accept="image/*" class="w-full border p-1.5 rounded text-sm bg-white" onchange="previewImage(event)"><label class="bg-indigo-50 border border-indigo-200 text-indigo-700 p-1.5 px-3 rounded cursor-pointer hover:bg-indigo-100 flex-none flex items-center shadow-sm" title="Prendre une photo"><i class="fa-solid fa-camera"></i><input type="file" accept="image/*" capture="environment" class="hidden" onchange="previewImage(event)"></label></div><div class="mt-2 flex items-center gap-3"><img id="part-photo-preview" class="hidden h-20 w-20 object-cover rounded border" alt=""><button type="button" id="btn-remove-photo" class="hidden text-xs text-red-600 hover:underline" onclick="removePhoto()">Retirer la photo</button></div></div></div><div class="flex justify-between items-center gap-2 mt-4"><button type="button" id="btn-delete-part" class="hidden text-red-600 hover:text-red-800 text-sm font-medium px-2 py-2" onclick="deletePart()"><i class="fa-solid fa-trash mr-1"></i> Supprimer</button><div class="flex gap-2 ml-auto"><button type="button" class="border px-4 py-2 rounded" onclick="closeModal('modal-part')">Annuler</button><button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded">Sauvegarder</button></div></div></form></div></div></div>
 
 <script>
 /* ============================================================================
@@ -687,6 +714,214 @@ const THUMB_MAX_PX = 220,  THUMB_QUALITY = 0.6;      // vignette de la grille
 const MAP_MAX_PX = 1600,   MAP_QUALITY = 0.88;       // plan de l'atelier
 const MAX_DOC_MB = 5;
 const HISTORY_KEEP = 150;
+
+/* ============================================================================
+   AVERTISSEMENT DE POIDS
+   ----------------------------------------------------------------------------
+   Reprend les pictogrammes de manutention apposés sur le matériel : vert pour
+   une personne, orange pour deux, rouge pour un engin de levage. Une pièce de
+   moins de 10 kg n'en porte aucun.
+
+   Les pictogrammes sont dessinés en SVG plutôt qu'importés en image : ils
+   restent nets de 24 px à pleine page, ne pèsent rien dans la base, et
+   l'inventaire n'a pas à stocker trois fichiers de plus par pièce.
+   ========================================================================== */
+const POIDS = {
+    leger: {
+        libelle: '10 à 25 kg', couleur: '#2E8B49',
+        texte: ["Ce produit nécessite une personne pour être soulevé.",
+                "Utilisez des techniques de levage appropriées."],
+        resume: 'Une personne',
+    },
+    lourd: {
+        libelle: '25 à 50 kg', couleur: '#D4622A',
+        texte: ["Ce produit nécessite deux personnes pour être soulevé.",
+                "Utilisez des techniques de levage appropriées."],
+        resume: 'Deux personnes',
+    },
+    treslourd: {
+        libelle: '50 kg +', couleur: '#C8252B',
+        texte: ["Ce produit doit être soulevé avec l'aide de moyens spéciaux.",
+                "Utilisez des techniques de levage appropriées."],
+        resume: 'Moyens de levage',
+    },
+};
+
+/** Silhouettes, en traits blancs comme sur les étiquettes d'origine. */
+const PICTOS = {
+    leger: `<g fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="66" cy="26" r="13" fill="#fff" stroke="none"/>
+        <path d="M64 42 L54 76 L44 110"/>
+        <path d="M54 76 L76 92 L74 112"/>
+        <path d="M66 50 L104 62"/>
+        <path d="M72 74 L104 84"/>
+        <rect x="100" y="54" width="36" height="32" rx="3"/>
+    </g>`,
+    lourd: `<g fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="34" cy="28" r="12" fill="#fff" stroke="none"/>
+        <path d="M34 44 L28 76 L18 108"/>
+        <path d="M28 76 L46 92 L44 112"/>
+        <path d="M38 52 L72 68"/>
+        <circle cx="136" cy="28" r="12" fill="#fff" stroke="none"/>
+        <path d="M136 44 L142 76 L152 108"/>
+        <path d="M142 76 L124 92 L126 112"/>
+        <path d="M132 52 L98 68"/>
+        <rect x="64" y="60" width="42" height="20" rx="3"/>
+    </g>`,
+    treslourd: `<g fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M40 16 L40 100"/>
+        <path d="M40 94 L20 94"/>
+        <circle cx="92" cy="32" r="11" fill="#fff" stroke="none"/>
+        <path d="M62 48 L62 22 L124 22 L138 48"/>
+        <path d="M58 54 L140 54 L140 88 L58 88 Z"/>
+        <path d="M140 66 L158 66"/>
+        <circle cx="76" cy="104" r="12"/>
+        <circle cx="128" cy="104" r="12"/>
+    </g>`,
+};
+
+/** Carrés blancs répartis le long d'une arête, comme sur l'étiquette. */
+function liseres(x1, y1, x2, y2, nb, taille) {
+    const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+    let out = '';
+    for (let i = 0; i < nb; i++) {
+        const t = (i + 0.5) / nb;
+        const x = x1 + (x2 - x1) * t, y = y1 + (y2 - y1) * t;
+        out += `<rect x="${(x - taille / 2).toFixed(1)}" y="${(y - taille / 2).toFixed(1)}"
+                      width="${taille}" height="${taille}" rx="2" fill="#fff"
+                      transform="rotate(${angle.toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)})"/>`;
+    }
+    return out;
+}
+
+/** Pictogramme complet. La consigne est placée sous le triangle, sur fond
+ *  blanc : dans le triangle elle chevauchait les bords et restait illisible,
+ *  alors qu'au-dessous elle laisse toute la place à la silhouette et au poids. */
+function pictoPoidsGrand(code, avecConsigne) {
+    const p = POIDS[code];
+    if (!p) return '';
+    // Sans la consigne, le dessin s'arrête au bas du triangle : la modale, elle,
+    // écrit déjà la consigne en toutes lettres au-dessous.
+    const hauteur = avecConsigne === false ? 286 : 342;
+    return `<svg viewBox="0 0 352 ${hauteur}" width="100%" height="100%" role="img"
+                 aria-label="${esc(p.libelle)} — ${esc(p.resume)}">
+        <g transform="translate(26 0)">
+        <!-- Contour blanc, puis le triangle coloré par-dessus -->
+        <path d="M150 6 L296 274 L4 274 Z" fill="#fff" stroke="#fff"
+              stroke-width="18" stroke-linejoin="round"/>
+        <path d="M150 20 L282 262 L18 262 Z" fill="${p.couleur}" stroke="${p.couleur}"
+              stroke-width="22" stroke-linejoin="round"/>
+        <!-- Triangle intérieur, cerné de blanc -->
+        <path d="M150 52 L250 218 L50 218 Z" fill="none" stroke="#fff"
+              stroke-width="7" stroke-linejoin="round"/>
+        ${liseres(143, 38, 48, 196, 4, 16)}
+        ${liseres(157, 38, 252, 196, 4, 16)}
+        ${liseres(92, 230, 208, 230, 3, 15)}
+        <rect x="140" y="12" width="20" height="16" rx="3" fill="#fff"/>
+        <g transform="translate(103 88) scale(0.56)">${PICTOS[code]}</g>
+        <!-- Le poids descend vers la base, où le triangle est le plus large -->
+        <text x="150" y="210" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif"
+              font-size="31" font-weight="bold" fill="#111">${esc(p.libelle)}</text>
+        <text x="150" y="262" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif"
+              font-size="32" font-weight="bold" fill="#fff" letter-spacing="1">ATTENTION</text>
+        </g>
+        ${avecConsigne === false ? '' : `
+        <!-- Consigne, hors du triangle et sur toute la largeur du cadre -->
+        <text x="176" y="302" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif"
+              font-size="13" fill="#111">${esc(p.texte[0])}</text>
+        <text x="176" y="320" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif"
+              font-size="13" fill="#111">${esc(p.texte[1])}</text>`}
+    </svg>`;
+}
+
+/** Version réduite, pour tenir à côté d'un nom : à cette taille, seules la
+ *  couleur et la silhouette restent lisibles, le texte ne l'est pas. */
+function pictoPoidsPetit(code, px) {
+    const p = POIDS[code];
+    if (!p) return '';
+    return `<svg viewBox="0 0 200 184" width="${px}" height="${Math.round(px * 0.92)}"
+                 role="img" aria-label="${esc(p.libelle)} — ${esc(p.resume)}">
+        <path d="M100 4 L196 178 L4 178 Z" fill="#fff" stroke="#fff"
+              stroke-width="12" stroke-linejoin="round"/>
+        <path d="M100 22 L180 168 L20 168 Z" fill="${p.couleur}" stroke="${p.couleur}"
+              stroke-width="20" stroke-linejoin="round"/>
+        <g transform="translate(32 56) scale(0.66)">${PICTOS[code]}</g>
+    </svg>`;
+}
+
+/** Icône posée à côté du nom d'une pièce. Le survol l'agrandit sur ordinateur,
+ *  le clic ouvre la consigne complète — le seul geste possible au doigt. */
+function badgePoids(part, px) {
+    const code = part && part.poids;
+    if (!POIDS[code]) return '';
+    const p = POIDS[code];
+    // Une seule bulle existe pour toute la page : la recopier dans chaque icône
+    // alourdirait le document d'autant de pictogrammes complets qu'il y a de
+    // pièces affichées.
+    return `<span class="picto-poids" data-poids="${code}" title="${esc(p.libelle)} — ${esc(p.resume)}">
+        ${pictoPoidsPetit(code, px || 24)}</span>`;
+}
+
+/** Consigne de manutention en grand, ouverte au clic sur un pictogramme. */
+function ouvrirPoids(code) {
+    const p = POIDS[code];
+    if (!p) return;
+    document.getElementById('poids-visuel').innerHTML = pictoPoidsGrand(code, false);
+    document.getElementById('poids-titre').textContent = p.libelle;
+    document.getElementById('poids-texte').innerHTML = p.texte.map(esc).join('<br>');
+    document.getElementById('modal-poids').classList.remove('hidden');
+}
+
+/** Bulle de survol, créée une seule fois et déplacée d'une icône à l'autre. */
+let bulleParPoids = null;
+function bullePoids() {
+    if (!bulleParPoids) {
+        bulleParPoids = document.createElement('div');
+        bulleParPoids.className = 'picto-bulle';
+        document.body.appendChild(bulleParPoids);
+    }
+    return bulleParPoids;
+}
+
+document.addEventListener('mouseover', e => {
+    const icone = e.target.closest && e.target.closest('.picto-poids');
+    if (!icone) return;
+    const b = bullePoids();
+    if (b.dataset.poids !== icone.dataset.poids) {
+        b.dataset.poids = icone.dataset.poids;
+        b.innerHTML = pictoPoidsGrand(icone.dataset.poids);
+    }
+    const r = icone.getBoundingClientRect();
+    // Placée au-dessus de l'icône, ramenée dans l'écran si elle en sortirait.
+    const largeur = 210;
+    let gauche = r.left + r.width / 2 - largeur / 2;
+    gauche = Math.max(8, Math.min(gauche, innerWidth - largeur - 8));
+    b.style.left = gauche + 'px';
+    b.style.width = largeur + 'px';
+    const hauteur = b.offsetHeight || 210;
+    b.style.top = (r.top > hauteur + 12 ? r.top - hauteur - 8 : r.bottom + 8) + 'px';
+    b.classList.add('visible');
+});
+
+document.addEventListener('mouseout', e => {
+    const icone = e.target.closest && e.target.closest('.picto-poids');
+    if (!icone) return;
+    // Passer du cadre au dessin qu'il contient n'est pas une sortie : sans ce
+    // test la bulle clignoterait.
+    const vers = e.relatedTarget;
+    if (vers && icone.contains(vers)) return;
+    bullePoids().classList.remove('visible');
+});
+
+// Un seul écouteur pour toute la page : les listes sont reconstruites souvent,
+// et le pictogramme ne doit pas ouvrir la fiche de la pièce derrière lui.
+document.addEventListener('click', e => {
+    const icone = e.target.closest('.picto-poids');
+    if (!icone) return;
+    e.stopPropagation();
+    e.preventDefault();
+    ouvrirPoids(icone.dataset.poids);
+}, true);
 
 const colorMap = {
     'red':    { bg: 'bg-red-100',    text: 'text-red-800',    hex: '#FCA5A5' },
@@ -1192,7 +1427,8 @@ function renderPartsGrid() {
                 <span class="absolute top-2 right-2 badge ${s.bg} ${s.text}">${esc(f ? f.name : 'Sans famille')}</span>
             </div>
             <div class="p-4">
-                <h3 class="font-bold truncate" title="${esc(p.name)}">${esc(p.name)}</h3>
+                <h3 class="font-bold truncate flex items-center gap-1.5" title="${esc(p.name)}">
+                    ${badgePoids(p, 22)}<span class="truncate">${esc(p.name)}</span></h3>
                 <p class="text-xs text-gray-500 truncate"><i class="fa-solid fa-location-dot"></i> ${esc(p.location || 'Zone non définie')}</p>
                 ${engHtml}
                 <div class="flex justify-between items-center border-t pt-2 mt-3">
@@ -1270,6 +1506,8 @@ function openPartModal(id) {
         document.getElementById('input-part-name').value = p.name || '';
         document.getElementById('input-part-cable').checked = estCable(p);
         majUnitePiece();
+        poidsChoisi = POIDS[p.poids] ? p.poids : null;
+        renderPoidsPicker();
         document.getElementById('input-part-qty').value = numQty(p.qty, p);
         document.getElementById('input-part-alert').value = numQty(p.alertQty, p);
         document.getElementById('input-part-family').value = p.familyId ?? '';
@@ -1297,10 +1535,38 @@ function openPartModal(id) {
         document.getElementById('part-edit-id').value = "";
         document.getElementById('input-part-cable').checked = false;
         majUnitePiece();
+        poidsChoisi = null;
+        renderPoidsPicker();
         document.getElementById('input-part-qty').value = 0;
         document.getElementById('input-part-alert').value = 0;
         btnDel.classList.add('hidden');
     }
+}
+
+/** Choix du poids : une seule valeur à la fois, et « Aucun » pour le
+ *  matériel de moins de 10 kg, qui ne porte pas d'étiquette. */
+let poidsChoisi = null;
+
+function renderPoidsPicker() {
+    const ct = document.getElementById('poids-picker');
+    const cases = [['', 'Aucun'], ['leger', ''], ['lourd', ''], ['treslourd', '']];
+    ct.innerHTML = cases.map(([code]) => {
+        const actif = (poidsChoisi || '') === code;
+        const inner = code
+            ? pictoPoidsPetit(code, 30)
+            : '<span class="text-xs text-gray-500 leading-tight">Moins<br>de 10 kg</span>';
+        return `<button type="button" data-poids-choix="${code}"
+            class="border rounded py-1.5 flex flex-col items-center justify-center gap-0.5 h-14 ${
+                actif ? 'border-indigo-600 bg-indigo-50 ring-1 ring-indigo-500' : 'bg-white hover:bg-gray-50'}">
+            ${inner}</button>`;
+    }).join('');
+    ct.querySelectorAll('[data-poids-choix]').forEach(b => b.onclick = () => {
+        poidsChoisi = b.dataset.poidsChoix || null;
+        renderPoidsPicker();
+    });
+    const p = POIDS[poidsChoisi];
+    document.getElementById('poids-choix-info').textContent =
+        p ? `${p.libelle} — ${p.resume}` : "Laissez vide en dessous de 10 kg.";
 }
 
 /** Reflète l'unité choisie dans le formulaire d'une pièce. */
@@ -1343,6 +1609,9 @@ async function handlePartSubmit(e) {
     // et une pièce ordinaire reste enregistrable même si les règles de sécurité
     // ne le connaissent pas encore.
     if (cable) part.cable = true;
+    // Comme pour les câbles, le champ n'est écrit que s'il porte une valeur :
+    // une pièce légère n'a pas à transporter un avertissement vide.
+    if (POIDS[poidsChoisi]) part.poids = poidsChoisi;
 
     if (!part.name) { toast("Le nom est obligatoire", 'err'); return; }
 
@@ -1470,7 +1739,8 @@ async function openQuickView(id) {
     if (!p) { toast("Pièce introuvable", 'err'); return; }
 
     document.getElementById('quick-view-id').value = p.id;
-    document.getElementById('quick-view-name').textContent = p.name || '';
+    document.getElementById('quick-view-name').innerHTML =
+        badgePoids(p, 26) + `<span>${esc(p.name || '')}</span>`;
     document.getElementById('quick-view-qty').textContent = qtyTxt(p.qty, p);
     document.getElementById('quick-view-desc').textContent = p.desc || "Aucune description";
     document.getElementById('quick-view-zone-label').textContent = p.location || "Zone non définie";
@@ -2726,7 +2996,7 @@ function renderBasketTotal(basket, rows) {
             const detail = t.lignes > 1
                 ? `<span class="text-xs text-indigo-600 ml-2">(${t.lignes} lignes${t.ouvrages.size > 1 ? `, ${t.ouvrages.size} ouvrages` : ''})</span>` : '';
             return `<tr class="border-t border-indigo-100">
-                <td class="py-1">${esc(t.part.name)}${detail}</td>
+                <td class="py-1"><span class="inline-flex items-center gap-1.5">${badgePoids(t.part, 18)}${esc(t.part.name)}</span>${detail}</td>
                 <td class="py-1 text-right font-bold">${qtyTxt(t.qty, t.part)}</td>
                 ${isDraft ? '' : `<td class="py-1 text-right font-bold${t.charge !== t.qty ? ' text-red-600' : ''}">${t.charge}</td>`}
                 <td class="py-1 text-right ${manque ? 'text-red-600 font-bold' : 'text-gray-500'}">${qtyTxt(t.part.qty, t.part)}${manque ? ' ⚠' : ''}</td>
@@ -2828,7 +3098,8 @@ function renderBasketItems(basket) {
             const short = num(part.qty) < num(item.qty);
             tr.innerHTML = `
                 <td class="px-6 py-3 cursor-pointer group" data-open-part="${part.id}">
-                    <div class="text-sm font-bold text-gray-900 group-hover:text-indigo-600 transition">${esc(part.name)}</div>
+                    <div class="text-sm font-bold text-gray-900 group-hover:text-indigo-600 transition flex items-center gap-1.5">
+                        ${badgePoids(part, 20)}<span>${esc(part.name)}</span></div>
                     ${situ}
                     ${commentHtml}
                     <div class="text-xs ${short ? 'text-red-600 font-bold' : 'text-gray-500'}">Stock: ${qtyTxt(part.qty, part)}${short ? ' — insuffisant' : ''}</div>
@@ -2845,7 +3116,8 @@ function renderBasketItems(basket) {
             tr.innerHTML = `
                 <td class="px-4 py-3 text-center"><input type="checkbox" data-toggle-item="${item.uid}" ${item.loaded ? 'checked' : ''} class="w-6 h-6 text-green-600 rounded cursor-pointer"></td>
                 <td class="px-4 py-3 cursor-pointer group" data-open-part="${part.id}">
-                    <div class="text-sm font-bold text-gray-900 group-hover:text-indigo-600 transition">${esc(part.name)}</div>
+                    <div class="text-sm font-bold text-gray-900 group-hover:text-indigo-600 transition flex items-center gap-1.5">
+                        ${badgePoids(part, 20)}<span>${esc(part.name)}</span></div>
                     ${situ}
                     ${ecart ? `<div class="text-xs text-red-600 font-semibold">Demandé au départ : ${qtyTxt(item.qty, part)}</div>` : ''}
                     ${commentHtml}

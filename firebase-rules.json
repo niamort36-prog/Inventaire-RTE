@@ -52,6 +52,7 @@
             "hasImage": { ".validate": "newData.isBoolean()" },
             "hasDoc":   { ".validate": "newData.isBoolean()" },
             "cable":    { ".validate": "newData.isBoolean()" },
+            "poids":    { ".validate": "newData.val() == 'leger' || newData.val() == 'lourd' || newData.val() == 'treslourd'" },
             "$autre":   { ".validate": false }
           }
         },
