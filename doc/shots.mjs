@@ -141,7 +141,10 @@ await page.evaluate(() => {
         `<div style="width:240px">${pictoPoidsGrand(c)}</div>`).join('');
     document.body.appendChild(d);
 });
-await wait(900);
+// Les etiquettes sont des images : attendre qu'elles soient decodees.
+await page.evaluate(() => Promise.all(
+    [...document.querySelectorAll('#planche-poids img')].map(i => i.decode())));
+await wait(500);
 await shotEl('avertissements-poids', '#planche-poids');
 await page.evaluate(() => document.getElementById('planche-poids').remove());
 

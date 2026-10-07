@@ -17,7 +17,10 @@ const APP_SHELL = [
     './index.html',
     './manifest.json',
     './RTELogo.png',
-    './LogoAcceuil.png'
+    './LogoAcceuil.png',
+    './pictos/poids-leger.png',
+    './pictos/poids-lourd.png',
+    './pictos/poids-treslourd.png'
 ];
 
 self.addEventListener('install', event => {

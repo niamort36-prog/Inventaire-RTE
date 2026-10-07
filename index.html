@@ -748,98 +748,34 @@ const POIDS = {
 };
 
 /** Silhouettes, en traits blancs comme sur les étiquettes d'origine. */
-const PICTOS = {
-    leger: `<g fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="66" cy="26" r="13" fill="#fff" stroke="none"/>
-        <path d="M64 42 L54 76 L44 110"/>
-        <path d="M54 76 L76 92 L74 112"/>
-        <path d="M66 50 L104 62"/>
-        <path d="M72 74 L104 84"/>
-        <rect x="100" y="54" width="36" height="32" rx="3"/>
-    </g>`,
-    lourd: `<g fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="34" cy="28" r="12" fill="#fff" stroke="none"/>
-        <path d="M34 44 L28 76 L18 108"/>
-        <path d="M28 76 L46 92 L44 112"/>
-        <path d="M38 52 L72 68"/>
-        <circle cx="136" cy="28" r="12" fill="#fff" stroke="none"/>
-        <path d="M136 44 L142 76 L152 108"/>
-        <path d="M142 76 L124 92 L126 112"/>
-        <path d="M132 52 L98 68"/>
-        <rect x="64" y="60" width="42" height="20" rx="3"/>
-    </g>`,
-    treslourd: `<g fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M40 16 L40 100"/>
-        <path d="M40 94 L20 94"/>
-        <circle cx="92" cy="32" r="11" fill="#fff" stroke="none"/>
-        <path d="M62 48 L62 22 L124 22 L138 48"/>
-        <path d="M58 54 L140 54 L140 88 L58 88 Z"/>
-        <path d="M140 66 L158 66"/>
-        <circle cx="76" cy="104" r="12"/>
-        <circle cx="128" cy="104" r="12"/>
-    </g>`,
+/** Les étiquettes telles qu'elles sont collées sur le matériel. Ce sont les
+ *  images fournies, détourées : les redessiner ne donnait qu'une ressemblance,
+ *  alors qu'un avertissement doit être reconnu du premier coup d'oeil. */
+const IMAGES_POIDS = {
+    leger:     'pictos/poids-leger.png',
+    lourd:     'pictos/poids-lourd.png',
+    treslourd: 'pictos/poids-treslourd.png',
 };
 
-/** Carrés blancs répartis le long d'une arête, comme sur l'étiquette. */
-function liseres(x1, y1, x2, y2, nb, taille) {
-    const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
-    let out = '';
-    for (let i = 0; i < nb; i++) {
-        const t = (i + 0.5) / nb;
-        const x = x1 + (x2 - x1) * t, y = y1 + (y2 - y1) * t;
-        out += `<rect x="${(x - taille / 2).toFixed(1)}" y="${(y - taille / 2).toFixed(1)}"
-                      width="${taille}" height="${taille}" rx="2" fill="#fff"
-                      transform="rotate(${angle.toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)})"/>`;
-    }
-    return out;
-}
-
-/** Pictogramme complet. La consigne est placée sous le triangle, sur fond
- *  blanc : dans le triangle elle chevauchait les bords et restait illisible,
- *  alors qu'au-dessous elle laisse toute la place à la silhouette et au poids. */
+/** Pictogramme en grand. La consigne est écrite au-dessous, hors de
+ *  l'étiquette, pour rester lisible sans empiéter sur le dessin. */
 function pictoPoidsGrand(code, avecConsigne) {
     const p = POIDS[code];
     if (!p) return '';
-    // Sans la consigne, le dessin s'arrête au bas du triangle : la modale, elle,
-    // écrit déjà la consigne en toutes lettres au-dessous.
-    const hauteur = avecConsigne === false ? 286 : 342;
-    return `<svg viewBox="0 0 352 ${hauteur}" width="100%" height="100%" role="img"
-                 aria-label="${esc(p.libelle)} — ${esc(p.resume)}">
-        <g transform="translate(26 0)">
-        <!-- Contour blanc, puis le triangle coloré par-dessus -->
-        <path d="M150 6 L296 274 L4 274 Z" fill="#fff" stroke="#fff"
-              stroke-width="18" stroke-linejoin="round"/>
-        <path d="M150 20 L282 262 L18 262 Z" fill="${p.couleur}" stroke="${p.couleur}"
-              stroke-width="22" stroke-linejoin="round"/>
-        <!-- Triangle intérieur, cerné de blanc -->
-        <path d="M150 52 L250 218 L50 218 Z" fill="none" stroke="#fff"
-              stroke-width="7" stroke-linejoin="round"/>
-        ${liseres(143, 38, 48, 196, 4, 16)}
-        ${liseres(157, 38, 252, 196, 4, 16)}
-        ${liseres(92, 230, 208, 230, 3, 15)}
-        <rect x="140" y="12" width="20" height="16" rx="3" fill="#fff"/>
-        <g transform="translate(103 88) scale(0.56)">${PICTOS[code]}</g>
-        <!-- Le poids descend vers la base, où le triangle est le plus large -->
-        <text x="150" y="210" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif"
-              font-size="31" font-weight="bold" fill="#111">${esc(p.libelle)}</text>
-        <text x="150" y="262" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif"
-              font-size="32" font-weight="bold" fill="#fff" letter-spacing="1">ATTENTION</text>
-        </g>
-        ${avecConsigne === false ? '' : `
-        <!-- Consigne, hors du triangle et sur toute la largeur du cadre -->
-        <text x="176" y="302" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif"
-              font-size="13" fill="#111">${esc(p.texte[0])}</text>
-        <text x="176" y="320" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif"
-              font-size="13" fill="#111">${esc(p.texte[1])}</text>`}
-    </svg>`;
+    const img = `<img src="${IMAGES_POIDS[code]}" width="543" height="480"
+                      alt="${esc(p.libelle)} — ${esc(p.resume)}"
+                      style="width:100%;height:auto;display:block">`;
+    if (avecConsigne === false) return img;
+    return img + `<p style="margin:7px 3px 1px;text-align:center;font-size:11px;
+                            line-height:1.35;color:#111">${p.texte.map(esc).join('<br>')}</p>`;
 }
 
-/** Silhouettes du petit format. Celles du grand pictogramme sont dessinées
- *  pour un carré : réduites, leurs bras et leurs têtes sortent du triangle et
- *  leurs traits deviennent invisibles. Celles-ci tiennent dans le trapèze
- *  réellement disponible — étroit en haut, large en bas — et portent un trait
- *  assez épais pour rester lisibles à 20 px. Elles sont dessinées dans un
- *  repère local de 160 × 96 posé par `pictoPoidsPetit`. */
+/** Silhouettes du petit format. L'étiquette entière, réduite à 20 px, ne serait
+ *  qu'une tache : à cette taille, seules la couleur et une forme très simple
+ *  portent l'information. Elles sont dessinées dans un repère local de 160 × 96
+ *  posé par `pictoPoidsPetit`, calé sur le trapèze réellement disponible dans
+ *  le triangle — étroit en haut, large en bas — et portent un trait assez épais
+ *  pour rester lisibles à 20 px. */
 const PICTOS_PETITS = {
     leger: `<g fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="66" cy="14" r="11" fill="#fff" stroke="none"/>
@@ -860,11 +796,12 @@ const PICTOS_PETITS = {
         <rect x="62" y="68" width="36" height="24" rx="4" fill="#fff" stroke="none"/>
     </g>`,
     treslourd: `<g fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="60" y="34" width="52" height="32" rx="4"/>
-        <path d="M48 42 L48 78 L124 78"/>
-        <path d="M48 42 L34 42"/>
-        <circle cx="66" cy="90" r="8"/>
-        <circle cx="114" cy="90" r="8"/>
+        <path d="M48 30 L48 76"/>
+        <path d="M48 70 L28 70"/>
+        <rect x="58" y="36" width="52" height="34" rx="4"/>
+        <path d="M110 54 L124 54"/>
+        <circle cx="68" cy="88" r="9"/>
+        <circle cx="110" cy="88" r="9"/>
     </g>`,
 };
 
