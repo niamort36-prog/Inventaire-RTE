@@ -7,6 +7,7 @@ Ce dossier contient de quoi le régénérer entièrement.
 |---|---|
 | `guide.html` | Le texte et la mise en page du guide |
 | `captures/` | Les 21 captures d'écran utilisées |
+| `logo-invent-rte.png` | Le logo de l'application, détouré, pour la couverture |
 | `demo.mjs` | Le jeu de données fictif servant aux captures |
 | `shots.mjs` | Crée le jeu de démonstration, prend les captures, puis efface tout |
 | `pdf.mjs` | Convertit `guide.html` en PDF A4 paginé, écrit à la racine du dépôt |
@@ -42,6 +43,27 @@ l'équipe avant de relancer.
 Les captures sont renumérotées à chaque exécution, dans l'ordre où elles sont prises. Après avoir
 inséré ou retiré une capture, vérifier les chemins `captures/NN-nom.png` cités dans `guide.html`.
 
+## La charte graphique RTE
+
+Le guide suit la charte graphique RTE, et doit continuer à la suivre. Les règles retenues,
+avec leur page dans `Charte_RTE_20251215.pdf` :
+
+| Règle | Où elle s'applique |
+|---|---|
+| Logotype RTE en **première position** sur tout support émis par RTE (p. 10) | En haut de la couverture, avant le logo de l'application |
+| Couleur principale **#00A6D9**, secondaire **#054191**, noir descendu 90 % **#191919** réservé aux textes courants (p. 12) | Variables `--cyan`, `--marine`, `--noir` en tête de la feuille de style |
+| Typographie **Arial** (p. 15) | Titres et textes |
+| Titres en **bleu marine** sur fond clair, en **blanc** sur fond sombre ; textes courants en **noir 90 %** ; mots clés en bleu marine (p. 16) | `h1`/`h2`/`h3`, `strong`, couverture |
+| Le blanc sur cyan est **réservé au print** et déconseillé en digital (p. 16) | Le cyan ne sert qu'aux filets et aux aplats de second plan ; les pastilles numérotées sont en bleu marine |
+| Fonds de couleur limités à une **teinte très claire** (p. 16) | Encadrés `.note`, `.tip`, `.warn`, en teintes descendues du cyan, du vert d'eau et de la terracotta |
+| Grille des formats verticaux : largeur / 6, hauteur / 8 (p. 24) | Repère de mise en page, rappelé en commentaire dans la feuille de style |
+
+Les couleurs fonctionnelles des encadrés sont prises dans les **couleurs secondaires de la
+charte** et non dans un rouge ou un vert quelconques : vert d'eau `#4BB9AA` pour les
+conseils, terracotta `#D77864` pour les avertissements.
+
+En cas de doute sur une règle, l'adresse de contact figure en dernière page de la charte.
+
 ## Deux règles à respecter
 
 **Aucune donnée réelle dans le guide.** Ce dépôt est public. Les captures doivent être prises sur
@@ -63,3 +85,6 @@ cela rend le script indépendant des règles publiées sur la base.
 À chaque évolution visible de l'application : nouvel écran, nouveau bouton, vocabulaire modifié.
 Mettre à jour `guide.html`, refaire les captures concernées, régénérer le PDF, et corriger la date
 de version sur la page de couverture.
+
+Et conserver la charte graphique : toute mise en forme ajoutée reprend les couleurs, la
+typographie et les règles du tableau ci-dessus.

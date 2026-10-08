@@ -19,9 +19,9 @@ await page.pdf({
     displayHeaderFooter: true,
     headerTemplate: '<div></div>',
     footerTemplate: `
-      <div style="width:100%;font-size:8pt;color:#9CA3AF;padding:0 14mm;
-                  font-family:'Segoe UI',sans-serif;display:flex;justify-content:space-between;">
-        <span>Invent'RTE — Guide d'utilisation</span>
+      <div style="width:100%;font-size:8pt;color:#054191;padding:0 14mm;
+                  font-family:Arial,sans-serif;display:flex;justify-content:space-between;">
+        <span>Invent'RTE &#183; Guide d'utilisation</span>
         <span class="pageNumber"></span>
       </div>`,
     margin: { top: '16mm', bottom: '18mm', left: '14mm', right: '14mm' },
