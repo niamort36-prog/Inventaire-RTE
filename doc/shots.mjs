@@ -6,7 +6,7 @@
  */
 import { chromium } from 'playwright-core';
 import fs from 'fs';
-import { FAMILLES, ZONES, PIECES, PLAN_SCRIPT } from './demo.mjs';
+import { FAMILLES, ZONES, PIECES, REFS_EB, PLAN_SCRIPT } from './demo.mjs';
 
 const URL = 'http://localhost:8777';
 const OUT = 'captures';
@@ -42,7 +42,7 @@ await wait(2000);
 
 // ---------------------------------------------------------------- Jeu de démo
 console.log('Création du jeu de démonstration (EL Aurillac)...');
-await page.evaluate(async ({ FAMILLES, ZONES, PIECES, planSrc }) => {
+await page.evaluate(async ({ FAMILLES, ZONES, PIECES, REFS_EB, planSrc }) => {
     const w = ms => new Promise(r => setTimeout(r, ms));
     switchTeam('EL Aurillac'); await w(3500);
 
@@ -70,6 +70,8 @@ await page.evaluate(async ({ FAMILLES, ZONES, PIECES, planSrc }) => {
             location: zone, desc: '', hasImage: false, hasDoc: false
         };
         if (cable) piece.cable = true;      // quantité comptée en mètres
+        const eb = REFS_EB[nom];           // rattachement au catalogue des achats
+        if (eb) { piece.refEB = eb[0]; piece.designationEB = eb[1]; piece.prixEB = eb[2]; }
         // Le poids n'est pas enregistré : il est posé à l'affichage, juste
         // avant chaque capture (voir __majPoids plus bas). Le jeu de
         // démonstration est effacé ensuite, rien ne sert de le stocker.
@@ -88,7 +90,7 @@ await page.evaluate(async ({ FAMILLES, ZONES, PIECES, planSrc }) => {
         parts.forEach(p => { if (window.__poids[p.name]) p.poids = window.__poids[p.name]; });
     };
     await w(2500);
-}, { FAMILLES, ZONES, PIECES, planSrc: PLAN_SCRIPT.toString() });
+}, { FAMILLES, ZONES, PIECES, REFS_EB, planSrc: PLAN_SCRIPT.toString() });
 await wait(3000);
 
 // Le plan est chargé une fois par session : on recharge pour qu'il apparaisse.
@@ -119,6 +121,17 @@ await shotEl('fiche-piece', '#modal-quick-view .inline-block');
 await page.evaluate(() => { closeModal('modal-quick-view'); openPartModal(); });
 await wait(1200);
 await shotEl('ajouter-piece', '#modal-part .bg-white');
+
+// Le rattachement au catalogue des achats, sur la fiche d'une pièce
+await page.evaluate(() => {
+    closeModal('modal-part');
+    openPartModal(parts.find(p => p.name === 'BS 100').id);
+});
+await wait(1200);
+await page.evaluate(() => {
+    document.getElementById('input-part-ref').parentElement.parentElement.id = 'bloc-ref-eb';
+});
+await shotEl('reference-eb', '#bloc-ref-eb');
 
 // Formulaire d'une pièce en mode câble : la quantité passe en mètres
 await page.evaluate(() => {
@@ -293,6 +306,27 @@ await page.evaluate(() => {
 });
 await wait(800);
 await shotEl('total-a-charger', '#basket-total');
+
+// L'EB : le bouton, puis ce qui n'a pas pu y entrer
+await page.evaluate(() => {
+    const b = [...document.querySelectorAll('#modal-basket-detail button')]
+        .find(x => /Générer un EB/.test(x.textContent));
+    b.parentElement.id = 'barre-chantier';
+});
+await wait(500);
+await shotEl('generer-eb', '#barre-chantier');
+
+await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms));
+    // On n'ouvre que la fenêtre : le fichier lui-même ne se photographie pas.
+    const rows = visibleBasketItems(currentBasket());
+    ouvrirSansRef(totauxParPiece(rows).filter(t => !t.part.refEB).slice(0, 5));
+    await w(600);
+});
+await wait(700);
+await shotEl('eb-hors-liste', '#modal-eb-sans-ref .bg-white');
+await page.evaluate(() => closeModal('modal-eb-sans-ref'));
+await wait(400);
 
 await page.evaluate(() => {
     openConfirmAddModal(parts.find(p => p.name.startsWith('Harnais')).id);

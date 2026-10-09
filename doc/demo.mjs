@@ -49,6 +49,26 @@ export const PIECES = [
     ['GC 228 412 D',              'Connectique',         'Magasin outillage',  6, 2],
 ];
 
+/** Rattachement au catalogue des achats, pour la génération d'une EB.
+ *
+ *  Références et prix **inventés** : ce dépôt est public, et les tarifs
+ *  fournisseurs du catalogue RTE n'ont pas à y figurer. Seule la forme compte
+ *  pour les captures du guide.
+ *
+ *  [ référence, désignation au catalogue, prix unitaire ]
+ */
+export const REFS_EB = {
+    'RL 15 900':  ['990118', 'RALLONGE RL 15/900',             74.50],
+    'CC 15 A':    ['990226', 'CONNECTEUR CHANTOURNE CC 15A',   18.20],
+    'PT 15 400':  ['990304', 'PALONNIER TRIANGUL. PT 15/400',  61.90],
+    'OE 100':     ['990412', 'OEILLET OE 100',                  4.50],
+    'BS 100':     ['990530', 'BALL-SOCKET BS 100',             22.00],
+    'C 25 N1':    ['990647', 'CORNE C 25 N1',                  29.80],
+    'AP 60 C1':   ['990755', 'ANNEAU DE PROTECTION AP 60 C1',  15.40],
+    'F 100':      ['990863', 'ISO ANTIPOL BAGUE ANTICOR F100', 12.30],
+    'MA ASTER 570': ['990971', "MANCHON D'ANCRAGE MA ASTER 570", 193.60],
+};
+
 /** Plan d'atelier schématique, dessiné dans le navigateur (aucun plan réel). */
 export const PLAN_SCRIPT = () => {
     const c = document.createElement('canvas');

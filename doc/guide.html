@@ -115,7 +115,7 @@
     préparer et charger le matériel de chantier.
   </div>
   <div class="foot">
-    Version du 8 octobre 2026 · Ce guide décrit toutes les fonctions de l'application.<br>
+    Version du 9 octobre 2026 · Ce guide décrit toutes les fonctions de l'application.<br>
     Aucune connaissance préalable n'est nécessaire.
   </div>
 </div>
@@ -138,9 +138,10 @@
   <div class="toc-item"><div class="toc-num">11</div><div class="toc-txt"><b>Matériel déjà prévu ailleurs</b><span>Voir ce qui est promis à un autre chantier</span></div></div>
   <div class="toc-item"><div class="toc-num">12</div><div class="toc-txt"><b>Charger le matériel</b><span>Pointer ce qui part réellement</span></div></div>
   <div class="toc-item"><div class="toc-num">13</div><div class="toc-txt"><b>Imprimer le bon de chargement</b><span>Sur papier ou en PDF</span></div></div>
-  <div class="toc-item"><div class="toc-num">14</div><div class="toc-txt"><b>Scanner un QR code</b><span>Retrouver une pièce instantanément</span></div></div>
-  <div class="toc-item"><div class="toc-num">15</div><div class="toc-txt"><b>Sur le téléphone</b><span>Installer l'application, travailler sans réseau</span></div></div>
-  <div class="toc-item"><div class="toc-num">16</div><div class="toc-txt"><b>Questions fréquentes</b><span>Les situations courantes</span></div></div>
+  <div class="toc-item"><div class="toc-num">14</div><div class="toc-txt"><b>L'expression de besoin</b><span>Commander le matériel du chantier</span></div></div>
+  <div class="toc-item"><div class="toc-num">15</div><div class="toc-txt"><b>Scanner un QR code</b><span>Retrouver une pièce instantanément</span></div></div>
+  <div class="toc-item"><div class="toc-num">16</div><div class="toc-txt"><b>Sur le téléphone</b><span>Installer l'application, travailler sans réseau</span></div></div>
+  <div class="toc-item"><div class="toc-num">17</div><div class="toc-txt"><b>Questions fréquentes</b><span>Les situations courantes</span></div></div>
 </div>
 
 <h3>Trois choses à savoir avant de commencer</h3>
@@ -191,7 +192,7 @@ n'est demandé : l'application vous connecte toute seule.</p>
 pour en changer ou pour saisir votre nom.</p>
 
 <figure>
-  <img src="captures/09-equipes.png" alt="Fenêtre de choix de l'équipe">
+  <img src="captures/10-equipes.png" alt="Fenêtre de choix de l'équipe">
   <figcaption>Le choix de l'équipe, et le nom qui apparaîtra dans l'historique</figcaption>
 </figure>
 
@@ -306,17 +307,34 @@ Pour modifier une pièce existante, ouvrez sa fiche puis <strong>Modifier</stron
   <tr><td class="k">Seuil d'alerte</td><td>En dessous ou à ce niveau, la pièce remonte dans les alertes de l'accueil. Laissez 0 si vous ne voulez pas d'alerte.</td></tr>
   <tr><td class="k">Famille</td><td>Facultatif, mais très utile pour trier ensuite.</td></tr>
   <tr><td class="k">Lieu</td><td>La zone de rangement, choisie parmi celles du plan.</td></tr>
+  <tr><td class="k">Référence EB</td><td>Facultatif. Le code du catalogue des achats, avec le prix unitaire : sans lui, la pièce ne peut pas être commandée.</td></tr>
   <tr><td class="k">Avertissement de poids</td><td>Facultatif. Prévient de ce qu'il faut pour soulever la pièce — voir ci-dessous.</td></tr>
   <tr><td class="k">Notice PDF</td><td>Facultatif, 5 Mo maximum. Consultable depuis la fiche.</td></tr>
   <tr><td class="k">Photo</td><td>Facultatif. L'icône appareil photo permet de la prendre directement avec le téléphone.</td></tr>
 </table>
+
+<h3>La référence EB</h3>
+<p>Pour qu'une pièce puisse être commandée, elle doit porter son <strong>code au catalogue
+des achats</strong>, sa désignation officielle et son prix unitaire. C'est ce qui permet de
+générer une expression de besoin depuis un chantier — voir le chapitre 14.</p>
+
+<figure>
+  <img src="captures/05-reference-eb.png" alt="Référence EB d'une pièce" style="width:110mm;margin:0 auto;">
+  <figcaption>La référence et le prix se saisissent une fois, sur la fiche de la pièce</figcaption>
+</figure>
+
+<div class="note">
+  <b>Toutes les pièces n'en ont pas besoin</b>
+  L'outillage de l'atelier — cordes, poulies, perches — ne se commande pas au catalogue.
+  Laissez le champ vide : la pièce reste utilisable partout ailleurs.
+</div>
 
 <h3>Avertir du poids</h3>
 <p>Sous la famille et le lieu, quatre cases permettent de signaler ce que pèse la pièce. Elles
 reprennent les étiquettes collées sur le matériel :</p>
 
 <figure>
-  <img src="captures/06-avertissements-poids.png" alt="Les trois avertissements de poids" style="width:160mm;margin:0 auto;">
+  <img src="captures/07-avertissements-poids.png" alt="Les trois avertissements de poids" style="width:160mm;margin:0 auto;">
   <figcaption>Les trois avertissements, et la consigne de manutention correspondante</figcaption>
 </figure>
 
@@ -343,7 +361,7 @@ On sait donc ce qui attend l'équipe avant même d'arriver au magasin.</p>
 les décimales.</p>
 
 <figure>
-  <img src="captures/05-piece-cable.png" alt="Une pièce de type câble" style="width:110mm;margin:0 auto;">
+  <img src="captures/06-piece-cable.png" alt="Une pièce de type câble" style="width:110mm;margin:0 auto;">
   <figcaption>Avec la case cochée, la quantité se compte en mètres</figcaption>
 </figure>
 
@@ -371,7 +389,7 @@ Sur l'accueil, mètres et unités sont comptés séparément — les additionner
 Elles servent à filtrer les listes et à structurer le bon de chargement.</p>
 
 <figure>
-  <img src="captures/07-familles.png" alt="Les familles">
+  <img src="captures/08-familles.png" alt="Les familles">
   <figcaption>Chaque famille a une couleur et affiche le nombre de pièces qu'elle contient</figcaption>
 </figure>
 
@@ -393,7 +411,7 @@ Elles servent à filtrer les listes et à structurer le bon de chargement.</p>
 et chaque pièce est rattachée à une zone.</p>
 
 <figure>
-  <img src="captures/08-plan.png" alt="Le plan de l'atelier">
+  <img src="captures/09-plan.png" alt="Le plan de l'atelier">
   <figcaption>Les zones posées sur le plan, et leur liste à droite avec le nombre de pièces</figcaption>
 </figure>
 
@@ -421,7 +439,7 @@ et chaque pièce est rattachée à une zone.</p>
 d'abord la <strong>préparation</strong>, ensuite le <strong>chargement</strong>.</p>
 
 <figure>
-  <img src="captures/18-chantiers.png" alt="Liste des chantiers">
+  <img src="captures/21-chantiers.png" alt="Liste des chantiers">
   <figcaption>La liste des chantiers. Le camembert indique l'avancement du chargement</figcaption>
 </figure>
 
@@ -431,7 +449,7 @@ d'abord la <strong>préparation</strong>, ensuite le <strong>chargement</strong>
 <div class="step"><div class="step-n">3</div><div>Indiquez le <strong>domaine de tension</strong>. Il sert à ne proposer, plus tard, que les chaînes isolantes et les câbles du domaine concerné.</div></div>
 
 <figure>
-  <img src="captures/10-creer-chantier.png" alt="Création d'un chantier" style="width:88mm;margin:0 auto;">
+  <img src="captures/11-creer-chantier.png" alt="Création d'un chantier" style="width:88mm;margin:0 auto;">
   <figcaption>Le nom et le domaine de tension du chantier</figcaption>
 </figure>
 
@@ -445,7 +463,7 @@ d'abord la <strong>préparation</strong>, ensuite le <strong>chargement</strong>
 <p>Utilisez la barre de recherche en haut de la fenêtre du chantier.</p>
 
 <figure>
-  <img src="captures/15-ajouter-materiel.png" alt="Ajouter du matériel" style="width:88mm;margin:0 auto;">
+  <img src="captures/18-ajouter-materiel.png" alt="Ajouter du matériel" style="width:88mm;margin:0 auto;">
   <figcaption>La fenêtre d'ajout de matériel</figcaption>
 </figure>
 
@@ -500,7 +518,7 @@ qui permettent de laisser l'application composer le matériel. Ils font l'objet 
 pylône 1, ajoutez son outillage, puis passez au suivant. Rien à resélectionner à chaque fois.</p>
 
 <figure>
-  <img src="captures/13-chantier-prepare.png" alt="Chantier organisé par ouvrages">
+  <img src="captures/14-chantier-prepare.png" alt="Chantier organisé par ouvrages">
   <figcaption>Le matériel regroupé sous chaque ouvrage, avec ses caractéristiques rappelées</figcaption>
 </figure>
 
@@ -528,7 +546,7 @@ pylône 1, ajoutez son outillage, puis passez au suivant. Rien à resélectionne
 un ouvrage se déclare très bien sans.</p>
 
 <figure>
-  <img src="captures/11-creer-pylone.png" alt="Déclaration d'un pylône avec chaîne et câble" style="width:78mm;margin:0 auto;">
+  <img src="captures/12-creer-pylone.png" alt="Déclaration d'un pylône avec chaîne et câble" style="width:78mm;margin:0 auto;">
   <figcaption>Un pylône d'ancrage 225 kV, avec son câble et sa chaîne isolante</figcaption>
 </figure>
 
@@ -550,7 +568,7 @@ d'accrochage :</p>
 l'application la signale et propose de l'ajouter.</p>
 
 <figure>
-  <img src="captures/12-pylone-garniture.png" alt="Garniture de câble proposée" style="width:92mm;margin:0 auto;">
+  <img src="captures/13-pylone-garniture.png" alt="Garniture de câble proposée" style="width:92mm;margin:0 auto;">
   <figcaption>La garniture correspondant au câble et à la pince, proposée cochée</figcaption>
 </figure>
 
@@ -609,7 +627,7 @@ La liste détaillée dit <em>où</em> va chaque pièce ; elle ne dit pas <em>com
 du magasin. C'est le rôle du bandeau <strong>Total à charger</strong>, en bas du chantier.</p>
 
 <figure>
-  <img src="captures/14-total-a-charger.png" alt="Total à charger">
+  <img src="captures/15-total-a-charger.png" alt="Total à charger">
   <figcaption>Les lignes cumulées par pièce, avec le stock disponible en regard</figcaption>
 </figure>
 
@@ -638,7 +656,7 @@ disponible. Rien n'indiquerait qu'il est déjà promis, et deux personnes pourra
 l'emporter le même jour.</p>
 
 <figure>
-  <img src="captures/19-engagement.png" alt="Mention de matériel déjà prévu" style="width:95mm;margin:0 auto;">
+  <img src="captures/22-engagement.png" alt="Mention de matériel déjà prévu" style="width:95mm;margin:0 auto;">
   <figcaption>La pièce reste disponible, mais son engagement est signalé</figcaption>
 </figure>
 
@@ -682,7 +700,7 @@ concerné.</p>
 </div>
 
 <figure>
-  <img src="captures/16-chantier-chargement.png" alt="Chantier en chargement">
+  <img src="captures/19-chantier-chargement.png" alt="Chantier en chargement">
   <figcaption>Le mode chargement : on coche au fur et à mesure</figcaption>
 </figure>
 
@@ -724,7 +742,7 @@ ce que vous avez à l'écran : le <strong>tri</strong> choisi et les <strong>fil
 </table>
 
 <figure>
-  <img src="captures/17-bon-imprime.png" alt="Bon de chargement imprimé">
+  <img src="captures/20-bon-imprime.png" alt="Bon de chargement imprimé">
   <figcaption>Le bon de chargement, ici regroupé par ouvrage</figcaption>
 </figure>
 
@@ -741,13 +759,71 @@ les observations et un emplacement pour le visa. Les en-têtes de colonnes se r�
 
 <!-- ============================ 11. SCAN ============================ -->
 <section>
-<h2>14. Scanner un QR code</h2>
+<h2>14. L'expression de besoin</h2>
+
+<p>Une <strong>EB</strong> est le fichier Excel envoyé aux achats pour commander du matériel.
+Depuis un chantier préparé, l'application le produit en un clic : inutile de ressaisir les
+références une à une.</p>
+
+<figure>
+  <img src="captures/16-generer-eb.png" alt="Le bouton Générer un EB" style="width:150mm;margin:0 auto;">
+  <figcaption>Le bouton se trouve dans la barre du chantier, à côté de « Imprimer »</figcaption>
+</figure>
+
+<h3>Ce que contient le fichier</h3>
+<p>Une ligne par référence, avec la quantité à charger, le prix unitaire et le total. Le fichier
+reprend la mise en page attendue par les achats : il n'y a plus qu'à le relire et l'envoyer.</p>
+
+<table>
+  <tr><td class="k">référence</td><td>Le code de la pièce au catalogue des achats.</td></tr>
+  <tr><td class="k">désignation</td><td>Le libellé officiel du catalogue, et non le nom raccourci de l'atelier.</td></tr>
+  <tr><td class="k">quantité</td><td>Le total à charger, tous pylônes confondus.</td></tr>
+  <tr><td class="k">prix unitaire</td><td>Celui enregistré sur la fiche de la pièce.</td></tr>
+  <tr><td class="k">total</td><td>Calculé, ainsi que le total général en haut de la feuille.</td></tr>
+</table>
+
+<div class="note">
+  <b>Chaque référence n'apparaît qu'une fois</b>
+  Le même article demandé sur trois pylônes donne une seule ligne, avec la somme des quantités.
+</div>
+
+<h3>Les chaînes isolantes</h3>
+<p>Une chaîne se commande entière, pas pièce par pièce. Quand le matériel du chantier vient
+d'une chaîne, l'EB le rend à sa chaîne : une ligne pour la chaîne, avec sa quantité et son prix,
+puis ses composants juste en dessous, sans quantité ni prix. C'est ainsi que les achats la
+lisent.</p>
+
+<h3>Trois cases à remplir à la main</h3>
+<p>En haut du fichier, le <strong>chantier</strong>, le <strong>numéro de semaine</strong> et le
+<strong>CDT</strong> restent vides : ils ne sont pas dans l'application, complétez-les avant
+d'envoyer.</p>
+
+<h3>Ce qui ne peut pas être commandé</h3>
+<p>Une pièce sans référence EB n'entre pas dans le fichier — les achats ne sauraient pas quoi
+commander. Elle n'est pas oubliée pour autant : l'application les liste après la génération.</p>
+
+<figure>
+  <img src="captures/17-eb-hors-liste.png" alt="Pièces sans référence EB" style="width:95mm;margin:0 auto;">
+  <figcaption>Ce qui n'est pas entré dans l'EB, et pourquoi</figcaption>
+</figure>
+
+<div class="tip">
+  <b>C'est normal pour l'outillage</b>
+  Cordes, poulies, perches et drones viennent de l'atelier, pas du catalogue. Si une pièce de
+  ligne y figure en revanche, c'est qu'il lui manque sa référence : ouvrez sa fiche,
+  <strong>Modifier</strong>, et renseignez-la.
+</div>
+</section>
+
+<!-- ============================ 15. SCANNER ============================ -->
+<section>
+<h2>15. Scanner un QR code</h2>
 
 <p>Chaque pièce possède un QR code. Collé sur le bac ou l'étagère, il permet d'ouvrir
 sa fiche instantanément, sans la chercher dans la liste.</p>
 
 <figure>
-  <img src="captures/20-scan.png" alt="Le scanner">
+  <img src="captures/23-scan.png" alt="Le scanner">
   <figcaption>L'onglet Scan. Autorisez l'accès à la caméra à la première utilisation</figcaption>
 </figure>
 
@@ -769,12 +845,12 @@ Pratique pour un inventaire annuel ou une commande.</p>
 
 <!-- ============================ 12. TÉLÉPHONE ============================ -->
 <section>
-<h2>15. Sur le téléphone</h2>
+<h2>16. Sur le téléphone</h2>
 
 <p>L'application est prévue pour être utilisée en atelier et en chantier, directement sur le téléphone.</p>
 
 <figure>
-  <img src="captures/21-mobile.png" class="phone" alt="L'application sur téléphone">
+  <img src="captures/24-mobile.png" class="phone" alt="L'application sur téléphone">
   <figcaption>L'affichage s'adapte automatiquement à l'écran</figcaption>
 </figure>
 
@@ -802,7 +878,7 @@ Pratique pour un inventaire annuel ou une commande.</p>
 
 <!-- ============================ 13. FAQ ============================ -->
 <section>
-<h2>16. Questions fréquentes</h2>
+<h2>17. Questions fréquentes</h2>
 
 <div class="faq">
   <div class="q">Je ne retrouve pas une pièce que je viens d'ajouter.</div>
