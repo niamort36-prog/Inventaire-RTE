@@ -4112,19 +4112,30 @@ function downloadExcel() {
     if (!parts.length) { toast("Aucune pièce à exporter", 'warn'); return; }
     const rows = parts.slice().sort((a, b) => String(a.name).localeCompare(String(b.name), 'fr')).map(p => {
         const family = families.find(f => f.id == p.familyId);
+        const poids = POIDS[p.poids];
         return {
+            "Référence EB": p.refEB || "",
             "Nom de la pièce": p.name,
+            "Désignation catalogue": p.designationEB || "",
             "Quantité": numQty(p.qty, p),
             "Unité": estCable(p) ? "m" : "u",
             "Seuil d'alerte": numQty(p.alertQty, p),
             "Stock bas": num(p.qty) <= num(p.alertQty) ? "OUI" : "",
+            // Le classement de la campagne d'identification des charges, écrit
+            // en toutes lettres : une colonne se trie et se filtre, pas un
+            // pictogramme.
+            "Poids": poids ? poids.libelle : "",
+            "Manutention": poids ? poids.resume : "",
+            "Prix unitaire": p.prixEB === undefined ? "" : numDec(p.prixEB),
             "Famille": family ? family.name : "Sans famille",
             "Lieu de stockage": p.location || "Non défini",
             "Description": p.desc || ""
         };
     });
     const ws = XLSX.utils.json_to_sheet(rows);
-    ws['!cols'] = [{ wch: 38 }, { wch: 10 }, { wch: 7 }, { wch: 12 }, { wch: 10 }, { wch: 22 }, { wch: 22 }, { wch: 40 }];
+    ws['!cols'] = [{ wch: 13 }, { wch: 38 }, { wch: 34 }, { wch: 10 }, { wch: 7 }, { wch: 12 },
+                   { wch: 10 }, { wch: 13 }, { wch: 22 }, { wch: 13 }, { wch: 22 }, { wch: 22 },
+                   { wch: 40 }];
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Inventaire");
     XLSX.writeFile(wb, `Inventaire_${teamLabel().replace(/\s+/g, '_')}_${new Date().toISOString().slice(0, 10)}.xlsx`);
