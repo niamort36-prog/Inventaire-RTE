@@ -434,6 +434,20 @@
                         </div>
                     </div>
 
+                    <!-- L'écartement des conducteurs d'un même faisceau. Il
+                         commande le choix des entretoises, et figure déjà dans
+                         le code des chaînes du catalogue RTE. -->
+                    <div class="mb-5" id="group-ecart-bloc">
+                        <label class="block text-sm font-semibold mb-1">
+                            Écartement <span class="font-normal text-gray-400">(facultatif)</span>
+                        </label>
+                        <div class="grid grid-cols-3 gap-2" id="group-ecart-picker">
+                            <button type="button" data-ecart="" class="border rounded py-2 text-sm">Non précisé</button>
+                            <button type="button" data-ecart="400" class="border rounded py-2 text-sm">400 mm</button>
+                            <button type="button" data-ecart="600" class="border rounded py-2 text-sm">600 mm</button>
+                        </div>
+                    </div>
+
                     <!-- Câble porté par l'ouvrage : il détermine le manchon
                          d'ancrage ou la pince de suspension. Facultatif. -->
                     <div class="mb-5 border-t pt-4">
@@ -459,6 +473,19 @@
                                 </span>
                             </label>
                         </div>
+                    </div>
+
+                    <!-- Matériel propre à une portée : ce qui se pose entre
+                         deux pylônes, et non sur l'un d'eux. -->
+                    <div class="mb-5 border-t pt-4 hidden" id="group-portee-bloc">
+                        <label class="block text-sm font-semibold mb-2">
+                            Matériel de portée <span class="font-normal text-gray-400">(facultatif)</span>
+                        </label>
+                        <p class="text-xs text-gray-500 mb-2" id="portee-contexte"></p>
+                        <div class="space-y-2" id="portee-choix"></div>
+                        <p class="text-xs text-gray-500 mt-2 hidden" id="portee-vide">
+                            Choisissez d'abord un câble : le matériel en dépend.
+                        </p>
                     </div>
 
                     <!-- Chaînes isolantes du catalogue RTE, filtrées sur les
@@ -2518,6 +2545,7 @@ function openGroupModal(gid) {
     pickOption('group-fonction-picker', 'fonction', g ? g.fonction : 'alignement');
     pickOption('group-chaine-picker', 'chaine', g ? g.chaine : 'simple');
     pickOption('group-faisceau-picker', 'faisceau', g ? g.faisceau : 'simple');
+    pickOption('group-ecart-picker', 'ecart', g && g.ecartement ? String(g.ecartement) : '');
 
     // Le matériel de chaîne ne s'ajoute qu'à la création : sur une modification,
     // il aurait déjà été ajouté et serait ajouté une seconde fois.
@@ -2558,9 +2586,11 @@ function selectGroupKind(kind) {
     // un pylône, pas sur la portée qui court entre deux.
     document.getElementById('group-pylone-fields').classList.toggle('hidden', kind !== 'pylone');
     document.getElementById('group-chain-block').classList.toggle('hidden', kind !== 'pylone');
+    document.getElementById('group-portee-bloc').classList.toggle('hidden', kind === 'pylone');
     if (kind !== 'pylone') {
         document.getElementById('input-chain').value = '';
         apercuChaine();
+        majMaterielPortee();
     }
     document.getElementById('group-name-label').textContent =
         kind === 'portee' ? 'Numéro de la portée' : 'Numéro du pylône';
@@ -2591,6 +2621,9 @@ function handleGroupSubmit(e) {
         data.fonction = document.getElementById('group-fonction-picker').dataset.value || 'alignement';
         data.chaine = document.getElementById('group-chaine-picker').dataset.value || 'simple';
     }
+    // L'écartement vaut pour les deux : il commande le choix des entretoises.
+    const ecart = num(document.getElementById('group-ecart-picker').dataset.value, 0);
+    if (ecart) data.ecartement = ecart;
 
     write('baskets/b' + basket.id + '/groups/' + gid, data);
     // Un ouvrage qu'on vient de créer devient celui auquel les ajouts se rattachent.
@@ -2602,8 +2635,9 @@ function handleGroupSubmit(e) {
     // aurait déjà été ajouté et le serait une seconde fois.
     const designation = existing ? '' : document.getElementById('input-chain').value;
     const cable = existing ? '' : document.getElementById('input-cable').value;
+    const porteeRetenue = existing ? [] : materielPorteeRetenu();
 
-    if ((designation || cable) && catalogue) {
+    if ((designation || cable || porteeRetenue.length) && catalogue) {
         toast("Ajout du matériel…");
         (async () => {
             let ajoutes = 0;
@@ -2614,6 +2648,14 @@ function handleGroupSubmit(e) {
                 ajoutes += r.ajoutes;
                 crees.push(...r.crees);
                 logHistory(`${groupShortLabel(data)} : chaîne ${designation}${nb > 1 ? ' ×' + nb : ''} (${r.ajoutes} références)`);
+            }
+            // Ce qui se pose sur la portée : jonction, préforme, entretoise,
+            // balisage. Chacun a été coché explicitement.
+            for (const m of porteeRetenue) {
+                await ajouterReference(basket, gid, m.article.designation, m.qty,
+                                       m.titre, crees, m.article);
+                ajoutes += 1;
+                logHistory(`${groupShortLabel(data)} : ${m.titre.toLowerCase()} ${m.article.designation} ×${m.qty}`);
             }
             if (cable) {
                 const ref = document.getElementById('input-cable-piece').value;
@@ -2834,6 +2876,116 @@ function majChoixCable() {
     majGarniture();
 }
 
+/** Le materiel de portee vient de la base, comme celui des chaines : il porte
+ *  des prix. */
+let accessoires = null, accessoiresEnCours = null;
+function chargerAccessoires() {
+    if (accessoires) return Promise.resolve(accessoires);
+    if (accessoiresEnCours) return accessoiresEnCours;
+    if (!db) return Promise.resolve({});
+    accessoiresEnCours = Promise.all([
+        db.ref('catalogueEB/cables').once('value'),
+        db.ref('catalogueEB/entretoises').once('value'),
+        db.ref('catalogueEB/balises').once('value'),
+    ]).then(([c, e, b]) => {
+        accessoires = { cables: c.val() || {}, entretoises: e.val() || {}, balises: b.val() || {} };
+        return accessoires;
+    }).catch(err => { console.error('Accessoires', err); return {}; })
+      .finally(() => { accessoiresEnCours = null; });
+    return accessoiresEnCours;
+}
+
+/** Une section est admissible si elle tombe dans la plage de l'article. Les
+ *  plages du catalogue sont larges — « 570 à 612 » — et une valeur unique vaut
+ *  pour elle seule. */
+function sectionAdmise(a, section) {
+    if (!section || a.sectionMin == null) return true;
+    const min = num(a.sectionMin, 0), max = num(a.sectionMax, min);
+    return section >= min - 0.5 && section <= max + 0.5;
+}
+
+/** Propose ce qui se pose sur une portee : le joint du cable, la preforme de
+ *  reparation, l'entretoise qui tient le faisceau, et le balisage. Rien n'est
+ *  coche d'avance : une portee ne demande pas tout a la fois. */
+async function majMaterielPortee() {
+    const bloc = document.getElementById('group-portee-bloc');
+    if (bloc.classList.contains('hidden')) return;
+    const liste = document.getElementById('portee-choix');
+    const vide = document.getElementById('portee-vide');
+    const nomCable = document.getElementById('input-cable').value;
+
+    liste.innerHTML = '';
+    vide.classList.toggle('hidden', !!nomCable);
+    document.getElementById('portee-contexte').textContent = '';
+    if (!nomCable) return;
+
+    const acc = await chargerAccessoires();
+    if (!acc || !acc.cables) return;
+    const fiche = acc.cables[nomCable] || {};
+    const section = fiche.section;
+    const faisceau = document.getElementById('group-faisceau-picker').dataset.value;
+    const ecart = num(document.getElementById('group-ecart-picker').dataset.value, 0);
+
+    document.getElementById('portee-contexte').textContent =
+        [nomCable, section ? section + ' mm²' : null, 'faisceau ' + faisceau,
+         ecart ? 'écartement ' + ecart + ' mm' : 'écartement non précisé']
+        .filter(Boolean).join(' · ');
+
+    const groupes = [];
+    if (fiche.mj) groupes.push({ titre: 'Manchon de jonction', choix: [fiche.mj] });
+    if (fiche.prar && fiche.prar.length) {
+        groupes.push({ titre: 'Préforme de réparation', choix: fiche.prar });
+    }
+
+    const ent = Object.values(acc.entretoises || {})
+        .filter(a => a.faisceau === faisceau)
+        .filter(a => !ecart || num(a.ecartement) === ecart)
+        .filter(a => sectionAdmise(a, section));
+    if (ent.length) groupes.push({ titre: 'Entretoise', choix: ent });
+
+    const bal = Object.values(acc.balises || {}).filter(a => sectionAdmise(a, section));
+    if (bal.length) groupes.push({ titre: 'Balisage', choix: bal });
+
+    if (!groupes.length) {
+        liste.innerHTML = '<p class="text-xs text-gray-500">' +
+            'Aucun matériel du catalogue ne correspond à ce câble et à ce faisceau.</p>';
+        return;
+    }
+
+    liste.innerHTML = groupes.map((g, i) => `
+        <div class="border rounded p-2">
+            <label class="flex items-start gap-2 cursor-pointer">
+                <input type="checkbox" data-portee="${i}" class="h-4 w-4 mt-1 flex-none text-indigo-600 rounded">
+                <span class="text-sm font-semibold">${esc(g.titre)}</span>
+            </label>
+            <div class="mt-2 flex gap-2 items-center">
+                <select data-portee-choix="${i}" class="w-full border p-1.5 rounded bg-white text-xs">
+                    ${g.choix.map((c, j) => `<option value="${j}">${esc(c.designation)}</option>`).join('')}
+                </select>
+                <input type="number" data-portee-qty="${i}" value="1" min="1"
+                       class="w-16 border p-1.5 rounded text-xs">
+            </div>
+        </div>`).join('');
+    liste.dataset.groupes = JSON.stringify(groupes);
+}
+
+/** Ce que l'utilisateur a retenu dans le bloc de portee. */
+function materielPorteeRetenu() {
+    const liste = document.getElementById('portee-choix');
+    if (!liste.dataset.groupes) return [];
+    const groupes = JSON.parse(liste.dataset.groupes);
+    const out = [];
+    liste.querySelectorAll('[data-portee]').forEach(c => {
+        if (!c.checked) return;
+        const i = c.dataset.portee;
+        const g = groupes[i];
+        const j = num(liste.querySelector(`[data-portee-choix="${i}"]`).value, 0);
+        const q = Math.max(1, num(liste.querySelector(`[data-portee-qty="${i}"]`).value, 1));
+        out.push({ titre: g.titre, article: g.choix[j], qty: q });
+    });
+    return out;
+}
+
 /** Certaines pinces de suspension demandent une garniture qui protège le câble.
  *  Elle dépend du câble, et quelques pinces s'en dispensent. */
 function garniturePour(cable, pince) {
@@ -2878,7 +3030,7 @@ function piecePourReference(ref) {
 /** Ajoute le matériel d'une chaîne au chantier, en créant au besoin les
  *  pièces absentes de l'inventaire (quantité 0, à corriger ensuite). */
 /** Retrouve ou crée la pièce d'une référence, puis l'ajoute au chantier. */
-async function ajouterReference(basket, gid, ref, quantite, commentaire, crees) {
+async function ajouterReference(basket, gid, ref, quantite, commentaire, crees, article) {
     let piece = piecePourReference(ref);
     if (!piece) {
         const id = Date.now() + Math.floor(Math.random() * 100000);
@@ -2887,6 +3039,13 @@ async function ajouterReference(basket, gid, ref, quantite, commentaire, crees) 
             desc: 'Créée automatiquement depuis le catalogue RTE — quantité à renseigner',
             hasImage: false, hasDoc: false,
         };
+        // Quand l'article du catalogue des achats est connu, la pièce naît
+        // déjà commandable : sa référence EB est renseignée du premier coup.
+        if (article && article.ref) {
+            piece.refEB = String(article.ref);
+            if (article.designation) piece.designationEB = String(article.designation).slice(0, 120);
+            if (typeof article.prix === 'number') piece.prixEB = article.prix;
+        }
         await write('parts/p' + id, piece);
         parts.push(piece);
         crees.push(ref);
@@ -2947,13 +3106,20 @@ function wireGroupPickers() {
     });
     // Chaque critère modifié restreint différemment la liste des chaînes.
     [['group-fonction-picker', 'fonction'], ['group-chaine-picker', 'chaine'],
-     ['group-faisceau-picker', 'faisceau']].forEach(([id, key]) => {
+     ['group-faisceau-picker', 'faisceau'], ['group-ecart-picker', 'ecart']].forEach(([id, key]) => {
         document.getElementById(id).addEventListener('click', e => {
             const b = e.target.closest(`button[data-${key}]`);
-            if (b) { pickOption(id, key, b.dataset[key]); remplirChoixChaines(); majChoixCable(); }
+            if (!b) return;
+            pickOption(id, key, b.dataset[key]);
+            remplirChoixChaines();
+            majChoixCable();
+            majMaterielPortee();          // le faisceau et l'écartement le changent
         });
     });
-    document.getElementById('input-cable').addEventListener('change', majChoixCable);
+    document.getElementById('input-cable').addEventListener('change', () => {
+        majChoixCable();
+        majMaterielPortee();
+    });
     document.getElementById('input-cable-piece').addEventListener('change', majGarniture);
     document.getElementById('basket-tension-picker').addEventListener('click', e => {
         const b = e.target.closest('button[data-tension]');

@@ -38,6 +38,41 @@
           "prix":        { ".validate": "newData.isNumber() && newData.val() >= 0" },
           "$autre":      { ".validate": false }
         }
+      },
+
+      // Materiel de portee : manchon de jonction et preformes par cable,
+      // entretoises et balisage repertories a part.
+      "cables": {
+        "$cable": { ".write": "auth != null" }
+      },
+      "entretoises": {
+        "$ref": {
+          ".write": "auth != null",
+          ".validate": "newData.hasChildren(['ref'])",
+          "ref":         { ".validate": "newData.isString() && newData.val().length <= 20" },
+          "designation": { ".validate": "newData.isString() && newData.val().length <= 120" },
+          "prix":        { ".validate": "newData.isNumber() && newData.val() >= 0" },
+          "faisceau":    { ".validate": "newData.isString() && newData.val().length <= 20" },
+          "ecartement":  { ".validate": "newData.isNumber()" },
+          "type":        { ".validate": "newData.isString() && newData.val().length <= 20" },
+          "acss":        { ".validate": "newData.isBoolean()" },
+          "sectionMin":  { ".validate": "newData.isNumber()" },
+          "sectionMax":  { ".validate": "newData.isNumber()" },
+          "$autre":      { ".validate": false }
+        }
+      },
+      "balises": {
+        "$ref": {
+          ".write": "auth != null",
+          ".validate": "newData.hasChildren(['ref'])",
+          "ref":         { ".validate": "newData.isString() && newData.val().length <= 20" },
+          "designation": { ".validate": "newData.isString() && newData.val().length <= 120" },
+          "prix":        { ".validate": "newData.isNumber() && newData.val() >= 0" },
+          "famille":     { ".validate": "newData.isString() && newData.val().length <= 10" },
+          "sectionMin":  { ".validate": "newData.isNumber()" },
+          "sectionMax":  { ".validate": "newData.isNumber()" },
+          "$autre":      { ".validate": false }
+        }
       }
     },
 
