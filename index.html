@@ -2657,7 +2657,7 @@ function handleGroupSubmit(e) {
                 ajoutes += 1;
                 logHistory(`${groupShortLabel(data)} : ${m.titre.toLowerCase()} ${m.article.designation} ×${m.qty}`);
             }
-            if (cable) {
+            if (cable && kind === 'pylone') {
                 const ref = document.getElementById('input-cable-piece').value;
                 const nb = Math.max(1, num(document.getElementById('input-cable-qty').value, 1));
                 const gcWrap = document.getElementById('cable-gc-wrap');
@@ -2854,6 +2854,9 @@ function majChoixCable() {
     if (!cable) { bloc.classList.add('hidden'); return; }
 
     const c = critereChaines(currentBasket());
+    // Sur une portée, le câble ne sert qu'à proposer le matériel de portée :
+    // ni pince de suspension, ni manchon d'ancrage, qui se posent sur un pylône.
+    if (c.type === null) { bloc.classList.add('hidden'); return; }
     const ancrage = c.type === 'ancrage';
     const piece = document.getElementById('input-cable-piece');
 
