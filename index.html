@@ -951,11 +951,18 @@ async function genererEB() {
             // Seul le nom de la chaine passe en bleu : on repere d'un coup d'oeil
             // ou commence chaque ensemble.
             if (l.chaine) {
-                const c = r.getCell(2);
-                // Le modèle fait partager un même style à toutes les lignes :
-                // sans cette copie, colorer une cellule les colore toutes.
-                c.style = Object.assign({}, c.style);
-                c.font = Object.assign({}, c.font, { color: { argb: 'FF054191' }, bold: true });
+                // Bandeau bleu sur toute la ligne, nom en bleu soutenu : la
+                // chaîne se repère d'un coup d'oeil au milieu de ses composants.
+                // Chaque cellule reçoit son propre style — le modèle en fait
+                // partager un seul, et le teinter les teindrait toutes.
+                for (let k = 1; k <= 5; k++) {
+                    const c = r.getCell(k);
+                    c.style = Object.assign({}, c.style);
+                    c.fill = { type: 'pattern', pattern: 'solid',
+                               fgColor: { argb: 'FFBDD7EE' } };
+                }
+                const nom = r.getCell(2);
+                nom.font = Object.assign({}, nom.font, { color: { argb: 'FF054191' }, bold: true });
             }
             // Les composants d'une chaine sont informatifs : la chaine seule
             // porte la quantite et le prix, comme sur le modele fourni.
