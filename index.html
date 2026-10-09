@@ -1681,7 +1681,6 @@ function openPartModal(id) {
         document.getElementById('input-part-cable').checked = estCable(p);
         document.getElementById('input-part-ref').value = p.refEB || '';
         document.getElementById('input-part-prix').value = p.prixEB === undefined ? '' : p.prixEB;
-        majInfoRefEB(p);
         majUnitePiece();
         poidsChoisi = POIDS[p.poids] ? p.poids : null;
         renderPoidsPicker();
@@ -1713,7 +1712,6 @@ function openPartModal(id) {
         document.getElementById('input-part-cable').checked = false;
         document.getElementById('input-part-ref').value = '';
         document.getElementById('input-part-prix').value = '';
-        majInfoRefEB(null);
         majUnitePiece();
         poidsChoisi = null;
         renderPoidsPicker();
