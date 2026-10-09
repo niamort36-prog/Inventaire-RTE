@@ -871,6 +871,16 @@ function chargerCatalogueEB() {
     return catalogueEBEnCours;
 }
 
+/** Les isolateurs se choisissent a part : le type et le niveau de pollution
+ *  ne se deduisent pas de la chaine. Ils ne sont donc pas listes dans sa
+ *  composition, mais commandes pour eux-memes, avec leur quantite et leur prix.
+ *  Au catalogue ils s'appellent « ISO ANTIPOL ... », a l'atelier « F100 DC ». */
+function estIsolateur(part) {
+    if (!part) return false;
+    if (part.designationEB) return /^\s*ISO\b/i.test(part.designationEB);
+    return /^F\s?\d/.test(String(part.name || ''));
+}
+
 /** La chaine d'origine d'un article, telle que l'ajout l'a notee :
  *  « Chaîne 6U4H2N10 » ou « Chaîne 6U4H2N10 ×2 ». */
 function chaineDeLigne(item) {
@@ -934,9 +944,19 @@ async function genererEB() {
 
         let ligne = 6;
         lignesEB.forEach(l => {
+            if (l.vide) { ligne++; return; }     // ligne laissee vide
             const r = ws.getRow(ligne);
             r.getCell(1).value = /^\d+$/.test(l.ref) ? Number(l.ref) : l.ref;
             r.getCell(2).value = l.designation;
+            // Seul le nom de la chaine passe en bleu : on repere d'un coup d'oeil
+            // ou commence chaque ensemble.
+            if (l.chaine) {
+                const c = r.getCell(2);
+                // Le modèle fait partager un même style à toutes les lignes :
+                // sans cette copie, colorer une cellule les colore toutes.
+                c.style = Object.assign({}, c.style);
+                c.font = Object.assign({}, c.font, { color: { argb: 'FF054191' }, bold: true });
+            }
             // Les composants d'une chaine sont informatifs : la chaine seule
             // porte la quantite et le prix, comme sur le modele fourni.
             if (!l.composant) {
@@ -983,6 +1003,7 @@ function composerEB(rows, totaux, cat) {
         if (!part) return;
         const c = chaineDeLigne(item);
         if (!c || !cat[c.code]) return;
+        if (estIsolateur(part)) return;      // commande a part, voir plus bas
         const e = chaines.get(c.code) || { nb: 0, composants: new Map(), vues: new Set() };
         // La meme chaine posee sur deux pylones compte deux fois ; mais ses
         // articles, eux, reviennent une fois par composant et par pose.
@@ -998,10 +1019,11 @@ function composerEB(rows, totaux, cat) {
     const lignes = [];
     [...chaines.entries()]
         .sort((a, b) => a[0].localeCompare(b[0], 'fr'))
-        .forEach(([code, e]) => {
+        .forEach(([code, e], i) => {
+            if (i) lignes.push({ vide: true });   // une respiration entre les chaines
             const ref = cat[code];
             lignes.push({ ref: ref.ref, designation: ref.designation || ('CHAINE ' + code),
-                          qty: e.nb, prix: ref.prix });
+                          qty: e.nb, prix: ref.prix, chaine: true });
             [...e.composants.values()]
                 .sort((a, b) => String(a.name).localeCompare(String(b.name), 'fr'))
                 .forEach(p => lignes.push({
@@ -1009,7 +1031,9 @@ function composerEB(rows, totaux, cat) {
         });
 
     const sans = [];
-    totaux.filter(t => !partsDeChaine.has(t.part.id)).forEach(t => {
+    const libres = totaux.filter(t => !partsDeChaine.has(t.part.id));
+    if (lignes.length && libres.length) lignes.push({ vide: true });
+    libres.forEach(t => {
         if (t.part.refEB) {
             lignes.push({ ref: t.part.refEB, designation: t.part.designationEB || t.part.name,
                           qty: t.charge, prix: t.part.prixEB });
