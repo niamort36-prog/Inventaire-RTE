@@ -2554,7 +2554,14 @@ function selectGroupKind(kind) {
             : 'bg-white text-gray-700 hover:bg-gray-50');
     });
     // Une portée n'a ni fonction ni type de chaîne : seulement un faisceau.
+    // Le bloc des chaînes isolantes disparaît avec eux — une chaîne se pose sur
+    // un pylône, pas sur la portée qui court entre deux.
     document.getElementById('group-pylone-fields').classList.toggle('hidden', kind !== 'pylone');
+    document.getElementById('group-chain-block').classList.toggle('hidden', kind !== 'pylone');
+    if (kind !== 'pylone') {
+        document.getElementById('input-chain').value = '';
+        apercuChaine();
+    }
     document.getElementById('group-name-label').textContent =
         kind === 'portee' ? 'Numéro de la portée' : 'Numéro du pylône';
     document.getElementById('input-group-name').placeholder = kind === 'portee' ? 'Ex : 1-2' : 'Ex : 1';
