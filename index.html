@@ -416,18 +416,21 @@
                             <button type="button" data-fonction="alignement" class="border rounded py-2 text-sm">Alignement</button>
                         </div>
                         <label class="block text-sm font-semibold mb-1">Chaîne</label>
-                        <div class="grid grid-cols-3 gap-2" id="group-chaine-picker">
+                        <div class="grid grid-cols-4 gap-2" id="group-chaine-picker">
                             <button type="button" data-chaine="simple" class="border rounded py-2 text-sm">Simple</button>
                             <button type="button" data-chaine="double" class="border rounded py-2 text-sm">Double</button>
                             <button type="button" data-chaine="triple" class="border rounded py-2 text-sm">Triple</button>
+                            <button type="button" data-chaine="quadruple" class="border rounded py-2 text-sm">Quadruple</button>
                         </div>
                     </div>
 
                     <div class="mb-5">
                         <label class="block text-sm font-semibold mb-1">Faisceau</label>
-                        <div class="grid grid-cols-2 gap-2" id="group-faisceau-picker">
+                        <div class="grid grid-cols-4 gap-2" id="group-faisceau-picker">
                             <button type="button" data-faisceau="simple" class="border rounded py-2 text-sm">Simple</button>
                             <button type="button" data-faisceau="double" class="border rounded py-2 text-sm">Double</button>
+                            <button type="button" data-faisceau="triple" class="border rounded py-2 text-sm">Triple</button>
+                            <button type="button" data-faisceau="quadruple" class="border rounded py-2 text-sm">Quadruple</button>
                         </div>
                     </div>
 
@@ -2455,8 +2458,10 @@ function newItemUid() {
    restent affichés à part, jamais perdus.
    ========================================================================== */
 const FONCTIONS  = { ancrage: 'Ancrage', alignement: 'Alignement' };
-const CHAINES    = { simple: 'Chaîne simple', double: 'Chaîne double', triple: 'Chaîne triple' };
-const FAISCEAUX  = { simple: 'Faisceau simple', double: 'Faisceau double' };
+const CHAINES    = { simple: 'Chaîne simple', double: 'Chaîne double',
+                     triple: 'Chaîne triple', quadruple: 'Chaîne quadruple' };
+const FAISCEAUX  = { simple: 'Faisceau simple', double: 'Faisceau double',
+                     triple: 'Faisceau triple', quadruple: 'Faisceau quadruple' };
 
 let activeGroupId = null;      // ouvrage auquel les ajouts se rattachent
 
