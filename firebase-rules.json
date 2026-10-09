@@ -53,6 +53,11 @@
             "hasDoc":   { ".validate": "newData.isBoolean()" },
             "cable":    { ".validate": "newData.isBoolean()" },
             "poids":    { ".validate": "newData.val() == 'leger' || newData.val() == 'lourd' || newData.val() == 'treslourd'" },
+
+            // Rattachement au catalogue des achats, pour la generation d'une EB.
+            "refEB":         { ".validate": "newData.isString() && newData.val().length <= 20" },
+            "designationEB": { ".validate": "newData.isString() && newData.val().length <= 120" },
+            "prixEB":        { ".validate": "newData.isNumber() && newData.val() >= 0" },
             "$autre":   { ".validate": false }
           }
         },

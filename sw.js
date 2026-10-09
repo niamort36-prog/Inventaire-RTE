@@ -20,7 +20,8 @@ const APP_SHELL = [
     './LogoAcceuil.png',
     './pictos/poids-leger.png',
     './pictos/poids-lourd.png',
-    './pictos/poids-treslourd.png'
+    './pictos/poids-treslourd.png',
+    './modele-eb.xlsx'
 ];
 
 self.addEventListener('install', event => {
