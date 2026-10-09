@@ -270,17 +270,29 @@ await shotEl('pylone-garniture', '#bloc-cable');
 await page.evaluate(() => closeModal('modal-group'));
 await wait(500);
 
-// Une portée, et de l'outillage non affecté
+// Une portée : son écartement et le matériel qui s'y pose
+await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms));
+    openGroupModal(); await w(2000);
+    selectGroupKind('portee');
+    document.getElementById('input-group-name').value = '1-2';
+    document.querySelector('#group-faisceau-picker button[data-faisceau="double"]').click();
+    document.querySelector('#group-ecart-picker button[data-ecart="600"]').click();
+    await w(500);
+    document.getElementById('input-cable').value = 'ASTER 570';
+    document.getElementById('input-cable').dispatchEvent(new Event('change'));
+    await w(2000);
+    // Deux familles cochées : il faut bien montrer à quoi ressemble un choix.
+    document.querySelectorAll('#portee-choix [data-portee]').forEach((c, i) => { if (i < 2) c.checked = true; });
+});
+await wait(1200);
+await shotEl('portee-materiel', '#modal-group .bg-white');
+
 await page.evaluate(async () => {
     const w = ms => new Promise(r => setTimeout(r, ms));
     const nom = n => parts.find(p => p.name.startsWith(n)).id;
-    openGroupModal(); await w(1200);
-    selectGroupKind('portee');
-    document.getElementById('input-group-name').value = '1-2';
-    pickOption('group-faisceau-picker', 'faisceau', 'double');
     document.getElementById('input-chain').value = '';
-    document.getElementById('input-cable').value = '';
-    handleGroupSubmit(new Event('submit')); await w(2500);
+    handleGroupSubmit(new Event('submit')); await w(6000);
     for (const [p, q] of [['Poulie', 2], ['Cordage', 2]]) {
         openConfirmAddModal(nom(p));
         document.getElementById('confirm-add-qty').value = String(q);

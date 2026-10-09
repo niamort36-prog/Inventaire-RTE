@@ -115,7 +115,7 @@
     préparer et charger le matériel de chantier.
   </div>
   <div class="foot">
-    Version du 9 octobre 2026 · Ce guide décrit toutes les fonctions de l'application.<br>
+    Version du 10 octobre 2026 · Ce guide décrit toutes les fonctions de l'application.<br>
     Aucune connaissance préalable n'est nécessaire.
   </div>
 </div>
@@ -329,6 +329,13 @@ générer une expression de besoin depuis un chantier — voir le chapitre 14.</
   Laissez le champ vide : la pièce reste utilisable partout ailleurs.
 </div>
 
+<div class="tip">
+  <b>Les pièces venues du catalogue arrivent déjà renseignées</b>
+  Quand l'application crée une pièce elle-même — un composant de chaîne, une entretoise, un
+  manchon — elle lui donne du même coup sa référence, sa désignation et son prix. Il n'y a rien
+  à ressaisir.
+</div>
+
 <h3>Avertir du poids</h3>
 <p>Sous la famille et le lieu, quatre cases permettent de signaler ce que pèse la pièce. Elles
 reprennent les étiquettes collées sur le matériel :</p>
@@ -439,7 +446,7 @@ et chaque pièce est rattachée à une zone.</p>
 d'abord la <strong>préparation</strong>, ensuite le <strong>chargement</strong>.</p>
 
 <figure>
-  <img src="captures/21-chantiers.png" alt="Liste des chantiers">
+  <img src="captures/22-chantiers.png" alt="Liste des chantiers">
   <figcaption>La liste des chantiers. Le camembert indique l'avancement du chargement</figcaption>
 </figure>
 
@@ -463,7 +470,7 @@ d'abord la <strong>préparation</strong>, ensuite le <strong>chargement</strong>
 <p>Utilisez la barre de recherche en haut de la fenêtre du chantier.</p>
 
 <figure>
-  <img src="captures/18-ajouter-materiel.png" alt="Ajouter du matériel" style="width:88mm;margin:0 auto;">
+  <img src="captures/19-ajouter-materiel.png" alt="Ajouter du matériel" style="width:88mm;margin:0 auto;">
   <figcaption>La fenêtre d'ajout de matériel</figcaption>
 </figure>
 
@@ -506,19 +513,21 @@ un pylône, une portée. C'est <strong>facultatif</strong> — sans cela, le cha
 <p>Dans le chantier, bouton <strong>Pylône / Portée</strong>.</p>
 
 <table>
-  <tr><td class="k">Pylône</td><td>Numéro, fonction (<strong>ancrage</strong> ou <strong>alignement</strong>), chaîne (<strong>simple</strong>, <strong>double</strong> ou <strong>triple</strong>) et faisceau (<strong>simple</strong> ou <strong>double</strong>).</td></tr>
+  <tr><td class="k">Pylône</td><td>Numéro, fonction (<strong>ancrage</strong> ou <strong>alignement</strong>), chaîne et faisceau — <strong>simple</strong>, <strong>double</strong>, <strong>triple</strong> ou <strong>quadruple</strong> de chaque côté.</td></tr>
   <tr><td class="k">Portée</td><td>Numéro et faisceau seulement. Les champs fonction et chaîne disparaissent, ils n'ont pas lieu d'être.</td></tr>
+  <tr><td class="k">Écartement</td><td>La distance entre les conducteurs d'un même faisceau : <strong>400</strong> ou <strong>600 mm</strong>. Facultatif, mais c'est lui qui permet de proposer la bonne entretoise.</td></tr>
 </table>
 
-<p>Deux champs facultatifs suivent — le <strong>câble</strong> et la <strong>chaîne isolante</strong> —
-qui permettent de laisser l'application composer le matériel. Ils font l'objet du chapitre suivant.</p>
+<p>Viennent ensuite le <strong>câble</strong> et, selon l'ouvrage, la <strong>chaîne isolante</strong>
+pour un pylône ou le <strong>matériel de portée</strong> pour une portée. Tout cela est facultatif et
+fait l'objet du chapitre suivant.</p>
 
 <h3>Y rattacher le matériel</h3>
 <p>L'ouvrage que vous venez de créer devient celui auquel les ajouts se rattachent : déclarez le
 pylône 1, ajoutez son outillage, puis passez au suivant. Rien à resélectionner à chaque fois.</p>
 
 <figure>
-  <img src="captures/14-chantier-prepare.png" alt="Chantier organisé par ouvrages">
+  <img src="captures/15-chantier-prepare.png" alt="Chantier organisé par ouvrages">
   <figcaption>Le matériel regroupé sous chaque ouvrage, avec ses caractéristiques rappelées</figcaption>
 </figure>
 
@@ -616,6 +625,35 @@ ajouté, quantités multipliées.</p>
   variantes allongée, réduite ou étagée dépendent du cas d'emploi. Et le domaine <strong>150 kV</strong>
   ne propose aucune chaîne — le catalogue n'en contient pas.
 </div>
+
+<h3>Le matériel d'une portée</h3>
+<p>Une portée ne porte ni chaîne ni pince : ce sont des pièces de pylône. L'application propose à
+la place ce qui se pose entre deux supports, en quatre familles.</p>
+
+<figure>
+  <img src="captures/14-portee-materiel.png" alt="Le matériel d'une portée" style="width:78mm;margin:0 auto;">
+  <figcaption>Le câble, l'écartement, et les quatre familles proposées</figcaption>
+</figure>
+
+<table>
+  <tr><td class="k">Manchon de jonction</td><td>Le raccord du câble, déduit du câble choisi.</td></tr>
+  <tr><td class="k">Préforme de réparation</td><td>Les <strong>PR-AR</strong> correspondant à la section du câble. Deux versions existent, <strong>D</strong> et <strong>G</strong> : choisissez la vôtre.</td></tr>
+  <tr><td class="k">Entretoise</td><td>Filtrée sur le faisceau, l'écartement et la section admissible. Sans écartement, toutes les entretoises du bon faisceau sont proposées.</td></tr>
+  <tr><td class="k">Balisage</td><td>Balises lumineuses, avifaunes et diurnes admissibles pour la section du câble.</td></tr>
+</table>
+
+<div class="note">
+  <b>Rien n'est coché d'avance</b>
+  Une portée ne demande pas les quatre familles à la fois. Cochez ce dont vous avez besoin,
+  choisissez l'article dans la liste et indiquez la quantité.
+</div>
+
+<div class="tip">
+  <b>Les désignations viennent du catalogue des achats</b>
+  Une entretoise s'y nomme <strong>END 6B/570*612</strong> : entretoise de ligne semi-flexible,
+  faisceau double, écartement 600 mm, pour des sections de 570 à 612 mm². L'application lit cette
+  nomenclature pour ne proposer que ce qui convient.
+</div>
 </section>
 
 <!-- ======================== 10. TOTAL À CHARGER ======================== -->
@@ -627,7 +665,7 @@ La liste détaillée dit <em>où</em> va chaque pièce ; elle ne dit pas <em>com
 du magasin. C'est le rôle du bandeau <strong>Total à charger</strong>, en bas du chantier.</p>
 
 <figure>
-  <img src="captures/15-total-a-charger.png" alt="Total à charger">
+  <img src="captures/16-total-a-charger.png" alt="Total à charger">
   <figcaption>Les lignes cumulées par pièce, avec le stock disponible en regard</figcaption>
 </figure>
 
@@ -656,7 +694,7 @@ disponible. Rien n'indiquerait qu'il est déjà promis, et deux personnes pourra
 l'emporter le même jour.</p>
 
 <figure>
-  <img src="captures/22-engagement.png" alt="Mention de matériel déjà prévu" style="width:95mm;margin:0 auto;">
+  <img src="captures/23-engagement.png" alt="Mention de matériel déjà prévu" style="width:95mm;margin:0 auto;">
   <figcaption>La pièce reste disponible, mais son engagement est signalé</figcaption>
 </figure>
 
@@ -700,7 +738,7 @@ concerné.</p>
 </div>
 
 <figure>
-  <img src="captures/19-chantier-chargement.png" alt="Chantier en chargement">
+  <img src="captures/20-chantier-chargement.png" alt="Chantier en chargement">
   <figcaption>Le mode chargement : on coche au fur et à mesure</figcaption>
 </figure>
 
@@ -742,7 +780,7 @@ ce que vous avez à l'écran : le <strong>tri</strong> choisi et les <strong>fil
 </table>
 
 <figure>
-  <img src="captures/20-bon-imprime.png" alt="Bon de chargement imprimé">
+  <img src="captures/21-bon-imprime.png" alt="Bon de chargement imprimé">
   <figcaption>Le bon de chargement, ici regroupé par ouvrage</figcaption>
 </figure>
 
@@ -766,7 +804,7 @@ Depuis un chantier préparé, l'application le produit en un clic : inutile de r
 références une à une.</p>
 
 <figure>
-  <img src="captures/16-generer-eb.png" alt="Le bouton Générer un EB" style="width:150mm;margin:0 auto;">
+  <img src="captures/17-generer-eb.png" alt="Le bouton Générer un EB" style="width:150mm;margin:0 auto;">
   <figcaption>Le bouton se trouve dans la barre du chantier, à côté de « Imprimer »</figcaption>
 </figure>
 
@@ -793,6 +831,16 @@ d'une chaîne, l'EB le rend à sa chaîne : une ligne pour la chaîne, avec sa q
 puis ses composants juste en dessous, sans quantité ni prix. C'est ainsi que les achats la
 lisent.</p>
 
+<p>La ligne de la chaîne porte un <strong>bandeau bleu</strong>, et une <strong>ligne vide</strong>
+sépare deux chaînes : chaque ensemble se repère d'un coup d'œil au milieu de ses composants.</p>
+
+<div class="note">
+  <b>Les isolateurs sont commandés à part</b>
+  Ils ne figurent pas dans la composition de la chaîne mais plus bas, avec leur quantité totale et
+  leur prix. Le type et le niveau de pollution ne se déduisent pas de la chaîne : ils se
+  choisissent.
+</div>
+
 <h3>Trois cases à remplir à la main</h3>
 <p>En haut du fichier, le <strong>chantier</strong>, le <strong>numéro de semaine</strong> et le
 <strong>CDT</strong> restent vides : ils ne sont pas dans l'application, complétez-les avant
@@ -803,7 +851,7 @@ d'envoyer.</p>
 commander. Elle n'est pas oubliée pour autant : l'application les liste après la génération.</p>
 
 <figure>
-  <img src="captures/17-eb-hors-liste.png" alt="Pièces sans référence EB" style="width:95mm;margin:0 auto;">
+  <img src="captures/18-eb-hors-liste.png" alt="Pièces sans référence EB" style="width:95mm;margin:0 auto;">
   <figcaption>Ce qui n'est pas entré dans l'EB, et pourquoi</figcaption>
 </figure>
 
@@ -823,7 +871,7 @@ commander. Elle n'est pas oubliée pour autant : l'application les liste après 
 sa fiche instantanément, sans la chercher dans la liste.</p>
 
 <figure>
-  <img src="captures/23-scan.png" alt="Le scanner">
+  <img src="captures/24-scan.png" alt="Le scanner">
   <figcaption>L'onglet Scan. Autorisez l'accès à la caméra à la première utilisation</figcaption>
 </figure>
 
@@ -839,8 +887,13 @@ s'ouvre avec, pour chaque pièce, son nom, son code et sa zone. Il ne reste qu'�
 
 <h3>Exporter l'inventaire vers Excel</h3>
 <p>Toujours dans l'onglet <strong>Pièces</strong>, le bouton <strong>Excel</strong> produit un tableau
-complet : nom, quantité, seuil, indicateur de stock bas, famille, zone et description.
-Pratique pour un inventaire annuel ou une commande.</p>
+complet : <strong>référence EB</strong>, nom, désignation du catalogue, quantité, unité, seuil,
+indicateur de stock bas, <strong>poids</strong> et geste de manutention, prix unitaire, famille, zone
+et description.</p>
+
+<p>Le poids y est écrit en toutes lettres — « 25 à 50 kg », « Deux personnes » — et non sous forme
+de pictogramme : une colonne se trie et se filtre. On peut ainsi sortir en un instant tout ce qui
+demande un moyen de levage, ou tout ce qui n'a pas encore de référence.</p>
 </section>
 
 <!-- ============================ 12. TÉLÉPHONE ============================ -->
@@ -850,7 +903,7 @@ Pratique pour un inventaire annuel ou une commande.</p>
 <p>L'application est prévue pour être utilisée en atelier et en chantier, directement sur le téléphone.</p>
 
 <figure>
-  <img src="captures/24-mobile.png" class="phone" alt="L'application sur téléphone">
+  <img src="captures/25-mobile.png" class="phone" alt="L'application sur téléphone">
   <figcaption>L'affichage s'adapte automatiquement à l'écran</figcaption>
 </figure>
 

@@ -6,7 +6,7 @@ Ce dossier contient de quoi le régénérer entièrement.
 | Fichier | Rôle |
 |---|---|
 | `guide.html` | Le texte et la mise en page du guide |
-| `captures/` | Les 24 captures d'écran utilisées |
+| `captures/` | Les 25 captures d'écran utilisées |
 | `logo-invent-rte.png` | Le logo de l'application, détouré, pour la couverture |
 | `demo.mjs` | Le jeu de données fictif servant aux captures |
 | `shots.mjs` | Crée le jeu de démonstration, prend les captures, puis efface tout |
@@ -44,6 +44,10 @@ Les captures sont renumérotées à chaque exécution, dans l'ordre où elles so
 inséré ou retiré une capture, vérifier les chemins `captures/NN-nom.png` cités dans `guide.html`.
 
 ## Les données de démonstration
+
+La capture du matériel de portée montre des désignations venues de la base (manchons,
+entretoises, balises) : elles ne portent **ni référence ni prix** à l'écran, rien de
+confidentiel n'y figure donc.
 
 `demo.mjs` porte aussi `REFS_EB` : le rattachement des pièces de démonstration au catalogue
 des achats. **Ces références et ces prix sont inventés.** Le dépôt est public, et les tarifs
