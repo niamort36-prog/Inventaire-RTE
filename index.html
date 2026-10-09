@@ -857,6 +857,27 @@ function badgePoids(part, px) {
         ${pictoPoidsPetit(code, px || 24)}</span>`;
 }
 
+/** Rattachement des chaines au catalogue des achats. Il vit dans la base, et
+ *  non dans un fichier du depot : il porte des prix fournisseurs. */
+let catalogueEB = null, catalogueEBEnCours = null;
+function chargerCatalogueEB() {
+    if (catalogueEB) return Promise.resolve(catalogueEB);
+    if (catalogueEBEnCours) return catalogueEBEnCours;
+    if (!db) return Promise.resolve({});
+    catalogueEBEnCours = db.ref('catalogueEB/chaines').once('value')
+        .then(s => { catalogueEB = s.val() || {}; return catalogueEB; })
+        .catch(e => { console.error('Catalogue EB', e); return {}; })
+        .finally(() => { catalogueEBEnCours = null; });
+    return catalogueEBEnCours;
+}
+
+/** La chaine d'origine d'un article, telle que l'ajout l'a notee :
+ *  « Chaîne 6U4H2N10 » ou « Chaîne 6U4H2N10 ×2 ». */
+function chaineDeLigne(item) {
+    const m = /^Cha\u00eene\s+(.+?)(?:\s*\u00d7\s*(\d+))?$/.exec((item.comment || '').trim());
+    return m ? { code: m[1].trim(), nb: m[2] ? parseInt(m[2], 10) : 1 } : null;
+}
+
 /** Charge ExcelJS a la demande : la bibliotheque ne sert qu'a l'EB, il serait
  *  dommage de la telecharger a chaque ouverture de l'application. */
 let excelEnCours = null;
@@ -887,35 +908,44 @@ async function genererEB() {
     const totaux = totauxParPiece(rows);
     if (!totaux.length) { toast("Ce chantier ne contient aucun matériel", 'warn'); return; }
 
-    const commandables = totaux.filter(t => t.part.refEB);
-    const sans = totaux.filter(t => !t.part.refEB);
-    if (!commandables.length) {
-        toast("Aucune pièce de ce chantier n'a de référence EB", 'warn');
-        return;
-    }
-
     toast("Préparation de l'EB...", 'info');
+    let lignesEB, sans;
     try {
-        const [ExcelJS, modele] = await Promise.all([
+        const [ExcelJS, modele, cat] = await Promise.all([
             chargerExcelJS(),
             fetch('modele-eb.xlsx').then(r => {
                 if (!r.ok) throw new Error('modèle introuvable');
                 return r.arrayBuffer();
             }),
+            chargerCatalogueEB(),
         ]);
+        const compose = composerEB(rows, totaux, cat);
+        lignesEB = compose.lignes;
+        sans = compose.sans;
+        if (!lignesEB.length) {
+            toast("Aucune pièce de ce chantier n'a de référence EB", 'warn');
+            if (sans.length) ouvrirSansRef(sans);
+            return;
+        }
 
         const wb = new ExcelJS.Workbook();
         await wb.xlsx.load(modele);
         const ws = wb.getWorksheet('COMMANDE') || wb.worksheets[0];
 
         let ligne = 6;
-        commandables.forEach(t => {
+        lignesEB.forEach(l => {
             const r = ws.getRow(ligne);
-            r.getCell(1).value = /^\d+$/.test(t.part.refEB) ? Number(t.part.refEB) : t.part.refEB;
-            r.getCell(2).value = t.part.designationEB || t.part.name;
-            r.getCell(3).value = t.charge;
-            if (t.part.prixEB !== undefined) r.getCell(4).value = numDec(t.part.prixEB);
-            r.getCell(5).value = { formula: 'C' + ligne + '*D' + ligne };
+            r.getCell(1).value = /^\d+$/.test(l.ref) ? Number(l.ref) : l.ref;
+            r.getCell(2).value = l.designation;
+            // Les composants d'une chaine sont informatifs : la chaine seule
+            // porte la quantite et le prix, comme sur le modele fourni.
+            if (!l.composant) {
+                r.getCell(3).value = l.qty;
+                if (l.prix !== undefined && l.prix !== null) r.getCell(4).value = numDec(l.prix);
+                r.getCell(5).value = { formula: 'C' + ligne + '*D' + ligne };
+            } else {
+                r.getCell(5).value = 0;
+            }
             r.commit();
             ligne++;
         });
@@ -930,12 +960,64 @@ async function genererEB() {
         a.href = url; a.download = nom; a.click();
         setTimeout(() => URL.revokeObjectURL(url), 5000);
 
-        toast(commandables.length + ' référence(s) dans l\'EB', 'ok');
+        toast(lignesEB.filter(l => !l.composant).length + ' référence(s) commandée(s)', 'ok');
         if (sans.length) ouvrirSansRef(sans);
     } catch (e) {
         console.error('EB', e);
         toast("L'EB n'a pas pu être généré : " + e.message, 'err');
     }
+}
+
+/** Compose les lignes de l'EB a partir du chantier.
+ *
+ *  Les articles venus d'une chaine sont rendus a leur chaine : celle-ci forme
+ *  une ligne avec sa quantite et son prix, suivie de ses composants sans
+ *  quantite ni prix — c'est ainsi que se lit l'EB fournie en modele. Le reste
+ *  du materiel est regroupe par reference, chaque reference ne figurant qu'une
+ *  fois avec le total a charger. */
+function composerEB(rows, totaux, cat) {
+    const chaines = new Map();        // code -> { nb, composants: Map(partId -> part) }
+    const partsDeChaine = new Set();
+
+    rows.forEach(({ item, part }) => {
+        if (!part) return;
+        const c = chaineDeLigne(item);
+        if (!c || !cat[c.code]) return;
+        const e = chaines.get(c.code) || { nb: 0, composants: new Map(), vues: new Set() };
+        // La meme chaine posee sur deux pylones compte deux fois ; mais ses
+        // articles, eux, reviennent une fois par composant et par pose.
+        if (!e.vues.has(item.groupId + '|' + c.nb)) {
+            e.nb += c.nb;
+            e.vues.add(item.groupId + '|' + c.nb);
+        }
+        e.composants.set(part.id, part);
+        chaines.set(c.code, e);
+        partsDeChaine.add(part.id);
+    });
+
+    const lignes = [];
+    [...chaines.entries()]
+        .sort((a, b) => a[0].localeCompare(b[0], 'fr'))
+        .forEach(([code, e]) => {
+            const ref = cat[code];
+            lignes.push({ ref: ref.ref, designation: ref.designation || ('CHAINE ' + code),
+                          qty: e.nb, prix: ref.prix });
+            [...e.composants.values()]
+                .sort((a, b) => String(a.name).localeCompare(String(b.name), 'fr'))
+                .forEach(p => lignes.push({
+                    ref: p.refEB || '', designation: p.designationEB || p.name, composant: true }));
+        });
+
+    const sans = [];
+    totaux.filter(t => !partsDeChaine.has(t.part.id)).forEach(t => {
+        if (t.part.refEB) {
+            lignes.push({ ref: t.part.refEB, designation: t.part.designationEB || t.part.name,
+                          qty: t.charge, prix: t.part.prixEB });
+        } else {
+            sans.push(t);
+        }
+    });
+    return { lignes, sans };
 }
 
 /** Dit ce qui n'a pas pu entrer dans l'EB, et pourquoi. */

@@ -24,6 +24,23 @@
       }
     },
 
+    // Rattachement des chaines isolantes au catalogue des achats. Partage par
+    // toutes les equipes : une chaine est la meme partout. Les prix y vivent
+    // parce que la base est fermee, contrairement au depot du code.
+    "catalogueEB": {
+      ".read": "auth != null",
+      "chaines": {
+        "$code": {
+          ".write": "auth != null",
+          ".validate": "newData.hasChildren(['ref'])",
+          "ref":         { ".validate": "newData.isString() && newData.val().length <= 20" },
+          "designation": { ".validate": "newData.isString() && newData.val().length <= 120" },
+          "prix":        { ".validate": "newData.isNumber() && newData.val() >= 0" },
+          "$autre":      { ".validate": false }
+        }
+      }
+    },
+
     "profiles": {
       ".read": "auth != null",
 
