@@ -396,11 +396,13 @@
 
                     <div class="mb-4">
                         <label class="block text-sm font-semibold mb-1">Type</label>
-                        <div class="grid grid-cols-2 gap-2" id="group-kind-picker">
+                        <div class="grid grid-cols-3 gap-2" id="group-kind-picker">
                             <button type="button" data-kind="pylone" class="border rounded py-2 text-sm font-medium">
                                 <i class="fa-solid fa-tower-observation mr-1"></i>Pylône</button>
                             <button type="button" data-kind="portee" class="border rounded py-2 text-sm font-medium">
                                 <i class="fa-solid fa-grip-lines mr-1"></i>Portée</button>
+                            <button type="button" data-kind="vehicule" class="border rounded py-2 text-sm font-medium">
+                                <i class="fa-solid fa-truck mr-1"></i>Véhicule</button>
                         </div>
                     </div>
 
@@ -424,7 +426,7 @@
                         </div>
                     </div>
 
-                    <div class="mb-5">
+                    <div class="mb-5" id="group-faisceau-bloc">
                         <label class="block text-sm font-semibold mb-1">Faisceau</label>
                         <div class="grid grid-cols-4 gap-2" id="group-faisceau-picker">
                             <button type="button" data-faisceau="simple" class="border rounded py-2 text-sm">Simple</button>
@@ -450,7 +452,7 @@
 
                     <!-- Câble porté par l'ouvrage : il détermine le manchon
                          d'ancrage ou la pince de suspension. Facultatif. -->
-                    <div class="mb-5 border-t pt-4">
+                    <div class="mb-5 border-t pt-4" id="group-cable-bloc">
                         <label class="block text-sm font-semibold mb-1">
                             Câble <span class="font-normal text-gray-400">(facultatif)</span>
                         </label>
@@ -545,14 +547,14 @@
                     <select id="filter-basket-zone" onchange="rerenderCurrentBasket()" class="border border-gray-300 rounded px-2 py-1 text-sm bg-white focus:outline-none max-w-[32vw] sm:max-w-[120px]"><option value="">Toutes Zones</option></select>
                     <select id="filter-basket-family" onchange="rerenderCurrentBasket()" class="border border-gray-300 rounded px-2 py-1 text-sm bg-white focus:outline-none max-w-[32vw] sm:max-w-[120px]"><option value="">Toutes Familles</option></select>
                     <select id="sort-basket" onchange="rerenderCurrentBasket()" class="border border-gray-300 rounded px-2 py-1 text-sm bg-white focus:outline-none max-w-[42vw] sm:max-w-none" title="Ordre d'affichage et d'impression">
-                        <option value="group">Trier par pylône / portée</option>
+                        <option value="group">Trier par ouvrage</option>
                         <option value="zone">Trier par zone</option>
                         <option value="name">Trier par nom</option>
                         <option value="family">Trier par famille</option>
                         <option value="added">Ordre d'ajout</option>
                     </select>
-                    <button onclick="openGroupModal()" class="border border-gray-300 rounded px-3 py-1 text-sm bg-white hover:bg-gray-50 whitespace-nowrap" title="Ajouter un pylône ou une portée">
-                        <i class="fa-solid fa-tower-observation sm:mr-1 text-gray-500"></i><span class="hidden sm:inline">Pylône / Portée</span>
+                    <button onclick="openGroupModal()" class="border border-gray-300 rounded px-3 py-1 text-sm bg-white hover:bg-gray-50 whitespace-nowrap" title="Ajouter un pylône, une portée ou un véhicule">
+                        <i class="fa-solid fa-tower-observation sm:mr-1 text-gray-500"></i><span class="hidden sm:inline">Ouvrage</span>
                     </button>
                     <button onclick="genererEB()" class="border border-gray-300 rounded px-3 py-1 text-sm bg-white hover:bg-gray-50 whitespace-nowrap" title="Expression de besoin : le matériel du chantier, en Excel, pour les achats">
                         <i class="fa-solid fa-file-invoice sm:mr-1"></i><span class="hidden sm:inline">Générer un EB</span>
@@ -2485,6 +2487,7 @@ function newItemUid() {
    restent affichés à part, jamais perdus.
    ========================================================================== */
 const FONCTIONS  = { ancrage: 'Ancrage', alignement: 'Alignement' };
+const TETE_OUVRAGE = { pylone: 'Pylône ', portee: 'Portée ', vehicule: 'Véhicule ' };
 const CHAINES    = { simple: 'Chaîne simple', double: 'Chaîne double',
                      triple: 'Chaîne triple', quadruple: 'Chaîne quadruple' };
 const FAISCEAUX  = { simple: 'Faisceau simple', double: 'Faisceau double',
@@ -2505,8 +2508,11 @@ function findGroup(basket, gid) { return groupsOf(basket).find(g => g.gid === gi
 /** Libellé complet : « Pylône 1 — Ancrage · Chaîne double · Faisceau simple ». */
 function groupLabel(g) {
     if (!g) return 'Non affecté';
-    const tete = (g.kind === 'portee' ? 'Portée ' : 'Pylône ') + (g.name || '');
-    const carac = g.kind === 'portee'
+    const tete = TETE_OUVRAGE[g.kind || 'pylone'] + (g.name || '');
+    // Un véhicule n'a aucune caractéristique de ligne : il ne sert qu'à ranger
+    // ce qu'on y charge.
+    const carac = g.kind === 'vehicule' ? []
+        : g.kind === 'portee'
         ? [FAISCEAUX[g.faisceau]]
         : [FONCTIONS[g.fonction], CHAINES[g.chaine], FAISCEAUX[g.faisceau]];
     if (g.cable) carac.push(g.cable);
@@ -2518,7 +2524,8 @@ function groupLabel(g) {
  *  ouvrages dans une liste où le numéro figure déjà. */
 function groupDetail(g) {
     if (!g) return '';
-    const carac = g.kind === 'portee'
+    const carac = g.kind === 'vehicule' ? []
+        : g.kind === 'portee'
         ? [FAISCEAUX[g.faisceau]]
         : [FONCTIONS[g.fonction], CHAINES[g.chaine], FAISCEAUX[g.faisceau]];
     if (g.cable) carac.push(g.cable);
@@ -2527,7 +2534,7 @@ function groupDetail(g) {
 
 function groupShortLabel(g) {
     if (!g) return 'Non affecté';
-    return (g.kind === 'portee' ? 'Portée ' : 'Pylône ') + (g.name || '');
+    return TETE_OUVRAGE[g.kind || 'pylone'] + (g.name || '');
 }
 
 function openGroupModal(gid) {
@@ -2584,17 +2591,25 @@ function selectGroupKind(kind) {
     // Une portée n'a ni fonction ni type de chaîne : seulement un faisceau.
     // Le bloc des chaînes isolantes disparaît avec eux — une chaîne se pose sur
     // un pylône, pas sur la portée qui court entre deux.
+    const vehicule = kind === 'vehicule';
     document.getElementById('group-pylone-fields').classList.toggle('hidden', kind !== 'pylone');
     document.getElementById('group-chain-block').classList.toggle('hidden', kind !== 'pylone');
-    document.getElementById('group-portee-bloc').classList.toggle('hidden', kind === 'pylone');
+    document.getElementById('group-portee-bloc').classList.toggle('hidden', kind !== 'portee');
+    // Un véhicule ne porte rien de la ligne : on ne lui demande qu'un nom.
+    document.getElementById('group-faisceau-bloc').classList.toggle('hidden', vehicule);
+    document.getElementById('group-ecart-bloc').classList.toggle('hidden', vehicule);
+    document.getElementById('group-cable-bloc').classList.toggle('hidden', vehicule);
     if (kind !== 'pylone') {
         document.getElementById('input-chain').value = '';
         apercuChaine();
-        majMaterielPortee();
     }
+    if (vehicule) document.getElementById('input-cable').value = '';
+    if (kind === 'portee') majMaterielPortee();
     document.getElementById('group-name-label').textContent =
-        kind === 'portee' ? 'Numéro de la portée' : 'Numéro du pylône';
-    document.getElementById('input-group-name').placeholder = kind === 'portee' ? 'Ex : 1-2' : 'Ex : 1';
+        vehicule ? 'Nom du véhicule'
+        : kind === 'portee' ? 'Numéro de la portée' : 'Numéro du pylône';
+    document.getElementById('input-group-name').placeholder =
+        vehicule ? 'Ex : Camion nacelle' : kind === 'portee' ? 'Ex : 1-2' : 'Ex : 1';
 }
 
 function handleGroupSubmit(e) {
@@ -2611,11 +2626,13 @@ function handleGroupSubmit(e) {
 
     const data = {
         gid, kind, name,
-        faisceau: document.getElementById('group-faisceau-picker').dataset.value || 'simple',
         createdAt: existing ? num(existing.createdAt, Date.now()) : Date.now()
     };
-    const cableChoisi = document.getElementById('input-cable').value
-        || (existing && existing.cable) || '';
+    if (kind !== 'vehicule') {
+        data.faisceau = document.getElementById('group-faisceau-picker').dataset.value || 'simple';
+    }
+    const cableChoisi = kind === 'vehicule' ? ''
+        : (document.getElementById('input-cable').value || (existing && existing.cable) || '');
     if (cableChoisi) data.cable = cableChoisi;
     if (kind === 'pylone') {
         data.fonction = document.getElementById('group-fonction-picker').dataset.value || 'alignement';
@@ -2752,7 +2769,7 @@ function critereChaines(basket) {
     const faisceau = document.getElementById('group-faisceau-picker').dataset.value;
     return {
         tension,
-        type: kind === 'portee' ? null : (fonction === 'ancrage' ? 'ancrage' : 'suspension'),
+        type: kind === 'pylone' ? (fonction === 'ancrage' ? 'ancrage' : 'suspension') : null,
         chaine, faisceau,
     };
 }
