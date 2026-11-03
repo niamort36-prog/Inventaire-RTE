@@ -232,9 +232,34 @@
                     <i class="fa-solid fa-cart-plus mr-2"></i> Nouveau Chantier
                 </button>
             </div>
-            <div id="baskets-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-            <div id="empty-baskets-msg" class="text-center py-10 text-gray-500 hidden">
-                <i class="fa-solid fa-basket-shopping fa-3x mb-3 text-gray-300"></i><p>Aucun panier actif.</p>
+            <div class="flex gap-1 border-b border-gray-200" id="paniers-onglets">
+                <button data-vue="cours" class="px-4 py-2 text-sm font-medium border-b-2 -mb-px">
+                    <i class="fa-solid fa-basket-shopping mr-1"></i>En cours <span id="compte-cours" class="ml-1 text-xs">0</span></button>
+                <button data-vue="archives" class="px-4 py-2 text-sm font-medium border-b-2 -mb-px">
+                    <i class="fa-solid fa-box-archive mr-1"></i>Archives <span id="compte-archives" class="ml-1 text-xs">0</span></button>
+            </div>
+
+            <div id="vue-cours">
+                <div id="baskets-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                <div id="empty-baskets-msg" class="text-center py-10 text-gray-500 hidden">
+                    <i class="fa-solid fa-basket-shopping fa-3x mb-3 text-gray-300"></i><p>Aucun panier actif.</p>
+                </div>
+            </div>
+
+            <div id="vue-archives" class="hidden space-y-3">
+                <p class="text-sm text-gray-500">
+                    Les chantiers terminés restent ici avec leur matériel et leurs ouvrages.
+                    On peut les relire, les imprimer, en sortir un EB, ou en repartir pour un nouveau chantier.
+                </p>
+                <div class="relative max-w-md">
+                    <input type="text" id="filter-archives" oninput="renderBaskets()" placeholder="Rechercher un chantier archivé..."
+                           class="w-full border border-gray-300 rounded px-3 py-2 pl-9 text-sm focus:outline-none focus:border-indigo-500">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-gray-400 text-xs"></i>
+                </div>
+                <div id="archives-list" class="space-y-2"></div>
+                <div id="empty-archives-msg" class="text-center py-10 text-gray-500 hidden">
+                    <i class="fa-solid fa-box-archive fa-3x mb-3 text-gray-300"></i><p>Aucun chantier archivé.</p>
+                </div>
             </div>
         </div>
 
@@ -553,7 +578,7 @@
                         <option value="family">Trier par famille</option>
                         <option value="added">Ordre d'ajout</option>
                     </select>
-                    <button onclick="openGroupModal()" class="border border-gray-300 rounded px-3 py-1 text-sm bg-white hover:bg-gray-50 whitespace-nowrap" title="Ajouter un pylône, une portée ou un véhicule">
+                    <button onclick="openGroupModal()" id="btn-group-add" class="border border-gray-300 rounded px-3 py-1 text-sm bg-white hover:bg-gray-50 whitespace-nowrap" title="Ajouter un pylône, une portée ou un véhicule">
                         <i class="fa-solid fa-tower-observation sm:mr-1 text-gray-500"></i><span class="hidden sm:inline">Ouvrage</span>
                     </button>
                     <button onclick="genererEB()" class="border border-gray-300 rounded px-3 py-1 text-sm bg-white hover:bg-gray-50 whitespace-nowrap" title="Expression de besoin : le matériel du chantier, en Excel, pour les achats">
@@ -743,7 +768,8 @@
         media/p<id>              { image, doc }  (chargé à la demande)
         map/image                plan de l'atelier (chargé à la demande)
         map/markers/m<id>        { id, x, y, name, desc }
-        baskets/b<id>            { id, name, status, items[] }
+        baskets/b<id>            { id, name, status, items[], archivedAt }
+                                 status : draft | active | archived
         history/<pushId>         { ts, user, text }
 
    Les images ne transitent JAMAIS dans le flux temps réel : seul le "coeur"
@@ -1907,6 +1933,9 @@ async function deletePart() {
     // article par article afin de ne pas écraser le travail en cours des autres.
     let touched = 0;
     for (const b of baskets) {
+        // Les archives ne sont pas retouchées : elles disent ce qui est parti
+        // ce jour-là, même si la pièce n'existe plus aujourd'hui.
+        if (estArchive(b)) continue;
         const concerned = itemsOf(b).filter(i => i.partId === id);
         if (!concerned.length) continue;
         touched++;
@@ -3178,13 +3207,42 @@ async function handleNewBasket(e) {
     openBasketDetail(id);
 }
 
+function estArchive(b) { return !!b && b.status === 'archived'; }
+
+/** Date courte d'un horodatage, ou tiret. */
+function dateCourte(ts) {
+    const n = num(ts, 0);
+    return n ? new Date(n).toLocaleDateString('fr-FR') : '—';
+}
+
+let vuePaniers = 'cours';           // 'cours' ou 'archives'
+
+function setVuePaniers(v) { vuePaniers = v; renderBaskets(); }
+
 function renderBaskets() {
+    const encours = baskets.filter(b => !estArchive(b));
+    const archives = baskets.filter(estArchive);
+
+    document.getElementById('compte-cours').textContent = encours.length;
+    document.getElementById('compte-archives').textContent = archives.length;
+    document.querySelectorAll('#paniers-onglets [data-vue]').forEach(bt => {
+        const actif = bt.dataset.vue === vuePaniers;
+        bt.className = 'px-4 py-2 text-sm font-medium border-b-2 -mb-px ' + (actif
+            ? 'border-indigo-600 text-indigo-700'
+            : 'border-transparent text-gray-500 hover:text-gray-700');
+        bt.onclick = () => setVuePaniers(bt.dataset.vue);
+    });
+    document.getElementById('vue-cours').classList.toggle('hidden', vuePaniers !== 'cours');
+    document.getElementById('vue-archives').classList.toggle('hidden', vuePaniers !== 'archives');
+
+    renderArchives(archives);
+
     const grid = document.getElementById('baskets-grid');
     const emptyMsg = document.getElementById('empty-baskets-msg');
     grid.innerHTML = '';
-    emptyMsg.classList.toggle('hidden', baskets.length > 0);
+    emptyMsg.classList.toggle('hidden', encours.length > 0);
 
-    baskets.slice().sort((a, b) => num(b.createdAt || b.id) - num(a.createdAt || a.id)).forEach(b => {
+    encours.slice().sort((a, b) => num(b.createdAt || b.id) - num(a.createdAt || a.id)).forEach(b => {
         const isDraft = b.status === 'draft';
         const percent = calculateProgress(b);
         const items = itemsOf(b);
@@ -3210,6 +3268,57 @@ function renderBaskets() {
     });
 }
 
+/** Liste des chantiers archivés : une ligne par chantier, du plus récent au
+ *  plus ancien, avec de quoi le relire ou en repartir. */
+function renderArchives(archives) {
+    const liste = document.getElementById('archives-list');
+    const vide = document.getElementById('empty-archives-msg');
+    const q = (document.getElementById('filter-archives').value || '').trim().toLowerCase();
+
+    const vues = archives
+        .filter(b => !q || String(b.name).toLowerCase().includes(q))
+        .sort((a, b) => num(b.archivedAt || b.createdAt || b.id) - num(a.archivedAt || a.createdAt || a.id));
+
+    liste.innerHTML = '';
+    vide.classList.toggle('hidden', vues.length > 0);
+    if (!vues.length && q) {
+        vide.classList.add('hidden');
+        liste.innerHTML = '<p class="text-sm text-gray-400 italic py-6 text-center">Aucun chantier archivé à ce nom.</p>';
+        return;
+    }
+
+    vues.forEach(b => {
+        const items = itemsOf(b);
+        const ouvrages = groupsOf(b).length;
+        const charges = items.filter(i => i.loaded).length;
+        const ligne = document.createElement('div');
+        ligne.className = "bg-white rounded-lg shadow-sm border border-gray-200 px-4 py-3 flex items-center justify-between gap-3 hover:bg-gray-50";
+        ligne.innerHTML = `
+            <div class="min-w-0 cursor-pointer flex-grow" data-ouvrir="${b.id}">
+                <div class="font-bold text-gray-800 truncate">${esc(b.name)}</div>
+                <div class="text-xs text-gray-500">
+                    Clôturé le ${dateCourte(b.archivedAt || b.createdAt)}
+                    &nbsp;·&nbsp; ${items.length} référence(s)
+                    ${ouvrages ? `&nbsp;·&nbsp; ${ouvrages} ouvrage(s)` : ''}
+                    ${b.tension ? `&nbsp;·&nbsp; ${num(b.tension)} kV` : ''}
+                    ${items.length ? `&nbsp;·&nbsp; ${charges}/${items.length} chargé(s)` : ''}
+                </div>
+            </div>
+            <div class="flex gap-2 flex-none">
+                <button data-ouvrir="${b.id}" class="border border-gray-300 rounded px-3 py-1.5 text-sm bg-white hover:bg-gray-100" title="Consulter ce chantier">
+                    <i class="fa-solid fa-eye sm:mr-1"></i><span class="hidden sm:inline">Voir</span></button>
+                <button data-recharger="${b.id}" class="bg-indigo-600 text-white rounded px-3 py-1.5 text-sm shadow-sm hover:bg-indigo-700 whitespace-nowrap" title="Repartir de ce chantier dans un nouveau brouillon">
+                    <i class="fa-solid fa-rotate-left sm:mr-1"></i><span class="hidden sm:inline">Recharger</span></button>
+            </div>`;
+        liste.appendChild(ligne);
+    });
+
+    liste.querySelectorAll('[data-ouvrir]').forEach(el =>
+        el.onclick = () => openBasketDetail(num(el.dataset.ouvrir)));
+    liste.querySelectorAll('[data-recharger]').forEach(el =>
+        el.onclick = ev => { ev.stopPropagation(); reutiliserBasket(num(el.dataset.recharger)); });
+}
+
 function openBasketDetail(id) {
     currentBasketId = id;
     activeGroupId = null;          // l'ouvrage visé ne suit pas d'un chantier à l'autre
@@ -3230,8 +3339,29 @@ function openBasketDetail(id) {
     const headerTable = document.getElementById('basket-table-header');
     const footerActions = document.getElementById('basket-footer-actions');
     const isDraft = basket.status === 'draft';
+    const archive = estArchive(basket);
 
-    if (isDraft) {
+    // Un chantier archivé est une trace : on le lit, on l'imprime, on en
+    // ressort un EB, on le recharge — on ne le modifie plus.
+    document.getElementById('basket-search-container').classList.toggle('hidden', archive);
+    document.getElementById('btn-group-add').classList.toggle('hidden', archive);
+
+    if (archive) {
+        badge.textContent = "Archivé le " + dateCourte(basket.archivedAt || basket.createdAt);
+        badge.className = "text-xs font-bold px-2 py-0.5 rounded bg-gray-200 text-gray-700";
+        headerPie.classList.remove('hidden');
+        updateHeaderPie(basket);
+        headerTable.innerHTML = `
+            <th class="px-2 sm:px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase"><i class="fa-solid fa-check sm:hidden"></i><span class="hidden sm:inline">Chargé</span></th>
+            <th class="px-2 sm:px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Pièce</th>
+            <th class="px-2 sm:px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase"><span class="sm:hidden">Qté</span><span class="hidden sm:inline">Qté chargée</span></th>
+            <th class="hidden sm:table-cell px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Note</th>
+            <th class="px-2 sm:px-4 py-3"></th>`;
+        footerActions.innerHTML = `
+            <button onclick="closeModal('modal-basket-detail')" class="bg-white border px-4 py-2 rounded">Fermer</button>
+            <button onclick="reutiliserBasket()" class="bg-indigo-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-700 whitespace-nowrap">
+                <i class="fa-solid fa-rotate-left mr-1"></i>Recharger ce chantier</button>`;
+    } else if (isDraft) {
         badge.textContent = "Brouillon";
         badge.className = "text-xs font-bold px-2 py-0.5 rounded bg-indigo-100 text-indigo-800";
         headerPie.classList.add('hidden');
@@ -3341,6 +3471,8 @@ let engagements = new Map();          // partId -> [{ basket, item }]
 function reconstruireEngagements() {
     engagements = new Map();
     baskets.forEach(b => {
+        // Un chantier archivé n'engage plus rien : son matériel est parti.
+        if (estArchive(b)) return;
         itemsOf(b).forEach(item => {
             // Une ligne déduite a déjà fait baisser le stock : l'information
             // est visible dans la quantité, inutile de la répéter.
@@ -3571,6 +3703,25 @@ function renderBasketItems(basket) {
         el.onclick = ev => { ev.stopPropagation(); setActiveGroup(el.dataset.activateGroup); });
     tbody.querySelectorAll('[data-edit-group]').forEach(el =>
         el.onclick = ev => { ev.stopPropagation(); openGroupModal(el.dataset.editGroup); });
+
+    // Archive : la liste se lit sans se modifier.
+    if (estArchive(basket)) {
+        tbody.querySelectorAll('input, select').forEach(el => {
+            el.disabled = true;
+            el.classList.add('bg-gray-100', 'text-gray-500');
+        });
+        tbody.querySelectorAll('[data-remove-item], [data-activate-group], [data-edit-group]')
+            .forEach(el => el.remove());
+        // Une pièce supprimée de l'inventaire depuis la clôture ne s'affiche
+        // plus : on le dit, plutôt que de laisser croire à un oubli.
+        const perdues = itemsOf(basket).filter(i => !parts.find(p => p.id === i.partId)).length;
+        if (perdues) {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td colspan="${nbCols}" class="px-6 py-2 text-xs text-gray-400 italic">
+                ${perdues} ligne(s) non affichée(s) : la pièce a été supprimée de l'inventaire depuis la clôture.</td>`;
+            tbody.appendChild(tr);
+        }
+    }
 
     renderBasketTotal(basket, rows.filter(r => !r.emptyGroup));
 }
@@ -3990,18 +4141,68 @@ function archiveBasket() {
     const basket = currentBasket(); if (!basket) return;
     const pct = calculateProgress(basket);
     if (pct < 100 && !confirm(`Le chargement n'est terminé qu'à ${pct} %.\n\nClôturer ce chantier ?`)) return;
-    if (!confirm(`Clôturer « ${basket.name} » ?\nIl sera retiré de la liste des chantiers.`)) return;
-    write('baskets/b' + basket.id, null);
-    logHistory(`Chantier « ${basket.name} » clôturé`);
+    if (!confirm(`Clôturer « ${basket.name} » ?\nIl passera dans les archives, où il restera consultable et rechargeable.`)) return;
+    // Le chantier n'est pas détruit : il quitte la liste des chantiers en cours
+    // et va aux archives, avec son matériel et son pointage.
+    updateNode('baskets/b' + basket.id, { status: 'archived', archivedAt: Date.now() });
+    logHistory(`Chantier « ${basket.name} » clôturé et archivé`);
     closeModal('modal-basket-detail');
-    toast("Chantier clôturé", 'ok');
+    vuePaniers = 'archives';
+    renderBaskets();
+    updateStats();
+    toast("Chantier archivé", 'ok');
+}
+
+/** Repart d'un chantier archivé : un nouveau brouillon reprend son matériel et
+ *  ses ouvrages, modifiable avant validation. L'archive, elle, ne bouge pas —
+ *  et le stock ne bougera qu'à la validation du nouveau chantier. */
+async function reutiliserBasket(srcId) {
+    const src = baskets.find(b => b.id === num(srcId || currentBasketId));
+    if (!src) { toast("Chantier introuvable", 'err'); return; }
+    const items = itemsOf(src);
+    if (!items.length) { toast("Ce chantier archivé est vide", 'warn'); return; }
+
+    const name = prompt("Nom du nouveau chantier :", src.name + " (reprise)");
+    if (!name || !name.trim()) return;
+
+    const id = Date.now();
+    const copie = { id, name: name.trim(), status: 'draft', createdAt: id };
+    if (src.tension) copie.tension = num(src.tension);
+    if (!await write('baskets/b' + id, copie)) return;
+
+    for (const g of groupsOf(src)) {
+        await write('baskets/b' + id + '/groups/' + g.gid, { ...g });
+    }
+    // On reprend la quantité demandée au départ, pas celle réellement chargée,
+    // et le pointage repart à zéro.
+    let reprises = 0, perdues = 0;
+    for (const it of items) {
+        if (!parts.find(p => p.id === it.partId)) { perdues++; continue; }
+        const uid = newItemUid();
+        const item = { uid, partId: it.partId, qty: num(it.qty), deduct: !!it.deduct };
+        if (it.groupId) item.groupId = it.groupId;
+        if (it.comment) item.comment = it.comment;
+        await write(itemRef(id, uid), item);
+        reprises++;
+    }
+
+    logHistory(`Chantier « ${copie.name} » repris de « ${src.name} » (${reprises} références)`);
+    closeModal('modal-basket-detail');
+    vuePaniers = 'cours';
+    showPage('paniers');
+    toast(perdues
+        ? `${reprises} référence(s) reprises — ${perdues} pièce(s) n'existent plus`
+        : `${reprises} référence(s) reprises en brouillon`, perdues ? 'warn' : 'ok');
+    openBasketDetail(id);
 }
 
 function deleteBasket() {
     const basket = currentBasket(); if (!basket) return;
     const toRestore = basket.status === 'active'
         ? itemsOf(basket).filter(i => i.deduct) : [];
-    let msg = `Supprimer définitivement « ${basket.name} » ?`;
+    let msg = estArchive(basket)
+        ? `Supprimer définitivement l'archive « ${basket.name} » ?\nElle ne sera plus consultable ni rechargeable.`
+        : `Supprimer définitivement « ${basket.name} » ?`;
     if (toRestore.length) msg += `\n\nLe stock de ${toRestore.length} référence(s) sera recrédité.`;
     if (!confirm(msg)) return;
 
@@ -4020,12 +4221,14 @@ function updateDashboardActiveBaskets() {
     const active = baskets.filter(b => b.status === 'active');
     document.getElementById('stat-total-active-baskets').textContent = active.length;
 
+    // Le tableau de bord ne montre que les chantiers vivants.
+    const vivants = baskets.filter(b => !estArchive(b));
     const container = document.getElementById('active-baskets-dashboard-container');
     const list = document.getElementById('active-baskets-dashboard-list');
-    container.classList.toggle('hidden', baskets.length === 0);
+    container.classList.toggle('hidden', vivants.length === 0);
     list.innerHTML = '';
 
-    baskets.slice().sort((a, b) => num(b.createdAt || b.id) - num(a.createdAt || a.id)).forEach(b => {
+    vivants.slice().sort((a, b) => num(b.createdAt || b.id) - num(a.createdAt || a.id)).forEach(b => {
         const p = calculateProgress(b);
         const isDraft = b.status === 'draft';
         const div = document.createElement('div');

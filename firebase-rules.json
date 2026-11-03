@@ -169,8 +169,9 @@
             ".validate": "newData.hasChildren(['id', 'name'])",
             "id":        { ".validate": "newData.isNumber()" },
             "name":      { ".validate": "newData.isString() && newData.val().length <= 150" },
-            "status":    { ".validate": "newData.val() == 'draft' || newData.val() == 'active'" },
-            "createdAt": { ".validate": "newData.isNumber()" }
+            "status":    { ".validate": "newData.val() == 'draft' || newData.val() == 'active' || newData.val() == 'archived'" },
+            "createdAt": { ".validate": "newData.isNumber()" },
+            "archivedAt": { ".validate": "newData.isNumber()" }
           }
         },
 

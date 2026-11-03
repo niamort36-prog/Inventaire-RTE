@@ -137,11 +137,12 @@
   <div class="toc-item"><div class="toc-num">10</div><div class="toc-txt"><b>Le total à charger</b><span>Ce qu'il faut sortir du magasin, tout compris</span></div></div>
   <div class="toc-item"><div class="toc-num">11</div><div class="toc-txt"><b>Matériel déjà prévu ailleurs</b><span>Voir ce qui est promis à un autre chantier</span></div></div>
   <div class="toc-item"><div class="toc-num">12</div><div class="toc-txt"><b>Charger le matériel</b><span>Pointer ce qui part réellement</span></div></div>
-  <div class="toc-item"><div class="toc-num">13</div><div class="toc-txt"><b>Imprimer le bon de chargement</b><span>Sur papier ou en PDF</span></div></div>
-  <div class="toc-item"><div class="toc-num">14</div><div class="toc-txt"><b>L'expression de besoin</b><span>Commander le matériel du chantier</span></div></div>
-  <div class="toc-item"><div class="toc-num">15</div><div class="toc-txt"><b>Scanner un QR code</b><span>Retrouver une pièce instantanément</span></div></div>
-  <div class="toc-item"><div class="toc-num">16</div><div class="toc-txt"><b>Sur le téléphone</b><span>Installer l'application, travailler sans réseau</span></div></div>
-  <div class="toc-item"><div class="toc-num">17</div><div class="toc-txt"><b>Questions fréquentes</b><span>Les situations courantes</span></div></div>
+  <div class="toc-item"><div class="toc-num">13</div><div class="toc-txt"><b>Retrouver un chantier terminé</b><span>Les archives : relire, imprimer, repartir d'un chantier</span></div></div>
+  <div class="toc-item"><div class="toc-num">14</div><div class="toc-txt"><b>Imprimer le bon de chargement</b><span>Sur papier ou en PDF</span></div></div>
+  <div class="toc-item"><div class="toc-num">15</div><div class="toc-txt"><b>L'expression de besoin</b><span>Commander le matériel du chantier</span></div></div>
+  <div class="toc-item"><div class="toc-num">16</div><div class="toc-txt"><b>Scanner un QR code</b><span>Retrouver une pièce instantanément</span></div></div>
+  <div class="toc-item"><div class="toc-num">17</div><div class="toc-txt"><b>Sur le téléphone</b><span>Installer l'application, travailler sans réseau</span></div></div>
+  <div class="toc-item"><div class="toc-num">18</div><div class="toc-txt"><b>Questions fréquentes</b><span>Les situations courantes</span></div></div>
 </div>
 
 <h3>Trois choses à savoir avant de commencer</h3>
@@ -157,8 +158,9 @@
 </div>
 <div class="note">
   <b>Rien n'est jamais perdu</b>
-  Les suppressions demandent toujours une confirmation, et le stock retiré pour un chantier
-  est automatiquement remis si le chantier est supprimé.
+  Les suppressions demandent toujours une confirmation, le stock retiré pour un chantier
+  est automatiquement remis si le chantier est supprimé, et un chantier terminé part
+  aux archives au lieu de disparaître.
 </div>
 </section>
 
@@ -316,7 +318,7 @@ Pour modifier une pièce existante, ouvrez sa fiche puis <strong>Modifier</stron
 <h3>La référence EB</h3>
 <p>Pour qu'une pièce puisse être commandée, elle doit porter son <strong>code au catalogue
 des achats</strong>, sa désignation officielle et son prix unitaire. C'est ce qui permet de
-générer une expression de besoin depuis un chantier — voir le chapitre 14.</p>
+générer une expression de besoin depuis un chantier — voir le chapitre 15.</p>
 
 <figure>
   <img src="captures/05-reference-eb.png" alt="Référence EB d'une pièce" style="width:110mm;margin:0 auto;">
@@ -695,7 +697,7 @@ disponible. Rien n'indiquerait qu'il est déjà promis, et deux personnes pourra
 l'emporter le même jour.</p>
 
 <figure>
-  <img src="captures/23-engagement.png" alt="Mention de matériel déjà prévu" style="width:95mm;margin:0 auto;">
+  <img src="captures/24-engagement.png" alt="Mention de matériel déjà prévu" style="width:95mm;margin:0 auto;">
   <figcaption>La pièce reste disponible, mais son engagement est signalé</figcaption>
 </figure>
 
@@ -753,21 +755,68 @@ concerné.</p>
 rappelle ce qui était prévu : l'écart reste visible, à l'écran comme sur le papier.</p>
 
 <p>Le pourcentage en haut de la fenêtre et sur la carte du chantier suit l'avancement.
-Quand tout est chargé, le bouton <strong>Chantier terminé</strong> le clôture et le retire de la liste.</p>
+Quand tout est chargé, le bouton <strong>Chantier terminé</strong> le clôture : il quitte la liste
+des chantiers en cours et passe aux <strong>archives</strong>, où il reste consultable et
+rechargeable — c'est l'objet du chapitre suivant.</p>
 
 <p>Pendant le chargement, le bandeau <strong>Total à charger</strong> affiche deux colonnes :
 ce qui était demandé et ce qui part réellement, l'écart en rouge.</p>
 
 <div class="warn">
   <b>Terminé ou supprimé, ce n'est pas la même chose</b>
-  <strong>Chantier terminé</strong> clôture le chantier : le matériel est parti, le stock reste déduit.
+  <strong>Chantier terminé</strong> clôture le chantier : le matériel est parti, le stock reste déduit,
+  et le chantier est archivé.
   <strong>Supprimer le chantier</strong> annule l'opération et <strong>remet le stock</strong> comme avant.
 </div>
 </section>
 
+<!-- ============================ ARCHIVES ============================ -->
+<section>
+<h2>13. Retrouver un chantier terminé</h2>
+
+<p>Un chantier clôturé n'est pas effacé : il passe dans les <strong>archives</strong>.
+Sur la page <strong>Paniers &amp; Chantiers</strong>, deux onglets séparent les
+<strong>chantiers en cours</strong> des <strong>archives</strong>, chacun avec son nombre.</p>
+
+<figure>
+  <img src="captures/23-archives.png" alt="Les chantiers archivés">
+  <figcaption>Les chantiers terminés, du plus récent au plus ancien</figcaption>
+</figure>
+
+<p>Chaque ligne rappelle la date de clôture, le nombre de références, le nombre d'ouvrages
+et ce qui avait réellement été chargé. Le champ de recherche filtre sur le nom du chantier.</p>
+
+<table>
+  <tr><td class="k">Voir</td><td>Ouvre le chantier tel qu'il a été clôturé. Tout est en lecture seule : on consulte, on filtre, on imprime, on génère une EB — on ne modifie plus rien.</td></tr>
+  <tr><td class="k">Recharger</td><td>Crée un <strong>nouveau chantier en brouillon</strong> reprenant le matériel, les quantités demandées au départ et les ouvrages. L'archive, elle, ne bouge pas.</td></tr>
+</table>
+
+<h3>Repartir d'un chantier précédent</h3>
+
+<p>C'est l'usage courant : un chantier semblable revient, et il n'y a aucune raison de ressaisir
+la liste. <strong>Recharger</strong> demande un nom pour le nouveau chantier, puis l'ouvre en
+brouillon : vous ajoutez, retirez, corrigez les quantités, puis vous validez comme d'habitude.</p>
+
+<div class="note">
+  <b>Le stock ne bouge qu'à la validation</b>
+  Recharger un chantier ne retire rien de l'inventaire. Les quantités ne sont déduites qu'au
+  moment du <strong>Valider &amp; Charger</strong> du nouveau chantier.
+</div>
+
+<div class="warn">
+  <b>Une pièce supprimée depuis la clôture</b>
+  Les archives ne sont jamais retouchées : elles disent ce qui est parti ce jour-là. Si une pièce
+  a disparu de l'inventaire depuis, sa ligne n'est plus affichée — un message en bas de liste
+  l'indique — et elle n'est pas reprise au rechargement.
+</div>
+
+<p>Le bouton <strong>Supprimer le chantier</strong> reste disponible dans une archive : il en
+efface définitivement la trace, sans toucher au stock.</p>
+</section>
+
 <!-- ============================ 10. IMPRESSION ============================ -->
 <section>
-<h2>13. Imprimer le bon de chargement</h2>
+<h2>14. Imprimer le bon de chargement</h2>
 
 <p>Dans un chantier, bouton <strong>Imprimer</strong>. Le document reprend exactement
 ce que vous avez à l'écran : le <strong>tri</strong> choisi et les <strong>filtres</strong> actifs.</p>
@@ -798,7 +847,7 @@ les observations et un emplacement pour le visa. Les en-têtes de colonnes se r�
 
 <!-- ============================ 11. SCAN ============================ -->
 <section>
-<h2>14. L'expression de besoin</h2>
+<h2>15. L'expression de besoin</h2>
 
 <p>Une <strong>EB</strong> est le fichier Excel envoyé aux achats pour commander du matériel.
 Depuis un chantier préparé, l'application le produit en un clic : inutile de ressaisir les
@@ -866,13 +915,13 @@ commander. Elle n'est pas oubliée pour autant : l'application les liste après 
 
 <!-- ============================ 15. SCANNER ============================ -->
 <section>
-<h2>15. Scanner un QR code</h2>
+<h2>16. Scanner un QR code</h2>
 
 <p>Chaque pièce possède un QR code. Collé sur le bac ou l'étagère, il permet d'ouvrir
 sa fiche instantanément, sans la chercher dans la liste.</p>
 
 <figure>
-  <img src="captures/24-scan.png" alt="Le scanner">
+  <img src="captures/25-scan.png" alt="Le scanner">
   <figcaption>L'onglet Scan. Autorisez l'accès à la caméra à la première utilisation</figcaption>
 </figure>
 
@@ -899,12 +948,12 @@ demande un moyen de levage, ou tout ce qui n'a pas encore de référence.</p>
 
 <!-- ============================ 12. TÉLÉPHONE ============================ -->
 <section>
-<h2>16. Sur le téléphone</h2>
+<h2>17. Sur le téléphone</h2>
 
 <p>L'application est prévue pour être utilisée en atelier et en chantier, directement sur le téléphone.</p>
 
 <figure>
-  <img src="captures/25-mobile.png" class="phone" alt="L'application sur téléphone">
+  <img src="captures/26-mobile.png" class="phone" alt="L'application sur téléphone">
   <figcaption>L'affichage s'adapte automatiquement à l'écran</figcaption>
 </figure>
 
@@ -940,7 +989,7 @@ demande un moyen de levage, ou tout ce qui n'a pas encore de référence.</p>
 
 <!-- ============================ 13. FAQ ============================ -->
 <section>
-<h2>17. Questions fréquentes</h2>
+<h2>18. Questions fréquentes</h2>
 
 <div class="faq">
   <div class="q">Je ne retrouve pas une pièce que je viens d'ajouter.</div>

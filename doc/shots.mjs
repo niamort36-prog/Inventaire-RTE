@@ -263,10 +263,11 @@ await page.evaluate(async () => {
     majChoixCable(); await w(300);
     document.getElementById('input-cable-piece').value = 'P4HT';
     majGarniture();
-    document.getElementById('input-cable').parentElement.id = 'bloc-cable';
 });
 await wait(900);
-await shotEl('pylone-garniture', '#bloc-cable');
+// Le bloc du cable porte deja son identifiant : ne pas le renommer, l'ecran
+// des ouvrages s'en sert pour masquer le cable sur un vehicule.
+await shotEl('pylone-garniture', '#group-cable-bloc');
 await page.evaluate(() => closeModal('modal-group'));
 await wait(500);
 
@@ -405,6 +406,28 @@ await wait(2000);
 await page.setViewportSize({ width: 1280, height: 560 });
 await wait(600);
 await shot('chantiers');
+
+// Les archives. Le statut est bascule en local le temps de la capture : les
+// regles Firebase n'acceptent « archived » qu'une fois publiees, et le jeu de
+// demonstration est efface juste apres. On le remet ensuite, sans quoi le
+// chantier sortirait des engagements affiches sur la capture suivante.
+await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms));
+    const b = baskets.find(x => x.id === window.__bid);
+    b.status = 'archived'; b.archivedAt = Date.now();
+    vuePaniers = 'archives';
+    renderBaskets(); await w(500);
+});
+await wait(900);
+await shot('archives');
+await page.evaluate(async () => {
+    const w = ms => new Promise(r => setTimeout(r, ms));
+    const b = baskets.find(x => x.id === window.__bid);
+    b.status = 'active'; delete b.archivedAt;
+    vuePaniers = 'cours';
+    reconstruireEngagements(); renderBaskets(); await w(400);
+});
+await wait(600);
 
 // Mention d'engagement : une pièce promise à un chantier, non déduite du stock
 await page.evaluate(async () => {
