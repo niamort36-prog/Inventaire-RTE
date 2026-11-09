@@ -290,6 +290,13 @@
                     <label class="block text-sm font-semibold mb-1">Votre nom <span class="font-normal text-gray-400">(pour l'historique)</span></label>
                     <input type="text" id="input-user-name" class="w-full border p-2 rounded text-sm" placeholder="Ex: Julien" onchange="saveUserName(this.value)">
                 </div>
+                <div class="border-t pt-4 mt-4">
+                    <a href="./Guide-Invent-RTE.pdf" download="Guide-Invent-RTE.pdf"
+                       class="w-full flex items-center justify-center gap-2 border border-indigo-200 bg-indigo-50 text-indigo-700 py-2 rounded hover:bg-indigo-100 text-sm font-medium">
+                        <i class="fa-regular fa-file-pdf"></i>Télécharger le guide (PDF)
+                    </a>
+                    <p class="text-xs text-gray-500 mt-1 text-center">Le mode d'emploi complet de l'application.</p>
+                </div>
                 <button onclick="closeModal('modal-team')" class="mt-4 w-full bg-gray-100 py-2 rounded hover:bg-gray-200 text-sm font-medium">Fermer</button>
             </div>
         </div>
@@ -4137,14 +4144,20 @@ function validateBasketDraft() {
     updateStats();
 }
 
-function archiveBasket() {
+async function archiveBasket() {
     const basket = currentBasket(); if (!basket) return;
     const pct = calculateProgress(basket);
     if (pct < 100 && !confirm(`Le chargement n'est terminé qu'à ${pct} %.\n\nClôturer ce chantier ?`)) return;
     if (!confirm(`Clôturer « ${basket.name} » ?\nIl passera dans les archives, où il restera consultable et rechargeable.`)) return;
     // Le chantier n'est pas détruit : il quitte la liste des chantiers en cours
     // et va aux archives, avec son matériel et son pointage.
-    updateNode('baskets/b' + basket.id, { status: 'archived', archivedAt: Date.now() });
+    const ok = await updateNode('baskets/b' + basket.id, { status: 'archived', archivedAt: Date.now() });
+    // Sans les règles à jour, la base refuse le statut « archivé » : on ne
+    // ferme rien et on le dit, plutôt que d'annoncer un archivage qui n'a pas eu lieu.
+    if (!ok) {
+        toast("Archivage refusé par la base — les règles Firebase doivent être republiées", 'err');
+        return;
+    }
     logHistory(`Chantier « ${basket.name} » clôturé et archivé`);
     closeModal('modal-basket-detail');
     vuePaniers = 'archives';
